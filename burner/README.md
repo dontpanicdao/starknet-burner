@@ -1,13 +1,8 @@
 # Burner
 
-## Tools
+## scripts and programs
 
-This package includes a number of tools to help you interact with Starknet.
-Among those tools is:
+This package includes a number of scripts to help you interact with Starknet:
 
-- `scripts/genkey.ts` is a tool to generate a new keypair for Starknet
-
-```shell
-npm install
-npm run genkey
-```
+- `scripts` contains node/npm scripts.
+- `go` contains Go programs.

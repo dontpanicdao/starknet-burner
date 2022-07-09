@@ -1,0 +1,8 @@
+{
+	"name": "scripts",
+	"version": "0.0.1",
+	"scripts": {
+		"genkey": "tsc --esModuleInterop --outDir build genkey.ts && node build/genkey.js"
+	},
+	"type": "commonjs"
+}
