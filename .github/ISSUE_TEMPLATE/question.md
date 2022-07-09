@@ -9,8 +9,8 @@ assignees: ''
 
 Did you discuss the question on the Starknet Discord? If no, you might want to do to get a better interaction.
 
-**Description**
+## Description
 __ask your question here__
 
-**Background**
+## Background
 Provide some background about the question. Why are you asking that question? What are you trying to achieve?
