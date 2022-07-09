@@ -14,8 +14,11 @@ For now the project contains a simple component that embed a
 
 There is a number of things we can added to the project to make it better:
 
+- Adding an autosign feature so that the user does not even see he is minting
+  tokens.
 - Building the same component with ReactJS. We could start by simply wrapping
-  the svelte component as [Rich Harris has done in its project](https://github.com/Rich-Harris/react-svelte).
+  the svelte component as
+  [Rich Harris has done in its project](https://github.com/Rich-Harris/react-svelte).
 - Building demos to help people boostrap their projects.
 - Have the application run on-demand to make it even easier to use with hackatons
 - Setting up the same feature with other accounts, including OpenZeppelin, Bravoos
