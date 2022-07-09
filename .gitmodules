@@ -1,0 +1,3 @@
+[submodule "plugin/argent-contracts-starknet"]
+	path = plugin/argent-contracts-starknet
+	url = https://github.com/argentlabs/argent-contracts-starknet.git
