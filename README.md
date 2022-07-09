@@ -15,6 +15,8 @@ games or social activities, the project includes:
   enabling users to block the `burner` whenever they want.
 - the argent-x account `plugin` is an extension to the argent-x account; it is
   used by the `burner` to invoke commands;
+- `starkpiller` is a demo application that uses the `burner` to mint and burn
+  Stark Pills.
 
 ## Special thanks to
 
@@ -24,11 +26,8 @@ games or social activities, the project includes:
 - [argent](https://twitter.com/argentHQ) for the fantastic work they do daily
   to bring Argent-X to starknet and work with Starkware and the community to
   build a better future.
-- [@crema](https://twitter.com/crema_fr) and
-  [@drspacemn](https://twitter.com/DrSpacemn) for helping starting the
-  project and providing the support I needed
+- [@crema](https://twitter.com/crema_fr) for helping starting the project and
+  providing the support I needed
 - [0xs34n](https://twitter.com/0xs34n) from 
   [aspect.co](https://twitter.com/aspectdotco) for building and maintaining
-  starknet-js.
-- All the people at Starkware and in the Starknet community for their help
-  and support.
+  [starknet-js](https://github.com/0xs34n/starknet.js).

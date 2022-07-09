@@ -1,18 +1,14 @@
 The Starknet Burner helps builders to build dapps on mobile applications during
 hackathons without having to deal with all the abstract account interactions.
 
-## Project Content
+## Content (Sofar...)
 
-The list below contains the first steps with the project. The goal is to build a
-dapp that is a webapp for mobile. The first step consists in:
+The project contains a set of hardcoded methods that allow to
+mint an NFT from the mobile application.
 
-- [ ] Generate a private/public Key pair
-- [ ] Deploy a argent-x account on Goerli
-- [ ] Add Eth to the account
-- [ ] Deploy a NFT contract on Goerli to Mint NFT
-- [ ] Build a simple Javascript with Private key hardcoded
-- [ ] Load the App on the mobile device
-- [ ] Mint an NFT from the mobile device
+## Milestone v0.2.0
+
+For now the project contains a simple component that embed a 
 
 ## What to do next?
 
