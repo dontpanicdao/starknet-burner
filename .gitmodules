@@ -1,3 +1,6 @@
 [submodule "plugin/argent-contracts-starknet"]
 	path = plugin/argent-contracts-starknet
 	url = https://github.com/argentlabs/argent-contracts-starknet.git
+[submodule "plugin/cairo-contracts"]
+	path = plugin/cairo-contracts
+	url = https://github.com/OpenZeppelin/cairo-contracts.git
