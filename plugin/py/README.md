@@ -166,3 +166,58 @@ You can check on [voyager](https://goerli.voyager.online) the detail of the
 contract `0x345058e731bb3b809880175260eaaa284d2302afb3551f74c1832731f25ee40`.
 You should call `get_signer` and `get_guardian` to control the signer and
 guardian of the contract.
+
+## Sending ETH to the new contract
+
+To send ETH to the new contract, you can use `transfer` function on `0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7`. The easiest way it to do it on voyager but it can also be done from the starknet CLI assuming you have eth on it.
+
+Once you have filled the contract, you can check the balance of the contract. First generate an ABI for an ERC20 contract.
+
+```shell
+cd plugin/cairo-contracts/src
+starknet-compile \
+   --output ../../contracts/erc20.json \
+   --abi ../../contracts/erc20_abi.json \
+   openzeppelin/token/erc20/ERC20.cairo
+```
+
+Once done, you can check the balance of the contract.
+
+```shell
+starknet call --feeder_gateway_url http://localhost:8080 --no_wallet \
+   --address 0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
+   --function balanceOf --abi ../contracts/erc20_abi.json
+   --inputs 0x345058e731bb3b809880175260eaaa284d2302afb3551f74c1832731f25ee40
+```
+
+The input looks like the command below:
+
+```json
+// POST http://alpha4.starknet.io/feeder_gateway/call_contract?blockNumber=null HTTP/1.1
+{
+	"calldata": ["1478889342385977866847350421410405821707989742040860331696169838368143044160"],
+	"entry_point_selector": "0x2e4263afad30923c891518314c3c95dbe830a16874e8abc5777a9a20b54c76e",
+	"max_fee": "0x0",
+	"signature": [],
+	"version": "0x100000000000000000000000000000000",
+	"contract_address": "0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
+}
+```
+
+And the output:
+
+```json
+{
+    "result": [
+        "0x11c37937e08000",
+        "0x0"
+    ]
+}
+```
+
+To see the balance of the contract, you can use the command below:
+
+```shell
+export HEXNUM=$(echo 0x11c37937e08000 | cut -c2-)
+echo $((16#$HEXNUM))
+```
