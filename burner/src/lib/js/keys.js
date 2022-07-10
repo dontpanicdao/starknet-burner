@@ -3,8 +3,8 @@ import { ec } from 'starknet';
 export const loadKeys = () => {
 	let privateKey = '0x0';
 	let publicKey = '0x0';
-	let sessPrivateKey = sessionStorage.getItem('privateKey');
-	let sessPublicKey = sessionStorage.getItem('publicKey');
+	let sessPrivateKey = localStorage.getItem('privateKey');
+	let sessPublicKey = localStorage.getItem('publicKey');
 	if (sessPrivateKey && sessPublicKey) {
 		privateKey = sessPrivateKey;
 		publicKey = sessPublicKey;
@@ -20,7 +20,7 @@ export const loadKeys = () => {
 	}
 	privateKey = `0x${priv.toString('hex')}`;
 	publicKey = ec.getStarkKey(keypair);
-	sessionStorage.setItem('privateKey', privateKey);
-	sessionStorage.setItem('publicKey', publicKey);
+	localStorage.setItem('privateKey', privateKey);
+	localStorage.setItem('publicKey', publicKey);
 	return [privateKey, publicKey];
 };
