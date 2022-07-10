@@ -1,20 +1,22 @@
 import argparse
 import asyncio
+import dataclasses
 from dotenv import load_dotenv
 import os
 import sys
-from pprint import pprint
-sys.path.append("../argent-contracts-starknet/test")
+# from pprint import pprint
 
 from starkware.starknet.testing.starknet import Starknet
 from starkware.starknet.services.api.gateway.gateway_client import GatewayClient
 from services.external_api.client import RetryConfig
-from starkware.starknet.services.api.gateway.transaction import (Deploy)
+from starkware.starknet.services.api.gateway.transaction import (Deploy, InvokeFunction)
 from starkware.starknet.definitions import constants
 from starkware.starknet.services.api.contract_class import ContractClass
+# from starkware.starknet.public.abi import get_selector_from_name
 
+# We need that function to generate the public key of the account
+sys.path.append("../argent-contracts-starknet/test")
 from utils.Signer import Signer
-from utils.utilities import deploy
 
 parser = argparse.ArgumentParser(description='Details of the account deployment')
 parser.add_argument('-priv', dest='private_key', type=str, help='Add the account private key')
@@ -50,14 +52,16 @@ def print_hex(i: int):
 def event_loop():
 	return asyncio.new_event_loop()
 
+"""
+	gets a client for the goerli network
+"""
 def get_gateway_client() -> GatewayClient:
     gateway_url = "https://alpha4.starknet.io"
     retry_config = RetryConfig(n_retries=1)
     return GatewayClient(url=gateway_url, retry_config=retry_config)
 
-async def account_factory(private_key: int, guardian_key: int) -> int:
+async def deploy_account(salt: int) -> int:
 	client = get_gateway_client()
-	salt = 1
 	contract_class = ContractClass.loads(data=open("../contracts/argentaccount.json", "r").read())
 	tx = Deploy(
 		contract_address_salt=salt,
@@ -69,14 +73,6 @@ async def account_factory(private_key: int, guardian_key: int) -> int:
 	contract_address = int(contract["address"], 16)
 	return contract_address
 
-# 	client
-# 	starknet = get_starknet
-# 	account = await deploy(starknet, "contracts/ArgentAccount.cairo")
-# 	signer = Signer(private_key)
-# 	guardian = Signer(guardian_key)
-# 	await account.initialize(signer.public_key, guardian.public_key).invoke()
-# 	return account
-
 if __name__ == '__main__':
 	try:
 		args = parse()
@@ -87,6 +83,6 @@ if __name__ == '__main__':
 	print_hex(args.private_key)
 	print("guardian key: ", end = '')
 	print_hex(args.guardian_key)
-	account = asyncio.run(account_factory(args.private_key, args.guardian_key))
+	account = asyncio.run(deploy_account(1))
 	print("account key:  ", end = '')
 	print_hex(account)
