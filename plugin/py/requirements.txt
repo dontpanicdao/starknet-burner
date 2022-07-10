@@ -1,7 +1,8 @@
 argparse
+cairo-lang
 ecdsa
 fastecdsa
-sympy
-cairo-lang
+hypothesis
 pytest
 python-dotenv
+sympy
