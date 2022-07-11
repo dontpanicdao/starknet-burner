@@ -70,13 +70,16 @@ mitmweb --mode reverse:http://alpha4.starknet.io
 `invoke` the the `initialize` function from starknet:
 
 ```shell
-python starkware/starknet/cli/starknet_cli.py invoke \
+export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount
+export STARKNET_NETWORK=alpha-goerli
+export STARKNET_ACCOUNT=open_zeppelin
+cd plugin/py
+starknet invoke \
    --gateway_url http://127.0.0.1:8080 \
-   --address 0x345058e731bb3b809880175260eaaa284d2302afb3551f74c1832731f25ee40 \
+   --address $ACCOUNT_ADDRESS \
    --function initialize \
-   --inputs 0x6c751300215e750f0718b9f38fad96078312198755f71a880183f983e1215b0 \
-   0x441c060be9bbaf135132dc0f31927d25508154d3d21ef474788be54c578bd30 \
-   --abi /Users/gregory/project/blaqkube/starknet-burner/plugin/contracts/argentaccount_abi.json \
+   --inputs $SIGNER_PUBLIC_KEY $GUARDIAN_PUBLIC_KEY \
+   --abi ../contracts/argentaccount_abi.json \
    --max_fee 50000000000000 \
    --wallet starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount \
    --network alpha-goerli
@@ -124,6 +127,9 @@ The result is the transaction hash:
 The you should monitor the transaction with the command like the one below:
 
 ```shell
+export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount
+export STARKNET_NETWORK=alpha-goerli
+export STARKNET_ACCOUNT=open_zeppelin
 export HASH=0x3943f18f26f941aefcdc80b1d8df6772d800fff6e0af1db339dddffae7337b5
 watch starknet get_transaction --hash $HASH --feeder_gateway_url http://127.0.0.1:8080
 ```
@@ -184,10 +190,13 @@ starknet-compile \
 Once done, you can check the balance of the contract.
 
 ```shell
+export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount
+export STARKNET_NETWORK=alpha-goerli
+export STARKNET_ACCOUNT=open_zeppelin
 starknet call --feeder_gateway_url http://localhost:8080 --no_wallet \
-   --address 0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
-   --function balanceOf --abi ../contracts/erc20_abi.json
-   --inputs 0x345058e731bb3b809880175260eaaa284d2302afb3551f74c1832731f25ee40
+   --address $ETH_CONTRACT_ADDRESS \
+   --function balanceOf --abi ../contracts/erc20_abi.json \
+   --inputs $ACCOUNT_ADDRESS
 ```
 
 The input looks like the command below:

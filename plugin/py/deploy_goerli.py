@@ -1,6 +1,5 @@
 import argparse
 import asyncio
-import dataclasses
 from dotenv import load_dotenv
 import os
 import sys
@@ -9,10 +8,9 @@ import sys
 from starkware.starknet.testing.starknet import Starknet
 from starkware.starknet.services.api.gateway.gateway_client import GatewayClient
 from services.external_api.client import RetryConfig
-from starkware.starknet.services.api.gateway.transaction import (Deploy, InvokeFunction)
+from starkware.starknet.services.api.gateway.transaction import (Deploy)
 from starkware.starknet.definitions import constants
 from starkware.starknet.services.api.contract_class import ContractClass
-# from starkware.starknet.public.abi import get_selector_from_name
 
 # We need that function to generate the public key of the account
 sys.path.append("../argent-contracts-starknet/test")
@@ -20,7 +18,6 @@ from utils.Signer import Signer
 
 parser = argparse.ArgumentParser(description='Details of the account deployment')
 parser.add_argument('-priv', dest='private_key', type=str, help='Add the account private key')
-parser.add_argument('-guard', dest='guardian_key', type=str, help='Add the account guardian key')
 
 """
 	parses the arguments and checks from the environment variables
@@ -31,16 +28,10 @@ def parse() -> dict:
 	args = parser.parse_args()
 	if args.private_key:
 		args.private_key = int(args.private_key, 16)
-	elif os.getenv('PRIVATE_KEY'):
-		args.private_key = int(os.environ['PRIVATE_KEY'], 16)
+	elif os.getenv('SIGNER_PRIVATE_KEY'):
+		args.private_key = int(os.environ['SIGNER_PRIVATE_KEY'], 16)
 	else:
 		raise Exception("private key missing")
-	if args.guardian_key:
-		args.guardian_key = int(args.guardian_key, 16)
-	elif os.getenv('GUARDIAN_KEY'):
-		args.guardian_key = int(os.environ['GUARDIAN_KEY'], 16)
-	else:
-		raise Exception("guardian key missing")
 	return args
 
 """
@@ -79,10 +70,8 @@ if __name__ == '__main__':
 	except:
 		parser.print_usage()
 		exit(1)
-	print("private key:  ", end = '')
+	print("signer private key:   ", end = '')
 	print_hex(args.private_key)
-	print("guardian key: ", end = '')
-	print_hex(args.guardian_key)
-	account = asyncio.run(deploy_account(1))
+	account = asyncio.run(deploy_account(44))
 	print("account key:  ", end = '')
 	print_hex(account)
