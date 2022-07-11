@@ -12,7 +12,7 @@ dotenv.config();
 //  3. Create and Run the transaction
 //  4. Monitor the transaction status
 
-const pk = toBN(process.env.ARGENT_ACCOUNT1_PRIVATE_KEY as BigNumberish, 10);
+const pk = toBN(process.env.ARGENT_ACCOUNT_PRIVATE_KEY as BigNumberish, 10);
 console.log(`private key: ${pk.toString(16)}`);
 const keypair = ec.getKeyPair(pk);
 
