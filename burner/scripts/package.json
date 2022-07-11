@@ -2,7 +2,8 @@
 	"name": "scripts",
 	"version": "0.0.1",
 	"scripts": {
-		"genkey": "tsc --esModuleInterop --outDir build genkey.ts && node build/genkey.js"
+		"genkey": "tsc --esModuleInterop --outDir build genkey.ts && node build/genkey.js",
+		"simulation": "tsc --esModuleInterop --outDir build simulation.ts && node build/simulation.js"
 	},
 	"type": "commonjs"
 }
