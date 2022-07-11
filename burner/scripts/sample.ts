@@ -12,12 +12,17 @@ dotenv.config();
 //  3. Create and Run the transaction
 //  4. Monitor the transaction status
 
-if (!process.env.PRIVATE_KEY) {
+if (!process.env.SIGNER_PRIVATE_KEY) {
 	throw new Error('PRIVATE_KEY is not set');
 }
 
-const pk = toBN(process.env.PRIVATE_KEY);
+if (!process.env.STRK_CONTRACT_ADDRESS) {
+	throw new Error('STRK_CONTRACT_ADDRESS is not set');
+}
+
+const pk = toBN(process.env.SIGNER_PRIVATE_KEY);
 const keypair = ec.getKeyPair(pk);
+const ethContract = toBN(process.env.STRK_CONTRACT_ADDRESS);
 
 const BASEURL = 'http://localhost:8080';
 
@@ -53,7 +58,7 @@ const sendToken = async (account: string, amount: number, to: string): Promise<s
 		toBN('0x15d40a3d6ca2ac30f4031e42be28da9b056fef9bb7357ac5e85627ee876e5ad'),
 		[
 			toBN('0x1'),
-			toBN('0x7A1A9784591AAD3CC294ED3D89FA45ADD74E96E8C20E46A21153A6AA979A9CB'.toLowerCase()),
+			ethContract,
 			toBN('0x83AFD3F4CAEDC6EEBF44246FE54E38C95E3179A5EC9EA81740ECA5B482D12E'.toLowerCase()),
 			toBN('0x0'),
 			toBN('0x3'),
@@ -74,9 +79,7 @@ const sendToken = async (account: string, amount: number, to: string): Promise<s
 		entry_point_selector: '0x15d40a3d6ca2ac30f4031e42be28da9b056fef9bb7357ac5e85627ee876e5ad',
 		calldata: [
 			toBN('0x1').toString(10),
-			toBN(
-				'0x7A1A9784591AAD3CC294ED3D89FA45ADD74E96E8C20E46A21153A6AA979A9CB'.toLowerCase()
-			).toString(10),
+			ethContract.toString(10),
 			toBN(
 				'0x83AFD3F4CAEDC6EEBF44246FE54E38C95E3179A5EC9EA81740ECA5B482D12E'.toLowerCase()
 			).toString(10),

@@ -22,14 +22,14 @@ def parse() -> dict:
 	args = parser.parse_args()
 	if args.private_key:
 		args.private_key = int(args.private_key, 16)
-	elif os.getenv('PRIVATE_KEY'):
-		args.private_key = int(os.environ['PRIVATE_KEY'], 16)
+	elif os.getenv('SIGNER_PRIVATE_KEY'):
+		args.private_key = int(os.environ['SIGNER_PRIVATE_KEY'], 16)
 	else:
 		raise Exception("private key missing")
 	if args.guardian_key:
 		args.guardian_key = int(args.guardian_key, 16)
-	elif os.getenv('GUARDIAN_KEY'):
-		args.guardian_key = int(os.environ['GUARDIAN_KEY'], 16)
+	elif os.getenv('GUARDIAN_PRIVATE_KEY'):
+		args.guardian_key = int(os.environ['GUARDIAN_PRIVATE_KEY'], 16)
 	else:
 		raise Exception("guardian key missing")
 	return args
