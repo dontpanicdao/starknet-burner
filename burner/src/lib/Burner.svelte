@@ -1,8 +1,20 @@
 <script>
 	import { loadKeys } from '$lib/ts/keys';
 	import RegisterKeys from '$lib/RegisterKeys.svelte';
+	import Transactions from '$lib/Transactions.svelte';
+	import Send from '$lib/Send.svelte';
 	import { onMount } from 'svelte';
-	import { wallet, logIn, setState } from '$lib/stores/wallet';
+	import { wallet, logIn, balanceOf } from '$lib/stores/wallet';
+	import { burner, setState } from '$lib/stores/burner';
+
+	const allBalance = async () => {
+		[
+			'0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7',
+			'0x7a1a9784591aad3cc294ed3d89fa45add74e96e8c20e46a21153a6aa979a9cb'
+		].forEach(async (address) => {
+			await balanceOf(address, $wallet.account);
+		});
+	};
 
 	const connect = async () => {
 		try {
@@ -14,30 +26,45 @@
 		}
 	};
 
-	const editKeys = () => {
-		setState('editKeys');
-	};
-
 	onMount(connect);
 </script>
 
 <div class="burner">
 	{#if !$wallet.isLoggedIn}
 		<button on:click={connect}>Log</button>
-	{:else if $wallet.state == 'view'}
+	{:else if $burner.state == 'view'}
 		<ul class="key">
 			<li>{$wallet.account.slice(0, 6)}...{$wallet.account.slice(-4)}</li>
 		</ul>
 		<div class="command">
-			<button on:click={editKeys}>change keys...</button>
+			<button on:click={allBalance}>Refresh</button>
+			<button
+				on:click={() => {
+					setState('send');
+				}}>Send...</button
+			>
+			<button
+				on:click={() => {
+					setState('transactions');
+				}}>Transactions</button
+			>
+			<button
+				on:click={() => {
+					setState('keys');
+				}}>Change Keys...</button
+			>
 		</div>
 		<ul class="token-panel">
 			{#each $wallet.erc20 as token}
-				<li class="token">{token.symbol}</li>
+				<li class="token">{token.symbol}: {token.displayQuantity}</li>
 			{/each}
 		</ul>
-	{:else if $wallet.state == 'editKeys'}
+	{:else if $burner.state == 'keys'}
 		<RegisterKeys />
+	{:else if $burner.state == 'transactions'}
+		<Transactions />
+	{:else if $burner.state == 'send'}
+		<Send />
 	{/if}
 </div>
 

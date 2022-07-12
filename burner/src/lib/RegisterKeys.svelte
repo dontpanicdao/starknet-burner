@@ -1,5 +1,6 @@
 <script>
-	import { setState, logIn } from '$lib/stores/wallet';
+	import { logIn } from '$lib/stores/wallet';
+	import { setState } from '$lib/stores/burner';
 	import { loadKeys, saveKeys } from '$lib/ts/keys';
 	import { onMount } from 'svelte';
 	let privateKey = '';
