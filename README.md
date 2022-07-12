@@ -26,8 +26,10 @@ help developers to participate with Hackathons. The project includes:
 - [argent](https://twitter.com/argentHQ) for the fantastic work they do daily
   to bring Argent-X to starknet and work with Starkware and the community to
   build a better future.
-- [@crema](https://twitter.com/crema_fr) for helping starting the project and
-  providing the support I needed
+- [@crema](https://twitter.com/crema_fr) and
+  [@DrSpacemn](https://twitter.com/DrSpacemn) for helping starting the project
+  and providing some support.
 - [0xs34n](https://twitter.com/0xs34n) from 
   [aspect.co](https://twitter.com/aspectdotco) for building and maintaining
   [starknet-js](https://github.com/0xs34n/starknet.js).
+
