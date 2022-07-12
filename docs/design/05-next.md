@@ -4,33 +4,48 @@ hackathons without having to deal with all the abstract account interactions.
 ## Content (Sofar...)
 
 The project contains a set of hardcoded methods that allow to
-mint an NFT from the mobile application.
+transfer an ERC20 named Stark Pills from the mobile application.
 
-## Milestone v0.2.0
+## Milestone v0.1.0
 
-For now the project contains a simple component that embed a 
+For now the project contains a simple component that demonstrates
+is is actually possible to transfer Stark Pills from the mobile
 
 ## What to do next?
 
 There is a number of things we can added to the project to make it better:
 
-- Adding an autosign feature so that the user does not even see he is minting
-  tokens.
-- Building the same component with ReactJS. We could start by simply wrapping
-  the svelte component as
-  [Rich Harris has done in its project](https://github.com/Rich-Harris/react-svelte).
+1. relying on session key/token instead of just signature (target v0.2.0)
+2. make the burner a library that can be embedded in other projects (target
+   v0.3.0)
+
+Then there are a number of additional feature that we should target. The list
+below is provided without any specific order:
+
+- enrich the interface to make the wallet perform more actions, like minting
+  token or claiming a reward.
+- providing an interface that is close to the one from the other wallets so
+  that we can use starknet.js or a subset of it
+- addition a sign/autosign feature so that the user does not even see he is
+  minting tokens.
 - Building demos to help people boostrap their projects.
-- Have the application run on-demand to make it even easier to use with hackatons
-- Setting up the same feature with other accounts, including OpenZeppelin, Bravoos
+- Have `drone` hosted or running on-demand to make it easier to use with
+  hackathons. The project would "just implement the burner side" not the
+  validation side to begin.
+- Setting up the same feature with other accounts, including OpenZeppelin, Braavos
   and Metamask.
 - Integrate an Indexer to check the assets minted, transferred and burned with the
   Starknet Burner.
+- Improve the interaction to refresh the components automatically.
 - Provide various ways to exchanges between the mobile and the application. It
-  could be that (1) we send an SMS with a key; (2) we scan a QR code from the session
-  public key, (3) that we use some pre-signed printed QR code or (4) that we use the
-  NFC technology.
+  could be 
+  - we send an SMS with a key;
+  - we scan a QR code from the session public key;
+  - we use some pre-signed printed QR code;
+  - we use the NFC tokens and a phone;
+  - ... other ideas are welcome... open an issue if you have any.
 - It can be used to automate tests on the Goerli network without risking to
-  loose the funds.
+  loose the funds by requesting a token based on an NFT or something else.
 
 ## Expected technical evolution
 
