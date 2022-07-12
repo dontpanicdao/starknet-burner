@@ -1,4 +1,4 @@
-<script>
+<script type="ts">
 	import { logIn } from '$lib/stores/wallet';
 	import { setState } from '$lib/stores/burner';
 	import { loadKeys, saveKeys } from '$lib/ts/keys';
@@ -19,7 +19,8 @@
 			return;
 		}
 		saveKeys(privateKey, account);
-		logIn(privateKey, account);
+		const history: string[] = [];
+		logIn(privateKey, account, history);
 		setState('view');
 	};
 

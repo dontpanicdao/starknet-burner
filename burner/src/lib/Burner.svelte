@@ -18,9 +18,9 @@
 
 	const connect = async () => {
 		try {
-			let [privateKey, account] = loadKeys();
+			let [privateKey, account, tx] = loadKeys();
 			console.log('privateKey', privateKey);
-			logIn(privateKey, account);
+			logIn(privateKey, account, tx);
 		} catch (e) {
 			console.error(e);
 		}

@@ -1,17 +1,21 @@
-import { writable } from 'svelte/store';
+import { writable, get } from 'svelte/store';
 import { ec } from 'starknet';
 import { toBN } from 'starknet/utils/number';
 import { getSelectorFromName } from 'starknet/utils/hash';
+import { checkTx, sendToken as sendTokenOperation } from '$lib/ts/operations';
+import { ETHCONTRACT, STRKCONTRACT } from '$lib/ts/constants';
 
-export const logIn = async (key: string, account: string) => {
+export const logIn = async (key: string, account: string, tx: Txn[]) => {
 	console.log('log to account', account);
 	privateKey.update(() => key);
 	const keypair = ec.getKeyPair(key);
 	console.log(ec.getStarkKey(keypair));
+
 	wallet.update((data) => ({
 		...data,
 		account,
 		publicKey: ec.getStarkKey(keypair),
+		history: tx,
 		isLoggedIn: true
 	}));
 };
@@ -46,6 +50,36 @@ const qty = (amount: string[], decimals: number): string => {
 		v = '0' + v;
 	}
 	return v.slice(0, v.length - j) + '.' + v.slice(-j);
+};
+
+export const sendToken = async (
+	token: string,
+	to: string,
+	amount: number,
+	track: (loading: boolean, lastError: string) => void
+) => {
+	track(true, '');
+	try {
+		const pk = get(privateKey);
+		const account = get(wallet).account;
+		if (!pk || !account) {
+			throw new Error('not logged in');
+		}
+		const tx = await sendTokenOperation(pk, account, token, to, amount);
+		wallet.update((data) => {
+			const txns = data.history.map((txn) => txn.hash);
+			txns.push(tx);
+			localStorage.setItem('bwtx', JSON.stringify(txns));
+			return {
+				...data,
+				history: [...data.history, { hash: tx, status: 'unknown', block: 0 }]
+			};
+		});
+	} catch (e) {
+		track(false, (e as Error).message);
+		return;
+	}
+	track(false, '');
 };
 
 export const balanceOf = async (token: string, account: string) => {
@@ -86,7 +120,33 @@ export const transfer = async (to: string, quantity: number) => {
 	console.log('transfert to', to, 'qty', quantity);
 };
 
+export const refreshTxn = async (hash: string) => {
+	console.log('refresh txn', hash);
+	const idx = get(wallet).history.findIndex((x) => x.hash === hash);
+	if (idx === -1) {
+		return;
+	}
+	const output = await checkTx(hash);
+	console.log(JSON.stringify(output, null, 2));
+	wallet.update((data) => {
+		const idx = data.history.findIndex((x) => x.hash === hash);
+		const tx = {
+			hash: data.history[idx].hash,
+			status: output.tx_status.toLowerCase(),
+			block: output.block_hash
+		};
+		data.history[idx] = tx;
+		return data;
+	});
+};
+
 const privateKey = writable('0x...');
+
+type Txn = {
+	hash: string;
+	status: string;
+	block: number;
+};
 
 export const wallet = writable({
 	lastError: null,
@@ -94,22 +154,16 @@ export const wallet = writable({
 	isLoggedIn: false,
 	account: '0x...',
 	publicKey: '0x...',
-	history: [],
+	history: [] as Txn[],
 	erc20: [
 		{
-			contract: '0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7',
-			name: 'Ethereum',
-			symbol: 'ETH',
+			...ETHCONTRACT,
 			quantity: toBN(0),
-			decimals: 18,
 			displayQuantity: ''
 		},
 		{
-			contract: '0x7a1a9784591aad3cc294ed3d89fa45add74e96e8c20e46a21153a6aa979a9cb',
-			name: 'Stark pill',
-			symbol: 'STRK',
+			...STRKCONTRACT,
 			quantity: toBN(0),
-			decimals: 0,
 			displayQuantity: ''
 		}
 	]

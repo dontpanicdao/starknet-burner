@@ -1,16 +1,20 @@
 import { ec } from 'starknet';
+import type { Txn } from '$lib/ts/txns';
 
-export const loadKeys = () => {
+export const loadKeys = (): [string, string, Txn[]] => {
 	let sessPrivateKey = localStorage.getItem('bwpk');
 	let sessAccount = localStorage.getItem('bwac');
-	let tx = localStorage.getItem('bwtx');
-	if (!tx || tx === '') {
-		tx = JSON.stringify([]);
+	if (!sessPrivateKey || !sessAccount) {
+		throw new Error('keys missing');
 	}
-	if (sessPrivateKey && sessAccount) {
-		return [sessPrivateKey, sessAccount, JSON.parse(tx)];
+	let bwtx = localStorage.getItem('bwtx');
+	let history: Txn[] = [];
+	if (!bwtx || bwtx === '') {
+		return [sessPrivateKey, sessAccount, history];
 	}
-	throw new Error('keys missing');
+	const txns: string[] = JSON.parse(bwtx);
+	history = txns.map((hash) => ({ hash, status: 'unknown', block: '' }));
+	return [sessPrivateKey, sessAccount, history];
 };
 
 export const saveKeys = (privateKey: string, account: string) => {
@@ -20,6 +24,11 @@ export const saveKeys = (privateKey: string, account: string) => {
 	if (prevAccount !== account) {
 		localStorage.setItem('bwtx', JSON.stringify([]));
 	}
+};
+
+export const saveTxns = (history: Txn[]) => {
+	const txns: string[] = history.map((txn) => txn.hash);
+	localStorage.setItem('bwtx', JSON.stringify(txns));
 };
 
 export const genKey = () => {
