@@ -18,6 +18,8 @@ There is a number of things we can added to the project to make it better:
 1. relying on session key/token instead of just signature (target v0.2.0)
 2. make the burner a library that can be embedded in other projects (target
    v0.3.0)
+3. move back to an upgradable contract (target v0.4.0) as for now all the
+   tests have been done with a regular contract.
 
 Then there are a number of additional feature that we should target. The list
 below is provided without any specific order:
