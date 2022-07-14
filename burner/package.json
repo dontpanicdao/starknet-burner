@@ -4,7 +4,6 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
-		"genkey": "tsc --esModuleInterop scripts/genkey.ts && node scripts/genkey.js",
 		"package": "svelte-kit package",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync",

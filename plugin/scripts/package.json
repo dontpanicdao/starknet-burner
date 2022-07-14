@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "scripts": {
     "entrypoints": "tsc --esModuleInterop --outDir build entrypoints.ts && node build/entrypoints.js",
-    "token": "tsc --esModuleInterop --outDir build token.ts && node build/token.js",
-    "sample": "tsc --esModuleInterop --outDir build sample.ts && node build/sample.js"
+    "genkey": "tsc --esModuleInterop --outDir build genkey.ts && node build/genkey.js",
+    "sample": "tsc --esModuleInterop --outDir build sample.ts && node build/sample.js",
+    "token": "tsc --esModuleInterop --outDir build token.ts && node build/token.js"
   },
   "type": "commonjs",
   "devDependencies": {
