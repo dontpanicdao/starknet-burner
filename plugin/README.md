@@ -445,3 +445,35 @@ starknet call --address $ACCOUNT_ADDRESS \
 
 > As you can see from that test, upgrading the contract does not reset the
 > associated data.
+
+### Argent-X upgrade
+
+The previous section explains how to upgrade the Argent-X contract. In this
+section, you will do it with the Argent-X browser plugin. To do it, navigate
+to voyager and search for the account you plan to use. If you create a new
+account for this (you should), make sure you have sent some ETH to it.
+
+Check the `implementation` method and call the `upgrade` function with the
+new class hash, i.e. 
+`0x7758c35635c1315085cd464a260273121d283fe9376f1984efc3e28bc3bb787`. You can
+check the transaction from the CLI, assuming you have copied the transaction
+hash in the HASH variable.
+
+```shell
+starknet get_transaction --hash $HASH
+```
+
+Once done, the account has been replaced, argent-x detects the change
+and advice to upgrade it to the right version. We can ignore that warning for
+now as it does not prevent the browser extension from working:
+
+![upgrade required](../docs/img/argent-x-upgrade.png)
+
+You can now enable the plugin on the account by calling the `add_plugin`
+method. Go to voyager on the account and click on the `add_plugin` function.
+Enter the class hash, i.e.
+`0x1872a7cab935b053c68f2c05fa83632ef0503e7a3e36c1ec3b9a5fd8c73a8af` and click
+on the `Transact` button.
+
+Once the plugin is added, you can check it is correctly by searching for the
+`is_plugin` function and calling it with the plugin hash. It should return 1.
