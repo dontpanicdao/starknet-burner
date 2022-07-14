@@ -319,3 +319,126 @@ the command below:
 export HASH=<Set the Transaction Hash>
 starknet get_transaction --hash $HASH
 ```
+
+### Contract upgrade
+
+To demonstrate the upgrade of a contract, we will get back to the main branch
+of [argentlabs/argent-contracts-starknet/](https://github.com/argentlabs/argent-contracts-starknet)
+and compile the contracts again. You do not have to do it since the contracts
+are  already compiled in the `plugin/contracts` directory of the project. If
+you plan to do it again, those are the commands to run:
+
+```shell
+starknet-compile contracts/ArgentAccount.cairo \
+  --output ../contracts/argentaccount.json \
+  --abi ../contracts/argentaccount_abi.json \
+  --account_contract
+```
+
+You should be able to declare the contract:
+
+```shell
+cd plugin
+
+starknet declare \
+  --contract contracts/argentaccount.json
+
+export HASH=0x7dc0100401c18f58c96724447de012e9ca1fdab498b213b593dbf07b08710b1
+watch starknet get_transaction --hash $HASH
+```
+
+To perform the upgrade, you should set `NEW_IMPLEMENTATION` with the new class hash.
+
+```shell
+export NEW_IMPLEMENTATION=0x3e327de1c40540b98d05cbcb13552008e36f0ec8d61d46956d2f9752c294328
+```
+
+> make sure `alpha-goerli.__default__` in
+> `~/.starknet_accounts/starknet_open_zeppelin_accounts.json`
+> points to the signer private/public key and the account address.
+
+To upgrade the account, you can simply invoke the contract `upgrade` function:
+
+```shell
+export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount
+export STARKNET_NETWORK=alpha-goerli
+
+starknet invoke \
+   --gateway_url https://alpha4.starknet.io \
+   --address $ACCOUNT_ADDRESS \
+   --function upgrade \
+   --inputs $NEW_IMPLEMENTATION \
+   --abi contracts/argentaccount_plugin_abi.json \
+   --max_fee 50000000000000
+
+export HASH=<Set the Transaction Hash>
+starknet get_transaction --hash $HASH
+```
+
+> If the command above succeeds, you have configured the plugin with the
+> account. You can reset the OpenZeppelin account to
+> `~/.starknet_accounts/starknet_open_zeppelin_accounts.json`
+
+To check the plugin is correctly configured, you can run the command below:
+
+```shell
+starknet call --address $ACCOUNT_ADDRESS \
+   --function get_signer \
+   --abi contracts/argentaccount_abi.json
+```
+
+If you contraol the implementation, you should see that it has changed:
+
+```shell
+starknet call --address $ACCOUNT_ADDRESS \
+   --function get_implementation \
+   --abi contracts/proxy_abi.json
+```
+
+If you check on [voyager](https://goerli.voyager.online) the detail of the
+contract and of your account, you will see that `is_plugin` is not available
+anymore and if you try to access the fonction with the former ABI, it will
+fail:
+
+```shell
+# This fails as expected
+starknet call --address $ACCOUNT_ADDRESS \
+   --function is_plugin --inputs $PLUGIN_ADDRESS \
+   --abi contracts/argentaccount_plugin_abi.json
+```
+
+To switch the contract back to a version that support the plugin, you can
+invoke the contract `upgrade` function again. Check the class hash with the
+command below:
+
+```shell
+starknet declare \
+  --contract contracts/argentaccount_plugin.json
+
+export NEW_IMPLEMENTATION=0x443e7c09ffda6b7cf5fe88fb18eb0a78d285db8ef8277c3918326d476c73efa
+
+starknet invoke \
+   --gateway_url https://alpha4.starknet.io \
+   --address $ACCOUNT_ADDRESS \
+   --function upgrade \
+   --inputs $NEW_IMPLEMENTATION \
+   --abi contracts/argentaccount_abi.json \
+   --max_fee 50000000000000
+
+export HASH=<Set the Transaction Hash>
+starknet get_transaction --hash $HASH
+```
+
+Once the implementation has switched back, you can check the implementation
+is back to the one with the plugin:
+
+```shell
+starknet call --address $ACCOUNT_ADDRESS \
+   --function get_implementation \
+   --abi contracts/proxy_abi.json
+
+# This now succeeds
+starknet call --address $ACCOUNT_ADDRESS \
+   --function is_plugin --inputs $PLUGIN_ADDRESS \
+   --abi contracts/argentaccount_plugin_abi.json
+```
