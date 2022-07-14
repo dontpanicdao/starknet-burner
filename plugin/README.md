@@ -442,3 +442,6 @@ starknet call --address $ACCOUNT_ADDRESS \
    --function is_plugin --inputs $PLUGIN_ADDRESS \
    --abi contracts/argentaccount_plugin_abi.json
 ```
+
+> As you can see from that test, upgrading the contract does not reset the
+> associated data.
