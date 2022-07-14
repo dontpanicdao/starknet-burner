@@ -212,6 +212,34 @@
     {
         "inputs": [
             {
+                "name": "plugin",
+                "type": "felt"
+            }
+        ],
+        "name": "add_plugin",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "plugin",
+                "type": "felt"
+            }
+        ],
+        "name": "is_plugin",
+        "outputs": [
+            {
+                "name": "success",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "name": "implementation",
                 "type": "felt"
             }

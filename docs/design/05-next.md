@@ -63,13 +63,28 @@ should be removed from the execute and be managed by a function called
 `validate`. This feature might not full impact the project, except that the
 validation plugin would also have to be updated in the contract definition.
 
-### payment delegation
+### Payment delegation
 
 Once the previous change is done done, the roadmap would also include the
 ability to delegate paiements to a `PaymentContract`. A third party contract
 would be able to pay the fees for your transactions based on a previous
 commitment. This could be a security improvement for the plugin that could
 only access funds from that `PaymentContract`.
+
+### A more advanced plugin
+
+There are a few ideas that we could implement to make the plugin more
+advanced. In particular:
+
+- there is a question about how to sign structures (see the discussions about
+  EIP-712 on shamans. The idea would be to embed more restriction in the token,
+  like the list of contract the command could interact with.
+- there is an open question about how we could limit the cost managed by the
+  plugin. Can we embed something on the PaymentContract to track the actual
+  signer? Could we have several Nonce (i.e. 1 per signer), etc
+- there is an interesting branch in called
+  [explore/pluginsv2](https://github.com/CremaFR/argent-contracts-starknet/tree/explore/pluginsv2)
+  that should be reviewed to get some additional ideas of what could be done.
 
 ### More secure signing on mobiles
 

@@ -24,7 +24,7 @@ const pk = toBN(process.env.SIGNER_PRIVATE_KEY);
 const keypair = ec.getKeyPair(pk);
 const ethContract = toBN(process.env.STRK_CONTRACT_ADDRESS);
 
-const BASEURL = 'http://localhost:8080';
+const BASEURL = 'https://alpha4.starknet.io';
 
 const Nonce = async (address: string): Promise<string> => {
 	console.log(`Getting Nonce for ${address.toLocaleLowerCase()}`);
