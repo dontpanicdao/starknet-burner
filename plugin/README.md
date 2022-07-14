@@ -260,6 +260,36 @@ session key.
 
 ### Invoke
 
-Last but not least, the invoke should be improved so that we use the USE_PLUGIN
-call as part its usage. This consists in adding the call as a 1st argument to
-the multicall invoke.
+Last but not least, the invoke uses the `USE_PLUGIN` to notify the account that
+it should check against the plugin. We will assume the following variables are
+set:
+
+```shell
+ACCOUNT_ADDRESS=0x0332a9bcd863896074508d6449177f227990f3377e53d2aeb04c83c05c8a31ed
+
+PLUGIN_ADDRESS=0x1872a7cab935b053c68f2c05fa83632ef0503e7a3e36c1ec3b9a5fd8c73a8af
+STRK_CONTRACT_ADDRESS=0x7a1a9784591aad3cc294ed3d89fa45add74e96e8c20e46a21153a6aa979a9cb
+ARGENT_ACCOUNT_ADDRESS=0x207aCC15dc241e7d167E67e30E769719A727d3E0fa47f9E187707289885Dfde
+
+SESSION_PRIVATE_KEY=0x4063...
+SESSION_PUBLIC_KEY=0x0779...
+SESSION_EXPIRATION_TIME=1657871865
+SESSION_TOKEN_SIGNATURE0=0x6194...
+SESSION_TOKEN_SIGNATURE1=0x5684...
+```
+
+Run the script `sample.ts` located in `plugin/scripts`. The script assume the account
+has STRK and ETH tokens and transfer one STRK to another account associated with
+`ARGENT_ACCOUNT_ADDRESS`. To run the script, run:
+
+```shell
+npm run sample
+```
+
+It should display a transaction hash. You can check the status of the transaction with
+the command below:
+
+```shell
+export HASH=<Set the Transaction Hash>
+starknet get_transaction --hash $HASH
+```
