@@ -9,10 +9,11 @@ environment and the associated dependencies; run the commands below:
 
 ```shell
 cd plugin/py
-python3 -m py .
+python3 -m venv .
 . ./bin/activate
 pip install -r requirements.txt
 starknet --version
+cd ..
 ```
 
 To ease the following steps, we will assume you have setup environment
@@ -94,7 +95,7 @@ deploy the account from the compiled file. Change the SALT to avoid collisions.
 with existing accounts:
 
 ```shell
-cd plugin/py
+cd plugin
 export SALT=0x77
 
 starknet deploy --salt $SALT \
@@ -173,32 +174,38 @@ starknet get_transaction --hash $HASH
 We should setup a collaboration between the session key wallet and the original
 wallet, or, in that specific case, between `burner` and `drone`.
 
-- with the current setup, we should make a session token from the burner public
-  key and an expirition date. Later we assume more data will be required but
-  this is a first step.
-- the session token must be generated, i.e. signed by the original signer
-- the session token with the additional data, like the expiration date, must
-  be shared back with the burner.
+- with the current setup, we should create a session token; that token is
+  make of:
+  - the session public key
+  - an expiration date
 
-### Invoke
+We assume the session public key is set in `SESSION_PUBLIC_KEY`; to generate an
+expiration time we might want to run a script like the one below:
 
-Last but not least, the invoke should be improved so that we use the USE_PLUGIN
-call as part its usage. This consists in adding the call as a 1st argument to
-the multicall invoke.
+```shell
+echo $(( $(date +%s) + 24*3600 ))
+```
 
-## More
+We will also set that value in the `SESSION_EXPIRATION_TIME` environment
+variable.
 
+- the session token is actually the hash of the 2 previous items
+- the session token must be signed by the account signer to get a pair of
+  signatures
 
-You can check on [voyager](https://goerli.voyager.online) the detail of the
-contract `0x345058e731bb3b809880175260eaaa284d2302afb3551f74c1832731f25ee40`.
-You should call `get_signer` and `get_guardian` to control the signer and
-guardian of the contract.
+To get the hash and signature, we can run the following command:
 
-## Sending ETH to the new contract
+```shell
+cd scripts
+npm run token
+```
 
-To send ETH to the new contract, you can use `transfer` function on `0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7`. The easiest way it to do it on voyager but it can also be done from the starknet CLI assuming you have eth on it.
+### Before the invoke, deploy an ERC20 token
 
-Once you have filled the contract, you can check the balance of the contract. First generate an ABI for an ERC20 contract.
+Before you go on, we will create an ERC20 so that we can play with it from the
+session account. To do it:
+
+- compile the ERC20 contract from the openzeppelin repository
 
 ```shell
 cd plugin/cairo-contracts/src
@@ -208,46 +215,51 @@ starknet-compile \
    openzeppelin/token/erc20/ERC20.cairo
 ```
 
-Once done, you can check the balance of the contract.
+Then, assuming, $ACCOUNT_ADDRESS_BASE10 is the address of the account in base,
+deploy the contract and mint 1000 token to the account:
+
+```shell
+starknet deploy \
+   --salt 0x918188 \
+   --contract contracts/erc20.json \
+   --inputs 100890435118921322741918835 \
+     357896964874 0 1000 0 $ACCOUNT_ADDRESS_BASE10
+```
+
+Set `STRK_CONTRACT_ADDRESS` to the contract HASH. You should be able to verify the
+account own 1000 tokens of it:
+
+```shell
+export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount
+export STARKNET_NETWORK=alpha-goerli
+
+starknet call --feeder_gateway_url http://alpha4.starknet.io --no_wallet \
+   --address $STRK_CONTRACT_ADDRESS \
+   --function balanceOf --abi ../contracts/erc20_abi.json \
+   --inputs $ACCOUNT_ADDRESS
+```
+
+Assuming, you set `ETH_CONTRACT_ADDRESS` to the address
+`0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7`, i.e. the address
+for ETH, you should also have some ETH to use the account:
 
 ```shell
 export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount
 export STARKNET_NETWORK=alpha-goerli
 export STARKNET_ACCOUNT=open_zeppelin
-starknet call --feeder_gateway_url http://localhost:8080 --no_wallet \
+starknet call --feeder_gateway_url http://alpha4.starknet.io --no_wallet \
    --address $ETH_CONTRACT_ADDRESS \
    --function balanceOf --abi ../contracts/erc20_abi.json \
    --inputs $ACCOUNT_ADDRESS
 ```
 
-The input looks like the command below:
+You can also check on [voyager](https://goerli.voyager.online) the detail of the
+contract and of your account. You should call `get_signer` and `get_guardian` to
+control the signer and guardian of the contract and make sure they differ from the
+session key.
 
-```json
-// POST http://alpha4.starknet.io/feeder_gateway/call_contract?blockNumber=null HTTP/1.1
-{
-	"calldata": ["1478889342385977866847350421410405821707989742040860331696169838368143044160"],
-	"entry_point_selector": "0x2e4263afad30923c891518314c3c95dbe830a16874e8abc5777a9a20b54c76e",
-	"max_fee": "0x0",
-	"signature": [],
-	"version": "0x100000000000000000000000000000000",
-	"contract_address": "0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
-}
-```
+### Invoke
 
-And the output:
-
-```json
-{
-    "result": [
-        "0x11c37937e08000",
-        "0x0"
-    ]
-}
-```
-
-To see the balance of the contract, you can use the command below:
-
-```shell
-export HEXNUM=$(echo 0x11c37937e08000 | cut -c2-)
-echo $((16#$HEXNUM))
-```
+Last but not least, the invoke should be improved so that we use the USE_PLUGIN
+call as part its usage. This consists in adding the call as a 1st argument to
+the multicall invoke.
