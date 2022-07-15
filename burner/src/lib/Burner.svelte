@@ -1,6 +1,7 @@
-<script>
+<script type="ts">
 	import { loadKeys } from '$lib/ts/keys';
 	import RegisterKeys from '$lib/RegisterKeys.svelte';
+	import RenewKeys from '$lib/RenewKeys.svelte';
 	import Transactions from '$lib/Transactions.svelte';
 	import Send from '$lib/Send.svelte';
 	import { onMount } from 'svelte';
@@ -12,15 +13,15 @@
 			'0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7',
 			'0x7a1a9784591aad3cc294ed3d89fa45add74e96e8c20e46a21153a6aa979a9cb'
 		].forEach(async (address) => {
-			await balanceOf(address, $wallet.account);
+			await balanceOf(address, $wallet.token.account);
 		});
 	};
 
 	const connect = async () => {
 		try {
-			let [privateKey, account, tx] = loadKeys();
-			console.log('privateKey', privateKey);
-			logIn(privateKey, account, tx);
+			let [publicKey, account, tx] = loadKeys();
+			console.log('publicKey', publicKey);
+			logIn(publicKey, account, tx);
 		} catch (e) {
 			console.error(e);
 		}
@@ -34,7 +35,7 @@
 		<button on:click={connect}>Log</button>
 	{:else if $burner.state == 'view'}
 		<ul class="key">
-			<li>{$wallet.account.slice(0, 6)}...{$wallet.account.slice(-4)}</li>
+			<li>{$wallet.token?.account.slice(0, 6)}...{$wallet.token?.account.slice(-4)}</li>
 		</ul>
 		<div class="command">
 			<button on:click={allBalance}>Refresh</button>
@@ -51,7 +52,7 @@
 			<button
 				on:click={() => {
 					setState('keys');
-				}}>Change Keys...</button
+				}}>Session Key...</button
 			>
 		</div>
 		<ul class="token-panel">
@@ -61,6 +62,8 @@
 		</ul>
 	{:else if $burner.state == 'keys'}
 		<RegisterKeys />
+	{:else if $burner.state == 'renewkey'}
+		<RenewKeys />
 	{:else if $burner.state == 'transactions'}
 		<Transactions />
 	{:else if $burner.state == 'send'}

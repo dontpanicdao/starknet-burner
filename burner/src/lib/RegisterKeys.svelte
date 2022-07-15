@@ -2,8 +2,13 @@
 	import { logIn } from '$lib/stores/wallet';
 	import { setState } from '$lib/stores/burner';
 	import { loadKeys, saveKeys } from '$lib/ts/keys';
+	import type { Txn } from '$lib/ts/txns';
 	import { onMount } from 'svelte';
 	let privateKey = '';
+	let publicKey = '';
+	let expirationTime = 0;
+	let token1 = '';
+	let token2 = '';
 	let account = '';
 	let errMessage = '';
 
@@ -19,14 +24,14 @@
 			return;
 		}
 		saveKeys(privateKey, account);
-		const history: string[] = [];
+		const history: Txn[] = [];
 		logIn(privateKey, account, history);
 		setState('view');
 	};
 
 	onMount(() => {
 		try {
-			[privateKey, account] = loadKeys();
+			[publicKey, account] = loadKeys();
 		} catch (e) {
 			console.error(e);
 		}
@@ -34,10 +39,32 @@
 </script>
 
 <div class="register-keys">
-	<label for="privatekey">private key</label>
-	<input id="privatekey" type="text" class="key" placeholder="0x..." bind:value={privateKey} />
+	<label for="sessionkey">session key</label>
+	<div>
+		<input
+			id="sessionkey"
+			type="text"
+			class="key"
+			placeholder="0x..."
+			bind:value={publicKey}
+			disabled
+		/>
+		<button
+			class="renew-session"
+			on:click={() => {
+				console.log('new...');
+				setState('renewkey');
+			}}>Change</button
+		>
+	</div>
 	<label for="account">account</label>
 	<input id="account" type="text" class="key" placeholder="0x..." bind:value={account} />
+	<label for="expiration">expiration time</label>
+	<input id="expiration" type="text" class="key" placeholder="" bind:value={expirationTime} />
+	<label for="token1">session token (#1)</label>
+	<input id="token1" type="text" class="key" placeholder="0x..." bind:value={token1} />
+	<label for="token2">session token (#2)</label>
+	<input id="token1" type="text" class="key" placeholder="0x..." bind:value={token2} />
 	{#if errMessage}
 		<div class="error">{errMessage}</div>
 	{/if}
@@ -73,5 +100,10 @@
 		display: flex;
 		justify-content: space-between;
 		margin-top: 20px;
+	}
+
+	.renew-session {
+		margin-left: -75px;
+		width: 70px;
 	}
 </style>

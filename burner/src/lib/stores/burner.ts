@@ -1,6 +1,12 @@
 import { writable } from 'svelte/store';
 export const setState = (state: string) => {
-	if (state !== 'view' && state !== 'keys' && state !== 'transactions' && state !== 'send') {
+	if (
+		state !== 'view' &&
+		state !== 'keys' &&
+		state !== 'transactions' &&
+		state !== 'send' &&
+		state !== 'renewkey'
+	) {
 		throw new Error('invalid state');
 	}
 	burner.update((b) => ({ ...b, state }));

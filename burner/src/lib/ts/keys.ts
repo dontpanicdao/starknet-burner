@@ -1,4 +1,5 @@
 import { ec } from 'starknet';
+import { toBN } from 'starknet/utils/number';
 import type { Txn } from '$lib/ts/txns';
 
 export const loadKeys = (): [string, string, Txn[]] => {
@@ -7,14 +8,16 @@ export const loadKeys = (): [string, string, Txn[]] => {
 	if (!sessPrivateKey || !sessAccount) {
 		throw new Error('keys missing');
 	}
+	let keypair = ec.getKeyPair(toBN(sessPrivateKey));
+	let sessPublicKey = ec.getStarkKey(keypair);
 	let bwtx = localStorage.getItem('bwtx');
 	let history: Txn[] = [];
 	if (!bwtx || bwtx === '') {
 		return [sessPrivateKey, sessAccount, history];
 	}
 	const txns: string[] = JSON.parse(bwtx);
-	history = txns.map((hash) => ({ hash, status: 'unknown', block: '' }));
-	return [sessPrivateKey, sessAccount, history];
+	history = txns.map((hash) => ({ hash, status: 'unknown', block: 0 }));
+	return [sessPublicKey, sessAccount, history];
 };
 
 export const saveKeys = (privateKey: string, account: string) => {
