@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getStarknet } from 'get-starknet';
-	import type { TypedData } from 'starknet/utils/typedData';
+	import type { TypedData } from 'starknet/utils/typedData/types';
 	import { Buffer } from 'buffer';
 	import { toBN } from 'starknet/utils/number';
 	import QR from '$lib/QR.svelte';
