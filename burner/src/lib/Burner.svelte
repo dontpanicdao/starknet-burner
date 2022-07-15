@@ -5,7 +5,7 @@
 	import Transactions from '$lib/Transactions.svelte';
 	import Send from '$lib/Send.svelte';
 	import { onMount } from 'svelte';
-	import { wallet, logIn, balanceOf } from '$lib/stores/wallet';
+	import { wallet, balanceOf } from '$lib/stores/wallet';
 	import { burner, setState } from '$lib/stores/burner';
 
 	const allBalance = async () => {
@@ -18,13 +18,7 @@
 	};
 
 	const connect = async () => {
-		try {
-			let [publicKey, account, tx] = loadKeys();
-			console.log('publicKey', publicKey);
-			logIn(publicKey, account, tx);
-		} catch (e) {
-			console.error(e);
-		}
+		loadKeys();
 	};
 
 	onMount(connect);
@@ -33,9 +27,13 @@
 <div class="burner">
 	{#if !$wallet.isLoggedIn}
 		<button on:click={connect}>Log</button>
+	{:else if $burner.state == 'renewkey'}
+		<RenewKeys />
+	{:else if $burner.state == 'keys' || !$wallet.token?.account}
+		<RegisterKeys />
 	{:else if $burner.state == 'view'}
 		<ul class="key">
-			<li>{$wallet.token?.account.slice(0, 6)}...{$wallet.token?.account.slice(-4)}</li>
+			<li>{$wallet.token?.account?.slice(0, 6)}...{$wallet.token?.account?.slice(-4)}</li>
 		</ul>
 		<div class="command">
 			<button on:click={allBalance}>Refresh</button>
@@ -60,10 +58,6 @@
 				<li class="token">{token.symbol}: {token.displayQuantity}</li>
 			{/each}
 		</ul>
-	{:else if $burner.state == 'keys'}
-		<RegisterKeys />
-	{:else if $burner.state == 'renewkey'}
-		<RenewKeys />
 	{:else if $burner.state == 'transactions'}
 		<Transactions />
 	{:else if $burner.state == 'send'}

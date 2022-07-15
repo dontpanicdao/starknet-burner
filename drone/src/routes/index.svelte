@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getStarknet } from 'get-starknet';
 	import type { TypedData } from 'starknet/utils/typedData/types';
+	import { getMessageHash } from 'starknet/utils/typedData';
 	import { Buffer } from 'buffer';
 	import { toBN } from 'starknet/utils/number';
 	import QR from '$lib/QR.svelte';
@@ -38,27 +39,32 @@
 		}
 		let msg: TypedData = {
 			domain: {
-				name: 'Example DApp',
-				chainId: 'SN_GOERLI',
-				version: '0.0.1'
+				name: 'burner.starknet',
+				version: '0.4',
+				chainId: 'SN_GOERLI'
 			},
 			types: {
 				StarkNetDomain: [
 					{ name: 'name', type: 'felt' },
-					{ name: 'chainId', type: 'felt' },
-					{ name: 'version', type: 'felt' }
+					{ name: 'version', type: 'felt' },
+					{ name: 'chainId', type: 'felt' }
 				],
-				Message: [
-					{ name: 'message', type: 'felt' },
+				Session: [
+					{ name: 'session_key', type: 'felt' },
 					{ name: 'expires', type: 'felt' }
 				]
 			},
-			primaryType: 'Message',
+			primaryType: 'Session',
 			message: {
-				message: sessionKey,
+				session_key: sessionKey,
 				expires: expires
 			}
 		};
+		let messageHash = await getMessageHash(
+			msg,
+			'0x66a69b58c8fff69a48c4d1284431a56b0e95bdd97cd846e4093f2e1f0a12e4'
+		);
+		console.log(messageHash);
 		let signature = await starknet.account.signMessage(msg);
 		token1 = `0x${toBN(signature[0], 10).toString(16)}`;
 		token2 = `0x${toBN(signature[1], 10).toString(16)}`;

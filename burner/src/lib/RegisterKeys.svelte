@@ -1,12 +1,12 @@
 <script type="ts">
-	import { logIn } from '$lib/stores/wallet';
+	import { wallet, saveToken } from '$lib/stores/wallet';
 	import { setState } from '$lib/stores/burner';
-	import { loadKeys, saveKeys } from '$lib/ts/keys';
+	import { loadKeys } from '$lib/ts/keys';
 	import type { Txn } from '$lib/ts/txns';
 	import { onMount } from 'svelte';
-	let privateKey = '';
+	import { get } from 'svelte/store';
 	let publicKey = '';
-	let expirationTime = 0;
+	let expires = 0;
 	let token1 = '';
 	let token2 = '';
 	let account = '';
@@ -17,24 +17,26 @@
 	};
 
 	const save = () => {
-		console.log('you have clicked on save');
-		if (!privateKey || !account) {
-			console.log('you have clicked on save');
-			errMessage = 'Please enter a private key and an account';
+		if (!account) {
+			errMessage = 'Enter an account';
 			return;
 		}
-		saveKeys(privateKey, account);
 		const history: Txn[] = [];
-		logIn(privateKey, account, history);
+		saveToken(account, expires, token1, token2, history);
 		setState('view');
 	};
 
 	onMount(() => {
-		try {
-			[publicKey, account] = loadKeys();
-		} catch (e) {
-			console.error(e);
-		}
+		loadKeys();
+		wallet.subscribe((data) => {
+			publicKey = data.token.sessionkey;
+			expires = data.token.expires;
+			if (data.token.token.length >= 2) {
+				token1 = data.token.token[0];
+				token2 = data.token.token[1];
+			}
+			account = data.token.account;
+		});
 	});
 </script>
 
@@ -59,8 +61,8 @@
 	</div>
 	<label for="account">account</label>
 	<input id="account" type="text" class="key" placeholder="0x..." bind:value={account} />
-	<label for="expiration">expiration time</label>
-	<input id="expiration" type="text" class="key" placeholder="" bind:value={expirationTime} />
+	<label for="expires">expires</label>
+	<input id="expires" type="text" class="key" placeholder="" bind:value={expires} />
 	<label for="token1">session token (#1)</label>
 	<input id="token1" type="text" class="key" placeholder="0x..." bind:value={token1} />
 	<label for="token2">session token (#2)</label>

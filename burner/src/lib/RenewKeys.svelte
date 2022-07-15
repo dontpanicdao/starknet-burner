@@ -15,8 +15,8 @@
 </script>
 
 <div class="register-keys">
-	<QR value={$wallet.publicKey} />
-	<div>{$wallet.publicKey.slice(0, 6)}...{$wallet.publicKey.slice(-4)}</div>
+	<QR value={$wallet.token.sessionkey} />
+	<div>{$wallet.token.sessionkey.slice(0, 6)}...{$wallet.token.sessionkey.slice(-4)}</div>
 	<div class="command">
 		<button on:click={renew}>Renew</button>
 		<button on:click={back}>Back...</button>

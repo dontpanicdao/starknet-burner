@@ -7,21 +7,73 @@ import { ETHCONTRACT, STRKCONTRACT } from '$lib/ts/constants';
 import type { Txn } from '$lib/ts/txns';
 import { genKey } from '$lib/ts/keys';
 
-export const logIn = async (key: string, account: string, tx: Txn[]) => {
-	console.log('log to account', account);
-	privateKey.update(() => key);
-	const keypair = ec.getKeyPair(key);
-	console.log(ec.getStarkKey(keypair));
-
+export const saveToken = async (
+	account: string,
+	expires: number,
+	token1: string,
+	token2: string,
+	tx: Txn[]
+) => {
+	let pk = localStorage.getItem('bwpk');
+	if (!pk || pk === '') {
+		throw new Error('no private key');
+	}
+	const keypair = ec.getKeyPair(pk);
+	let publicKey = ec.getStarkKey(keypair);
+	localStorage.setItem(
+		'bwtk',
+		JSON.stringify({
+			account,
+			sessionkey: publicKey as string,
+			expires,
+			token: [token1, token2]
+		})
+	);
 	wallet.update((data) => {
-		let token = data.token;
-		token.account = account;
+		let token = {
+			account,
+			sessionkey: publicKey as string,
+			expires,
+			token: [token1, token2]
+		};
 		return {
 			...data,
 			token,
-			publicKey: ec.getStarkKey(keypair),
 			history: tx,
 			isLoggedIn: true
+		};
+	});
+};
+
+export const renewSessionKey = () => {
+	let [pk, publicKey] = genKey();
+	if (!pk || !publicKey) {
+		throw new Error('failed to generate key');
+	}
+	localStorage.setItem('bwpk', pk);
+	let token = localStorage.getItem('bwtk');
+	if (!token || token === '') {
+		return;
+	}
+	let tokenData = JSON.parse(token);
+	localStorage.setItem(
+		'bwtk',
+		JSON.stringify({
+			sessionkey: publicKey as string,
+			account: tokenData.account,
+			expires: 0,
+			token: [] as string[]
+		})
+	);
+	wallet.update((data) => {
+		return {
+			...data,
+			token: {
+				sessionkey: publicKey as string,
+				account: tokenData.account,
+				expires: 0,
+				token: [] as string[]
+			}
 		};
 	});
 };
@@ -66,7 +118,7 @@ export const sendToken = async (
 ) => {
 	track(true, '');
 	try {
-		const pk = get(privateKey);
+		const pk = localStorage.getItem('bwpk');
 		const account = get(wallet).token?.account;
 		if (!pk || !account) {
 			throw new Error('not logged in');
@@ -86,35 +138,6 @@ export const sendToken = async (
 		return;
 	}
 	track(false, '');
-};
-
-export const renewSessionKey = () => {
-	let [pk, publicKey] = genKey();
-	if (!pk || !publicKey) {
-		throw new Error('failed to generate key');
-	}
-	privateKey.update(() => pk);
-	localStorage.setItem('bwpk', pk);
-	localStorage.setItem(
-		'bwtk',
-		JSON.stringify({
-			sessionkey: publicKey as string,
-			expires: 0,
-			token: [] as string[]
-		})
-	);
-	wallet.update((data) => {
-		return {
-			...data,
-			token: {
-				account: data.token.account,
-				accountSigner: '',
-				signature: [] as string[],
-				expires: 0
-			},
-			publicKey
-		};
-	});
 };
 
 export const balanceOf = async (token: string, account: string) => {
@@ -201,19 +224,16 @@ export const refreshTxn = async (hash: string) => {
 	});
 };
 
-const privateKey = writable('0x...');
-
 export const wallet = writable({
 	lastError: null,
 	loading: false,
 	isLoggedIn: false,
 	token: {
-		account: '0x...',
+		sessionkey: '',
+		account: '',
 		expires: 0,
-		accountSigner: '',
-		signature: [] as string[]
+		token: [] as string[]
 	},
-	publicKey: '0x...',
 	history: [] as Txn[],
 	erc20: [
 		{

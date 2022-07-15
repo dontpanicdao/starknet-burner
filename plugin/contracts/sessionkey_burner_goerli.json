@@ -322,11 +322,11 @@
             "0x1104800180018000",
             "0x800000000000010ffffffffffffffffffffffffffffffffffffffffffffffcc",
             "0x480680017fff8000",
-            "0x1bfc207425a47a5dfa1a50a4f5241203f50624ca5fdf5e18755765416b8e288",
+            "0x6275726e65722e737461726b6e6574",
             "0x1104800180018000",
             "0x800000000000010ffffffffffffffffffffffffffffffffffffffffffffffc8",
             "0x480680017fff8000",
-            "0x1",
+            "0x302e34",
             "0x1104800180018000",
             "0x800000000000010ffffffffffffffffffffffffffffffffffffffffffffffc4",
             "0x480680017fff8000",
@@ -10219,7 +10219,7 @@
             },
             "__main__.STARKNET_DOMAIN_NAME": {
                 "type": "const",
-                "value": 791119772454592071223831648347914363774925549870197887809484094951577412232
+                "value": 511227200236558773947767324956058996
             },
             "__main__.STARKNET_DOMAIN_TYPE_HASH": {
                 "type": "const",
@@ -10227,7 +10227,7 @@
             },
             "__main__.STARKNET_DOMAIN_VERSION": {
                 "type": "const",
-                "value": 1
+                "value": 3157556
             },
             "__main__.STARKNET_MESSAGE_SHORT": {
                 "type": "const",
