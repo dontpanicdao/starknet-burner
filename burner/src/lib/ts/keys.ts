@@ -18,6 +18,19 @@ export const loadKeys = () => {
 	let sessPublicKey = ec.getStarkKey(keypair);
 	let bwtk = localStorage.getItem('bwtk');
 	if (!bwtk || bwtk === '') {
+		wallet.update((data) => {
+			let token = {
+				sessionkey: sessPublicKey as string,
+				expires: 0,
+				token: ['', ''],
+				account: ''
+			};
+			return {
+				...data,
+				token,
+				isLoggedIn: true
+			};
+		});
 		return;
 	}
 	let tokenData = JSON.parse(bwtk);

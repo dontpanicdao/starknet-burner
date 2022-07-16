@@ -31,6 +31,9 @@ help developers to participate with Hackathons. The project includes:
 - `starkpiller` is a demo application that uses the `burner` to mint and burn
   Stark pills.
 
+To use the burner wallet, check the
+[Getting Started](./docs/getting-started.md) guide.
+
 ## Special thanks to
 
 - [Austin Griffith](https://twitter.com/austingriffith) for the original
@@ -46,4 +49,3 @@ help developers to participate with Hackathons. The project includes:
 - [0xs34n](https://twitter.com/0xs34n) from 
   [aspect.co](https://twitter.com/aspectdotco) for building and maintaining
   [starknet-js](https://github.com/0xs34n/starknet.js).
-

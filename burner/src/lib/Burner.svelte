@@ -26,7 +26,7 @@
 
 <div class="burner">
 	{#if !$wallet.isLoggedIn}
-		<button on:click={connect}>Log</button>
+		loading...
 	{:else if $burner.state == 'renewkey'}
 		<RenewKeys />
 	{:else if $burner.state == 'keys' || !$wallet.token?.account}
