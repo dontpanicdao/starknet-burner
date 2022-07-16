@@ -36,7 +36,9 @@ navigate to [voyager](https://goerli.voyager.network) and check your contract.
 Go to the `Write Contract` method and run the `upgrade` function with new
 contract address like below:
 
-![Run Upgrade Account](./img/upgrade-account.png)
+<p align="center">
+<img src="./img/upgrade-account.png" alt="Run Upgrade Account" width="480px">
+</p>
 
 To check the implementation has changed, you should wait for the contract to be upgraded
 and check the contract in voyager. You should see in the `Write Contract` methods, there
@@ -44,7 +46,9 @@ is a `add_plugin` function. Another way is to open the Argent-x extension, you s
 now see that the extension detects it is not its original contract and requests you to
 upgrade it back (**do not** use the `Upgrade` function).
 
-![Run Upgrade Account](./img/upgrade-account.png)
+<p align="center">
+<img src="./img/argent-x-upgrade.png" alt="Upgrade Warning" width="480px">
+</p>
 
 You might also use the `proxy_abi.json` file in `plugin/contracts` and check
 the implementation has changed from the starknet CLI.
@@ -74,7 +78,9 @@ extension, navigate to [voyager](https://goerli.voyager.network) and check your
 contract. Go to the `Write Contract` method and run the `add_plugin` function
 with the plugin hash like below:
 
-![Add plugin](./img/add_plugin-account.png)
+<p align="center">
+<img src="./img/add_plugin-account.png" alt="Add plugin" width="480px">
+</p>
 
 To check the implementation has changed, you should wait for the plugin to be added
 and check the contract in voyager. You should see in the `Read Contract` methods, there
@@ -105,7 +111,9 @@ npm run dev
 When you connect to the burner wallet, for the first time, you get a string
 asking for the account and session tokens like below:
 
-![firt burner connection](./img/burner-1stconnection.png)
+<p align="center">
+<img src="./img/burner-1stconnection.png" alt="first burner connection" width="480px">
+</p>
 
 You can copy the session key; we will use it with the drone application to
 grant access to the burner wallet.
@@ -122,13 +130,17 @@ npm run dev
 
 When you connect to drone, it requests for a session key like below:
 
-![first drone connection](./img/drone-1stconnection.png)
+<p align="center">
+<img src="./img/drone-1stconnection.png" alt="first drone connection" width="480px">
+</p>
 
 You can copy the session key and click on the sign button. It will connect to
 your argent-x extension and request to sign the session key. Once you have
 signed the session key, it will provide the session token to the burner wallet.
 
-![drone signature](./img/drone-signing.png)
+<p align="center">
+<img src="./img/drone-signing.png" alt="drone signature" width="480px">
+</p>
 
 ### Register the session token with the burner wallet
 
@@ -137,7 +149,9 @@ reload the burner wallet this time with the session token and the associated
 account. Check it is correctly loaded by clicking on the `Keys...` button, the
 keys screen should look like below:
 
-![second burner connection](./img/burner-2ndconnection.png)
+<p align="center">
+<img src="./img/burner-2ndconnection.png" alt="second burner connection" width="480px">
+</p>
 
 ### You are ready to use the burner wallet
 
