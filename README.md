@@ -32,7 +32,7 @@ help developers to participate with Hackathons. The project includes:
   Stark pills.
 
 To use the burner wallet, check the
-[Getting Started](./docs/getting-started.md) guide.
+[Getting Started](./docs/README.md) guide.
 
 ## Special thanks to
 
