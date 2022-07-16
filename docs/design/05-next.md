@@ -6,20 +6,23 @@ hackathons without having to deal with all the abstract account interactions.
 The project contains a set of hardcoded methods that allow to
 transfer an ERC20 named Stark Pills from the mobile application.
 
-## Milestone v0.1.0
+## Milestone v0.2.0
 
-For now the project contains a simple component that demonstrates
-is is actually possible to transfer Stark Pills from the mobile
+For now the project contains a working burner wallet and as well as its
+working drone. To make it work, we had to provide a new compliant account
+contract to the argent-x repository as well as a custom plugin that
+implements an EIP-712 like signature for the wallet. To make the example
+fully work, you might need some Starkpills. Do not hesitate to contact us
+if you need more details.
 
 ## What to do next?
 
 There is a number of things we can added to the project to make it better:
 
-1. relying on session key/token instead of just signature (target v0.2.0)
-2. make the burner a library that can be embedded in other projects (target
+1. make the burner a library that can be embedded in other projects (target
    v0.3.0)
-3. move back to an upgradable contract (target v0.4.0) as for now all the
-   tests have been done with a regular contract.
+2. make the contract upgradable from drone (target v0.4.0) as for now, the
+   procedure requires you interact with your argent-x wallet on voyager.
 
 Then there are a number of additional feature that we should target. The list
 below is provided without any specific order:
@@ -89,15 +92,17 @@ To check the changes associated with OpenZeppelin, we should review:
 There are a few ideas that we could implement to make the plugin more
 advanced. In particular:
 
-- there is a question about how to sign structures (see the discussions about
-  EIP-712 on shamans. The idea would be to embed more restriction in the token,
-  like the list of contract the command could interact with.
+- limiting the plugin to interact with only one contract is a must. This is
+  an hard requirement to make the solution usable in games or other
+  applications.
 - there is an open question about how we could limit the cost managed by the
   plugin. Can we embed something on the PaymentContract to track the actual
   signer? Could we have several Nonce (i.e. 1 per signer), etc
 - there is an interesting branch in called
   [explore/pluginsv2](https://github.com/CremaFR/argent-contracts-starknet/tree/explore/pluginsv2)
   that should be reviewed to get some additional ideas of what could be done.
+  There is also another plugin called `ArgentSecurity.cairo` with the current
+  `explore/plugins` branch.
 
 ### More secure signing on mobiles
 
