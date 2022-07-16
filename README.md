@@ -1,5 +1,19 @@
 A Javascript wallet to interact with Starknet from mobile and web applications.
 
+<!-- badges -->
+<p align="center">
+  <a href="https://starkware.co/">
+    <img src="https://img.shields.io/badge/powered_by-StarkWare-navy">
+  </a>
+  <a href="https://github.com/dontpanicdao/starknet-burner/blob/main/LICENSE/">
+    <img src="https://img.shields.io/badge/license-MIT-black">
+  </a>
+</p>
+
+## Warning ** Experimental Project **
+
+This project is still in development. It is not yet ready for use in production.
+
 ## What is Starknet Burner?
 
 `Starknet Burner` is a wallet built to help users that needs to interact with

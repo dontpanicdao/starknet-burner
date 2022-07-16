@@ -1,34 +1,47 @@
 import { ec } from 'starknet';
+import { toBN } from 'starknet/utils/number';
 import type { Txn } from '$lib/ts/txns';
+import { wallet } from '$lib/stores/wallet';
 
-export const loadKeys = (): [string, string, Txn[]] => {
+export const loadKeys = () => {
 	let sessPrivateKey = localStorage.getItem('bwpk');
-	let sessAccount = localStorage.getItem('bwac');
-	if (!sessPrivateKey || !sessAccount) {
-		throw new Error('keys missing');
+	if (!sessPrivateKey || sessPrivateKey === '') {
+		sessPrivateKey = `0x${ec.genKeyPair().getPrivate().toString(16)}`;
+		if (!sessPrivateKey) {
+			throw new Error('failed to generate key');
+		}
+		localStorage.setItem('bwpk', sessPrivateKey);
+		localStorage.removeItem('bwtk');
+		localStorage.removeItem('bwtx');
 	}
+	let keypair = ec.getKeyPair(toBN(sessPrivateKey));
+	let sessPublicKey = ec.getStarkKey(keypair);
+	let bwtk = localStorage.getItem('bwtk');
+	if (!bwtk || bwtk === '') {
+		return;
+	}
+	let tokenData = JSON.parse(bwtk);
 	let bwtx = localStorage.getItem('bwtx');
 	let history: Txn[] = [];
-	if (!bwtx || bwtx === '') {
-		return [sessPrivateKey, sessAccount, history];
+	if (bwtx && bwtx !== '') {
+		let historyData: string[] = JSON.parse(bwtx);
+		history = historyData.map((data) => ({ hash: data, status: 'unknown', block: 0 }));
 	}
-	const txns: string[] = JSON.parse(bwtx);
-	history = txns.map((hash) => ({ hash, status: 'unknown', block: '' }));
-	return [sessPrivateKey, sessAccount, history];
-};
-
-export const saveKeys = (privateKey: string, account: string) => {
-	localStorage.setItem('bwpk', privateKey);
-	let prevAccount = localStorage.getItem('bwac');
-	localStorage.setItem('bwac', account);
-	if (prevAccount !== account) {
-		localStorage.setItem('bwtx', JSON.stringify([]));
-	}
-};
-
-export const saveTxns = (history: Txn[]) => {
-	const txns: string[] = history.map((txn) => txn.hash);
-	localStorage.setItem('bwtx', JSON.stringify(txns));
+	wallet.update((data) => {
+		let token = {
+			sessionkey: sessPublicKey as string,
+			account: tokenData.account,
+			expires: tokenData.expires,
+			token: tokenData.token
+		};
+		return {
+			...data,
+			token,
+			history,
+			isLoggedIn: true
+		};
+	});
+	return;
 };
 
 export const genKey = () => {
@@ -36,9 +49,4 @@ export const genKey = () => {
 	const privateKey = keypair.getPrivate();
 	const publicKey = ec.getStarkKey(keypair);
 	return [privateKey, publicKey];
-};
-
-export const getPublicKey = (privateKey: string) => {
-	const keypair = ec.getKeyPair(privateKey);
-	return ec.getStarkKey(keypair);
 };

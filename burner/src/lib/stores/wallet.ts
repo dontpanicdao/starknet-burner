@@ -4,20 +4,78 @@ import { toBN } from 'starknet/utils/number';
 import { getSelectorFromName } from 'starknet/utils/hash';
 import { checkTx, sendToken as sendTokenOperation } from '$lib/ts/operations';
 import { ETHCONTRACT, STRKCONTRACT } from '$lib/ts/constants';
+import type { Txn } from '$lib/ts/txns';
+import { genKey } from '$lib/ts/keys';
 
-export const logIn = async (key: string, account: string, tx: Txn[]) => {
-	console.log('log to account', account);
-	privateKey.update(() => key);
-	const keypair = ec.getKeyPair(key);
-	console.log(ec.getStarkKey(keypair));
+export const saveToken = async (
+	account: string,
+	expires: number,
+	token1: string,
+	token2: string,
+	tx: Txn[]
+) => {
+	let pk = localStorage.getItem('bwpk');
+	if (!pk || pk === '') {
+		throw new Error('no private key');
+	}
+	const keypair = ec.getKeyPair(pk);
+	let publicKey = ec.getStarkKey(keypair);
+	localStorage.setItem(
+		'bwtk',
+		JSON.stringify({
+			account,
+			sessionkey: publicKey as string,
+			expires,
+			token: [token1, token2]
+		})
+	);
+	wallet.update((data) => {
+		let token = {
+			account,
+			sessionkey: publicKey as string,
+			expires,
+			token: [token1, token2]
+		};
+		return {
+			...data,
+			token,
+			history: tx,
+			isLoggedIn: true
+		};
+	});
+};
 
-	wallet.update((data) => ({
-		...data,
-		account,
-		publicKey: ec.getStarkKey(keypair),
-		history: tx,
-		isLoggedIn: true
-	}));
+export const renewSessionKey = () => {
+	let [pk, publicKey] = genKey();
+	if (!pk || !publicKey) {
+		throw new Error('failed to generate key');
+	}
+	localStorage.setItem('bwpk', pk);
+	let token = localStorage.getItem('bwtk');
+	if (!token || token === '') {
+		return;
+	}
+	let tokenData = JSON.parse(token);
+	localStorage.setItem(
+		'bwtk',
+		JSON.stringify({
+			sessionkey: publicKey as string,
+			account: tokenData.account,
+			expires: 0,
+			token: [] as string[]
+		})
+	);
+	wallet.update((data) => {
+		return {
+			...data,
+			token: {
+				sessionkey: publicKey as string,
+				account: tokenData.account,
+				expires: 0,
+				token: [] as string[]
+			}
+		};
+	});
 };
 
 const BASEURL = 'https://alpha4.starknet.io';
@@ -60,12 +118,25 @@ export const sendToken = async (
 ) => {
 	track(true, '');
 	try {
-		const pk = get(privateKey);
-		const account = get(wallet).account;
+		const pk = localStorage.getItem('bwpk');
+		const account = get(wallet).token?.account;
+		const sessionkey = get(wallet).token?.sessionkey;
+		const expires = get(wallet).token?.expires;
+		const [token1, token2] = get(wallet).token?.token;
 		if (!pk || !account) {
 			throw new Error('not logged in');
 		}
-		const tx = await sendTokenOperation(pk, account, token, to, amount);
+		const tx: string = await sendTokenOperation(
+			pk,
+			sessionkey,
+			expires,
+			token1,
+			token2,
+			account,
+			token,
+			to,
+			amount
+		);
 		wallet.update((data) => {
 			const txns = data.history.map((txn) => txn.hash);
 			txns.push(tx);
@@ -116,6 +187,32 @@ export const balanceOf = async (token: string, account: string) => {
 	});
 };
 
+export const getSigner = async (account: string) => {
+	console.log('get_signer', account);
+	let payload = {
+		signature: [],
+		contract_address: account.toLocaleLowerCase(),
+		entry_point_selector: getSelectorFromName('get_signer'),
+		calldata: []
+	};
+
+	let response = await fetch(`${BASEURL}/feeder_gateway/call_contract?blockNumber=pending`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(payload)
+	});
+	if (response.status != 200) {
+		throw new Error(`${response.status} ${response.statusText}`);
+	}
+	let data = await response.json();
+	wallet.update((x) => {
+		let token = { ...x.token, signer: data.result[0] };
+		return { ...x, token };
+	});
+};
+
 export const transfer = async (to: string, quantity: number) => {
 	console.log('transfert to', to, 'qty', quantity);
 };
@@ -140,20 +237,16 @@ export const refreshTxn = async (hash: string) => {
 	});
 };
 
-const privateKey = writable('0x...');
-
-type Txn = {
-	hash: string;
-	status: string;
-	block: number;
-};
-
 export const wallet = writable({
 	lastError: null,
 	loading: false,
 	isLoggedIn: false,
-	account: '0x...',
-	publicKey: '0x...',
+	token: {
+		sessionkey: '',
+		account: '',
+		expires: 0,
+		token: [] as string[]
+	},
 	history: [] as Txn[],
 	erc20: [
 		{

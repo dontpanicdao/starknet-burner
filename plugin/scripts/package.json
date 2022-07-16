@@ -4,6 +4,7 @@
   "scripts": {
     "entrypoints": "tsc --esModuleInterop --outDir build entrypoints.ts && node build/entrypoints.js",
     "genkey": "tsc --esModuleInterop --outDir build genkey.ts && node build/genkey.js",
+    "hex": "tsc --esModuleInterop --outDir build hex.ts && node build/hex.js",
     "int": "tsc --esModuleInterop --outDir build int.ts && node build/int.js",
     "sample": "tsc --esModuleInterop --outDir build sample.ts && node build/sample.js",
     "token": "tsc --esModuleInterop --outDir build token.ts && node build/token.js"

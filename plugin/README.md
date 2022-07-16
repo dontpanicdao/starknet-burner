@@ -154,7 +154,7 @@ export HASH=<Set the Transaction Hash>
 starknet get_transaction --hash $HASH
 ```
 
-> Add the plugin class hash in the `PLUGIN_ADDRESS` environment variable.
+> Add the plugin class hash in the `PLUGIN_HASH` environment variable.
 
 - we need to reference the plugin from the contract so that it would delegate
   the call to the plugin.
@@ -175,7 +175,7 @@ starknet invoke \
    --gateway_url https://alpha4.starknet.io \
    --address $ACCOUNT_ADDRESS \
    --function add_plugin \
-   --inputs $PLUGIN_ADDRESS \
+   --inputs $PLUGIN_HASH \
    --abi ../contracts/argentaccount_plugin_abi.json \
    --max_fee 50000000000000
 
@@ -191,7 +191,7 @@ To check the plugin is correctly configured, you can run the command below:
 
 ```shell
 starknet call --address $ACCOUNT_ADDRESS \
-   --function is_plugin --inputs $PLUGIN_ADDRESS \
+   --function is_plugin --inputs $PLUGIN_HASH \
    --abi ../contracts/argentaccount_plugin_abi.json
 ```
 
@@ -203,7 +203,7 @@ wallet, or, in that specific case, between `burner` and `drone`.
 - with the current setup, we should create a session token; that token is
   make of:
   - the session public key
-  - an expiration date
+  - an expiration time
 
 We assume the session public key is set in `SESSION_PUBLIC_KEY`; to generate an
 expiration time we might want to run a script like the one below:
@@ -293,7 +293,7 @@ set:
 ```shell
 ACCOUNT_ADDRESS=0x0332a9bcd863896074508d6449177f227990f3377e53d2aeb04c83c05c8a31ed
 
-PLUGIN_ADDRESS=0x1872a7cab935b053c68f2c05fa83632ef0503e7a3e36c1ec3b9a5fd8c73a8af
+PLUGIN_PLUGIN_HASH=0x377e145923e881f59d62269a46057d8dac67e27d68a12679b198d4224a0966b
 STRK_CONTRACT_ADDRESS=0x7a1a9784591aad3cc294ed3d89fa45add74e96e8c20e46a21153a6aa979a9cb
 ARGENT_ACCOUNT_ADDRESS=0x207aCC15dc241e7d167E67e30E769719A727d3E0fa47f9E187707289885Dfde
 
@@ -403,7 +403,7 @@ fail:
 ```shell
 # This fails as expected
 starknet call --address $ACCOUNT_ADDRESS \
-   --function is_plugin --inputs $PLUGIN_ADDRESS \
+   --function is_plugin --inputs $PLUGIN_HASH \
    --abi contracts/argentaccount_plugin_abi.json
 ```
 
@@ -439,7 +439,7 @@ starknet call --address $ACCOUNT_ADDRESS \
 
 # This now succeeds
 starknet call --address $ACCOUNT_ADDRESS \
-   --function is_plugin --inputs $PLUGIN_ADDRESS \
+   --function is_plugin --inputs $PLUGIN_HASH \
    --abi contracts/argentaccount_plugin_abi.json
 ```
 

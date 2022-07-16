@@ -51,7 +51,7 @@ const sendToken = async (
   account: string,
   pluginHash: string,
   sessionKey: string,
-  expirationTime: number,
+  expires: number,
   sessionToken1: string,
   sessionToken2: string,
   amount: number,
@@ -76,7 +76,7 @@ const sendToken = async (
       toBN("0x8"),
       toBN(pluginHash),
       toBN(sessionKey),
-      toBN(expirationTime),
+      toBN(expires),
       toBN(sessionToken1),
       toBN(sessionToken2),
       toBN(to.toLowerCase()),
@@ -111,7 +111,7 @@ const sendToken = async (
       toBN("0x8").toString(10),
       toBN(pluginHash).toString(10),
       toBN(sessionKey).toString(10),
-      toBN(expirationTime).toString(10),
+      toBN(expires).toString(10),
       toBN(sessionToken1).toString(10),
       toBN(sessionToken2).toString(10),
       toBN(to.toLowerCase()).toString(10),
@@ -158,7 +158,7 @@ const run = async (
   account: string,
   pluginHash: string,
   sessionKey: string,
-  expirationTime: number,
+  expires: number,
   sessionToken1: string,
   sessionToken2: string,
   amount: number,
@@ -168,7 +168,7 @@ const run = async (
     account,
     pluginHash,
     sessionKey,
-    expirationTime,
+    expires,
     sessionToken1,
     sessionToken2,
     amount,
@@ -188,8 +188,8 @@ if (!process.env.ARGENT_ACCOUNT_ADDRESS) {
   throw new Error("ARGENT_ACCOUNT_ADDRESS is not defined");
 }
 
-if (!process.env.PLUGIN_ADDRESS) {
-  throw new Error("PLUGIN_ADDRESS is not defined");
+if (!process.env.PLUGIN_HASH) {
+  throw new Error("PLUGIN_HASH is not defined");
 }
 
 if (!process.env.SESSION_PUBLIC_KEY) {
@@ -200,7 +200,7 @@ if (!process.env.SESSION_EXPIRATION_TIME) {
   throw new Error("SESSION_EXPIRATION_TIME needs to be set");
 }
 
-const expirationTime = parseInt(process.env.SESSION_EXPIRATION_TIME, 10);
+const expires = parseInt(process.env.SESSION_EXPIRATION_TIME, 10);
 
 if (
   !process.env.SESSION_TOKEN_SIGNATURE0 ||
@@ -213,9 +213,9 @@ if (
 
 run(
   process.env.ACCOUNT_ADDRESS,
-  process.env.PLUGIN_ADDRESS,
+  process.env.PLUGIN_HASH,
   process.env.SESSION_PUBLIC_KEY,
-  expirationTime,
+  expires,
   process.env.SESSION_TOKEN_SIGNATURE0,
   process.env.SESSION_TOKEN_SIGNATURE1,
   1,

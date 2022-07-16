@@ -2,7 +2,7 @@
 	"name": "burner",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "vite dev",
+		"dev": "vite dev --port 3000",
 		"build": "vite build",
 		"package": "svelte-kit package",
 		"preview": "vite preview",
@@ -18,8 +18,10 @@
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
 		"@types/bn.js": "^5.1.0",
+		"@types/qrcode": "^1.4.2",
 		"@typescript-eslint/eslint-plugin": "^5.27.0",
 		"@typescript-eslint/parser": "^5.27.0",
+		"buffer": "^6.0.3",
 		"dotenv": "^16.0.1",
 		"eslint": "^8.16.0",
 		"eslint-config-prettier": "^8.3.0",
@@ -27,13 +29,14 @@
 		"ethers": "^5.6.9",
 		"prettier": "^2.6.2",
 		"prettier-plugin-svelte": "^2.7.0",
+		"qrcode": "^1.5.1",
 		"starknet": "^3.16.1",
 		"svelte": "^3.44.0",
 		"svelte-check": "^2.7.1",
 		"svelte-preprocess": "^4.10.6",
 		"tslib": "^2.3.1",
 		"typescript": "^4.7.4",
-		"vite": "^2.9.13"
+		"vite": "^3.0.0"
 	},
 	"type": "module"
 }

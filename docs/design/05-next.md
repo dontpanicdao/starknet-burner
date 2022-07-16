@@ -55,13 +55,16 @@ A number of evolutions are planned or proposed that might impact the project.
 Below is a list of identified evolutions and technical work that we could rely
 on.
 
-### validate and execute separation
+### Validate and execute separation
 
-Starknet 0.10 that is due in a few weeks and should split the execution of a
+Starknet 0.10 that is due in August and should split the execution of a
 transaction in 2 parts. The validation of the signature, the nonce and fees
 should be removed from the execute and be managed by a function called
 `validate`. This feature might not full impact the project, except that the
 validation plugin would also have to be updated in the contract definition.
+
+You will find more details about v0.10.0
+[here](https://starkware.notion.site/StarkNet-0-10-0-4ac978234c384a30a195ce4070461257)
 
 ### Payment delegation
 
@@ -70,6 +73,16 @@ ability to delegate paiements to a `PaymentContract`. A third party contract
 would be able to pay the fees for your transactions based on a previous
 commitment. This could be a security improvement for the plugin that could
 only access funds from that `PaymentContract`.
+
+### Additions to OpenZeppelin account
+
+There are also a number of additions to the OpenZeppelin account that could be
+of some use. In particular, it supports a ETH signature as you can see from PR
+[#361](https://github.com/OpenZeppelin/cairo-contracts/pull/361). It might rely
+on [the secp implementations](https://community.starknet.io/t/is-it-possible-to-use-verify-ecdsa-signature-in-cairo-to-verify-a-web3-js-wallet-ecdsa-signature/338).
+
+To check the changes associated with OpenZeppelin, we should review:
+[release notes](https://github.com/OpenZeppelin/cairo-contracts/releases)
 
 ### A more advanced plugin
 
