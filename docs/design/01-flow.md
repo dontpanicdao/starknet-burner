@@ -26,26 +26,33 @@ Before you can sign any transactions, an offchain process must be completed.
 This process consists in:
 
 - generating a session key in the application. It is worth noting that the
-  session key is a private key and must be secured by any mean possible. It
-  would be very important to not be able to guess the key, neither that it last
-  too long, that it is stored in an unsafe place or shared with any third
-  party. For instance, the session key should not be shared with the
-  application server. It should not be stored in a global variable or made
-  accessible via a function that can be accessed by a script from another site.
-  [0xs34n/starknet.js PR 87](https://github.com/0xs34n/starknet.js/pull/87)
+  session key is a private/public key pair and must be secured by any mean
+  possible. It would be very important to not be able to guess the key,
+  neither that it last too long, that it is stored in an unsafe place or
+  shared with any third party. For instance, the session key should not be
+  shared with the application server. It should not be stored in a global
+  variable or made accessible via a function that can be accessed by a script
+  from another site.
 - once the session key is generated a session token should be generated. To
   generate token that token, a data set should be generated and hashed. The
   data set includes:
   - the session key public key,
   - the session key expiration time, and 
   - the session key authorizations, like the contract and token involved.
+
+> For now, session key authorizations are not implemented which makes the
+> session key not suitable for production use. This is a planned feature.
+
 - the session token is generated off chain by signing the hash with the account
   signer. By doing it, the account signer delegates some abilities to the
-  session key signer limited to the content of data set and the hash.
+  session key signer limited to the content of data set and the hash. The signing
+  scheme relies on an EIP-712 like signature as you can read in the
+  [learning more](./04-learning-more.md) section of the documentation.
 
 > The account will enforce the check for the session key signer when checking
 > the session token. It will be exchanged with Starknet and as a result, it
-> will be available to third parties.
+> will be available to third parties but it is not a concern since that is
+> the session key that makes the session secured.
 
 When calling running an invoke with an account to interact with a contract,
 the session key signer requires you prefix the other calls with a special
@@ -53,7 +60,8 @@ invocation method that should include:
 - the information saying it is a session key signer and the plugin identifier
   associated with tha feature
 - the session key signer public key
-- the data set that has been used to generate the session token
+- the data set that has been used to generate the session token, including the
+  expires property
 - the signed session token
 
 The plugin then verifies the session token matches the authorization, key and
