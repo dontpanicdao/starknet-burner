@@ -50,7 +50,7 @@
 			<button
 				on:click={() => {
 					setState('keys');
-				}}>Session Key...</button
+				}}>Keys...</button
 			>
 		</div>
 		<ul class="token-panel">
