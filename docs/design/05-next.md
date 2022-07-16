@@ -24,34 +24,6 @@ There is a number of things we can added to the project to make it better:
 2. make the contract upgradable from drone (target v0.4.0) as for now, the
    procedure requires you interact with your argent-x wallet on voyager.
 
-Then there are a number of additional feature that we should target. The list
-below is provided without any specific order:
-
-- enrich the interface to make the wallet perform more actions, like minting
-  token or claiming a reward.
-- providing an interface that is close to the one from the other wallets so
-  that we can use starknet.js or a subset of it
-- addition a sign/autosign feature so that the user does not even see he is
-  minting tokens.
-- Building demos to help people boostrap their projects.
-- Have `drone` hosted or running on-demand to make it easier to use with
-  hackathons. The project would "just implement the burner side" not the
-  validation side to begin.
-- Setting up the same feature with other accounts, including OpenZeppelin, Braavos
-  and Metamask.
-- Integrate an Indexer to check the assets minted, transferred and burned with the
-  Starknet Burner.
-- Improve the interaction to refresh the components automatically.
-- Provide various ways to exchanges between the mobile and the application. It
-  could be 
-  - we send an SMS with a key;
-  - we scan a QR code from the session public key;
-  - we use some pre-signed printed QR code;
-  - we use the NFC tokens and a phone;
-  - ... other ideas are welcome... open an issue if you have any.
-- It can be used to automate tests on the Goerli network without risking to
-  loose the funds by requesting a token based on an NFT or something else.
-
 ## Expected technical evolution
 
 A number of evolutions are planned or proposed that might impact the project.
@@ -119,3 +91,37 @@ be interesting to read in detail:
 
 - [Storing Keys in the Secure Enclave](https://developer.apple.com/documentation/security/certificate_key_and_trust_services/keys/storing_keys_in_the_secure_enclave)
 - [iOS Keychain: using Secure Enclave-stored keys](https://medium.com/@alx.gridnev/ios-keychain-using-secure-enclave-stored-keys-8f7c81227f4)
+
+### Even more resources
+
+Then there are a number of additional features that we could target. The list
+below is provided without any specific order or priority:
+
+- enrich the interface to make the wallet perform more actions, like minting
+  token or claiming a reward.
+- providing an interface that is close to the one from the other wallets so
+  that we can use starknet.js or a subset of it
+- addition a sign/autosign feature so that the user does not even see he is
+  minting tokens.
+- Building demos to help people boostrap their projects.
+- Have `drone` hosted or running on-demand to make it easier to use with
+  hackathons. The project would "just implement the burner side" not the
+  validation side to begin.
+- Setting up the same feature with other accounts, including OpenZeppelin, Braavos
+  and Metamask.
+- Integrate an Indexer to check the assets minted, transferred and burned with the
+  Starknet Burner.
+- Improve the interaction to refresh the components automatically.
+- Provide various ways to exchanges between the mobile and the application. It
+  could be:
+  - we send an SMS with a key;
+  - we scan a QR code from the session public key;
+  - we use some pre-signed printed QR code;
+  - we use the NFC tokens and a phone;
+  - ... other ideas are welcome... open an issue if you have any.
+- It can be used to automate tests on the Goerli network without risking to
+  loose the funds by requesting a token based on an NFT or something else.
+- Checkout [Web3Auth/sign-in-with-starkware](https://github.com/Web3Auth/sign-in-with-starkware)
+  to see if that can somehow be leverage
+- Checkout [abdelhamidbakhta/starkvest](https://github.com/abdelhamidbakhta/starkvest)
+  to see if it can make sense to use it for the project.

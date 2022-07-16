@@ -1,0 +1,3 @@
+/contracts/*
+!/contracts/.keep
+/.env
