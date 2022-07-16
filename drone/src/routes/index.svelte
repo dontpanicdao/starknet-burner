@@ -7,7 +7,7 @@
 	import QR from '$lib/QR.svelte';
 
 	let baseURL = 'http://localhost:3000?key=';
-	let sessionKey = '';
+	let sessionkey = '';
 	let account = '';
 	let token1 = '';
 	let token2 = '';
@@ -15,10 +15,10 @@
 	let errMessage = '';
 	const encode = (str: string): string => Buffer.from(str, 'binary').toString('base64');
 
-	$: sessionKey, checkError();
+	$: sessionkey, checkError();
 
 	const checkError = () => {
-		if (!sessionKey || sessionKey === '') {
+		if (!sessionkey || sessionkey === '') {
 			errMessage = 'Enter a valid sessionkey';
 			return;
 		}
@@ -26,7 +26,7 @@
 	};
 
 	const connect = async () => {
-		if (!sessionKey || sessionKey === '') {
+		if (!sessionkey || sessionkey === '') {
 			return;
 		}
 		let starknet = getStarknet();
@@ -56,7 +56,7 @@
 			},
 			primaryType: 'Session',
 			message: {
-				session_key: sessionKey,
+				session_key: sessionkey,
 				expires: expires
 			}
 		};
@@ -79,12 +79,12 @@
 	<h1>drone</h1>
 	<p>drone let you sign a session key with your argent-x browser extension</p>
 	<div class="selection">
-		{#if token1 && sessionKey}
+		{#if token1 && sessionkey}
 			<div>
 				<a
 					href={`${baseURL}${encode(
 						JSON.stringify({
-							sessionKey,
+							sessionkey,
 							account,
 							token1,
 							token2,
@@ -95,7 +95,7 @@
 					<QR
 						value={`${baseURL}${encode(
 							JSON.stringify({
-								sessionKey,
+								sessionkey,
 								account,
 								token1,
 								token2,
@@ -108,7 +108,7 @@
 			<div class="buttons">
 				<button
 					on:click={() => {
-						sessionKey = '';
+						sessionkey = '';
 						expires = Math.round(new Date().getTime() / 1000) + 60 * 60 * 24;
 						token1 = '';
 						token2 = '';
@@ -123,7 +123,7 @@
 				type="text"
 				class="key"
 				placeholder="0x..."
-				bind:value={sessionKey}
+				bind:value={sessionkey}
 			/>
 			<label for="account">account (see argent-x)</label>
 			<input id="account" disabled type="text" class="key" placeholder="0" bind:value={account} />
@@ -135,7 +135,7 @@
 			<input id="token2" disabled type="text" class="key" placeholder="0x..." bind:value={token2} />
 		{:else}
 			<label for="sessionkey">sessionkey</label>
-			<input id="sessionkey" type="text" class="key" placeholder="0x..." bind:value={sessionKey} />
+			<input id="sessionkey" type="text" class="key" placeholder="0x..." bind:value={sessionkey} />
 			<label for="account">account (see argent-x)</label>
 			<input id="account" disabled type="text" class="key" placeholder="0" bind:value={account} />
 			<label for="expires">expires</label>
@@ -148,7 +148,7 @@
 			<div class="buttons">
 				<button
 					on:click={() => {
-						sessionKey = '';
+						sessionkey = '';
 						expires = Math.round(new Date().getTime() / 1000) + 60 * 60 * 24;
 						token1 = '';
 						token2 = '';

@@ -44,41 +44,6 @@ export const loadKeys = () => {
 	return;
 };
 
-export const saveKeys = (privateKey: string, account: string) => {
-	localStorage.setItem('bwpk', privateKey);
-	let keypair = ec.getKeyPair(toBN(privateKey));
-	let sessionkey = ec.getStarkKey(keypair);
-	let token = localStorage.getItem('bwtk');
-	let previousAccount: string = '';
-	if (token && token !== '') {
-		let tokenData = JSON.parse(token);
-		previousAccount = tokenData.account;
-	}
-	localStorage.setItem('bwtk', JSON.stringify({ account, sessionkey: sessionkey as string }));
-	if (previousAccount !== account) {
-		localStorage.setItem('bwtx', JSON.stringify([]));
-	}
-	wallet.update((data) => {
-		let token = {
-			account,
-			sessionkey: sessionkey as string,
-			expires: 0,
-			token: [] as string[]
-		};
-		if (previousAccount !== account) {
-			return {
-				...data,
-				token,
-				history: [] as Txn[]
-			};
-		}
-		return {
-			...data,
-			token
-		};
-	});
-};
-
 export const saveTxns = (history: Txn[]) => {
 	const txns: string[] = history.map((txn) => txn.hash);
 	localStorage.setItem('bwtx', JSON.stringify(txns));
@@ -89,9 +54,4 @@ export const genKey = () => {
 	const privateKey = keypair.getPrivate();
 	const publicKey = ec.getStarkKey(keypair);
 	return [privateKey, publicKey];
-};
-
-export const getPublicKey = (privateKey: string) => {
-	const keypair = ec.getKeyPair(privateKey);
-	return ec.getStarkKey(keypair);
 };
