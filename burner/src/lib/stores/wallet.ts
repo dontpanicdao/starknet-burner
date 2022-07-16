@@ -120,10 +120,23 @@ export const sendToken = async (
 	try {
 		const pk = localStorage.getItem('bwpk');
 		const account = get(wallet).token?.account;
+		const sessionkey = get(wallet).token?.sessionkey;
+		const expires = get(wallet).token?.expires;
+		const [token1, token2] = get(wallet).token?.token;
 		if (!pk || !account) {
 			throw new Error('not logged in');
 		}
-		const tx: string = await sendTokenOperation(pk, account, token, to, amount);
+		const tx: string = await sendTokenOperation(
+			pk,
+			sessionkey,
+			expires,
+			token1,
+			token2,
+			account,
+			token,
+			to,
+			amount
+		);
 		wallet.update((data) => {
 			const txns = data.history.map((txn) => txn.hash);
 			txns.push(tx);

@@ -4,7 +4,7 @@
 	import { loadKeys } from '$lib/ts/keys';
 	import type { Txn } from '$lib/ts/txns';
 	import { onMount } from 'svelte';
-	import { get } from 'svelte/store';
+
 	let publicKey = '';
 	let expires = 0;
 	let token1 = '';

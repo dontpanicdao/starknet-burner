@@ -29,6 +29,10 @@ const getNonce = async (account: string): Promise<string> => {
 
 export const sendToken = async (
 	pk: string,
+	sessionkey: string,
+	expires: number,
+	sessionToken1: string,
+	sessionToken2: string,
 	account: string,
 	contract: string,
 	to: string,
@@ -41,12 +45,21 @@ export const sendToken = async (
 		toBN(account),
 		toBN('0x15d40a3d6ca2ac30f4031e42be28da9b056fef9bb7357ac5e85627ee876e5ad'),
 		[
-			toBN('0x1'),
+			toBN('0x2'),
 			toBN(contract),
-			toBN('0x83AFD3F4CAEDC6EEBF44246FE54E38C95E3179A5EC9EA81740ECA5B482D12E'.toLowerCase()),
-			toBN('0x0'),
+			toBN('0x27ad8765fc3b8f3afef2481081767daadd0abafbd10a7face32534f2e4730e2'), // use_plugin
+			toBN('0x0'), // data offset
+			toBN('0x5'), // data length
+			toBN(contract),
+			toBN('0x83afd3f4caedc6eebf44246fe54e38c95e3179a5ec9ea81740eca5b482d12e'), // transfer
+			toBN('0x5'),
 			toBN('0x3'),
-			toBN('0x3'),
+			toBN('0x8'),
+			toBN(import.meta.env.VITE_PLUGIN_HASH),
+			toBN(sessionkey),
+			toBN(expires),
+			toBN(sessionToken1),
+			toBN(sessionToken2),
 			toBN(to.toLowerCase()),
 			toBN(amount),
 			toBN('0x0'),
@@ -63,14 +76,21 @@ export const sendToken = async (
 		contract_address: account.toLocaleLowerCase(),
 		entry_point_selector: '0x15d40a3d6ca2ac30f4031e42be28da9b056fef9bb7357ac5e85627ee876e5ad',
 		calldata: [
-			toBN('0x1').toString(10),
+			toBN('0x2').toString(10),
 			toBN(contract).toString(10),
-			toBN(
-				'0x83AFD3F4CAEDC6EEBF44246FE54E38C95E3179A5EC9EA81740ECA5B482D12E'.toLowerCase()
-			).toString(10),
+			toBN('0x27ad8765fc3b8f3afef2481081767daadd0abafbd10a7face32534f2e4730e2').toString(10),
 			toBN('0x0').toString(10),
+			toBN('0x5').toString(10),
+			toBN(contract).toString(10),
+			toBN('0x83afd3f4caedc6eebf44246fe54e38c95e3179a5ec9ea81740eca5b482d12e').toString(10),
+			toBN('0x5').toString(10),
 			toBN('0x3').toString(10),
-			toBN('0x3').toString(10),
+			toBN('0x8').toString(10),
+			toBN(import.meta.env.VITE_PLUGIN_HASH).toString(10),
+			toBN(sessionkey).toString(10),
+			toBN(expires).toString(10),
+			toBN(sessionToken1).toString(10),
+			toBN(sessionToken2).toString(10),
 			toBN(to.toLowerCase()).toString(10),
 			toBN(amount).toString(10),
 			toBN('0x0').toString(10),

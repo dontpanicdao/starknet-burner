@@ -44,11 +44,6 @@ export const loadKeys = () => {
 	return;
 };
 
-export const saveTxns = (history: Txn[]) => {
-	const txns: string[] = history.map((txn) => txn.hash);
-	localStorage.setItem('bwtx', JSON.stringify(txns));
-};
-
 export const genKey = () => {
 	const keypair = ec.genKeyPair();
 	const privateKey = keypair.getPrivate();
