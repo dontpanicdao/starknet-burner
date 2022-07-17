@@ -4,14 +4,15 @@ The burner wallet is a Javascript Wallet that works on a browser, including on
 your mobile phone. It relies on an upgraded argent-x account that supports
 plugins. To use it, you should:
 
-1. make sure your account is changed with ETH and Starkpill tokens.
+1. make sure your account is changed with ETH.
 2. upgrade the argent-x account to an argent-x account that supports plugins
-3. add the plugin that checks a specific signature to your account
-4. connect to the burner wallet and generate a session key
-5. send the session key to the drone application that will help you to sign
+3. withdraw some Starkpills from the Faucet.
+4. add the plugin that checks a specific signature to your account
+5. connect to the burner wallet and generate a session key
+6. send the session key to the drone application that will help you to sign
    it and send a session token back to the application
-6. register the session token with the burner wallet
-7. play with the wallet
+7. register the session token with the burner wallet
+8. play with the wallet
    
 > Before you start, the current plugin is not secure and granting access to
 > the burner wallet will enable the user to use your account for any purpose.
@@ -60,6 +61,20 @@ starknet call \
    --function get_implementation \
    --abi proxy_abi.json
 ```
+
+### Withdrawing Starkpills
+
+The Faucet checks:
+- the account you are using should not have more than 1 STRK already
+- the account implementation should be the modified starknet account
+  that supports plugins
+
+Assuming all the condition above are met, you would get 5 Starkpills
+by requesting the Faucet on Voyager at
+[0x05a8..aadf](https://goerli.voyager.online/contract/0x05a87f6bec0b6121e55f291f8e06e6149accd706fb43c725a7f1fd3f3f62aadf).
+
+> The Starkpill Faucet supply is limited. If it gets empty,
+> contact-us.
 
 ### Add the plugin that checks a specific signature
 

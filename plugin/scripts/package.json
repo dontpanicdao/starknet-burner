@@ -6,6 +6,8 @@
     "genkey": "tsc --esModuleInterop --outDir build genkey.ts && node build/genkey.js",
     "hex": "tsc --esModuleInterop --outDir build hex.ts && node build/hex.js",
     "int": "tsc --esModuleInterop --outDir build int.ts && node build/int.js",
+    "int2hex": "tsc --esModuleInterop --outDir build int2hex.ts && node build/int2hex.js",
+    "pubkey": "tsc --esModuleInterop --outDir build pubkey.ts && node build/pubkey.js",
     "sample": "tsc --esModuleInterop --outDir build sample.ts && node build/sample.js",
     "token": "tsc --esModuleInterop --outDir build token.ts && node build/token.js"
   },
