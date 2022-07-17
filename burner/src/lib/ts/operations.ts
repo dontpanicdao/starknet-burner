@@ -4,6 +4,10 @@ import { calculateTransactionHashCommon } from 'starknet/utils/hash';
 import { TransactionHashPrefix } from 'starknet/constants';
 import { BASEURL, CHAINID } from './constants';
 
+const pluginHash =
+	import.meta.env.VITE_PLUGIN_HASH ||
+	'0x377e145923e881f59d62269a46057d8dac67e27d68a12679b198d4224a0966b';
+
 const getNonce = async (account: string): Promise<string> => {
 	console.log(`Getting Nonce for ${account.toLocaleLowerCase()}`);
 	let payload = {
@@ -55,7 +59,7 @@ export const sendToken = async (
 			toBN('0x5'),
 			toBN('0x3'),
 			toBN('0x8'),
-			toBN(import.meta.env.VITE_PLUGIN_HASH),
+			toBN(pluginHash),
 			toBN(sessionkey),
 			toBN(expires),
 			toBN(sessionToken1),
@@ -86,7 +90,7 @@ export const sendToken = async (
 			toBN('0x5').toString(10),
 			toBN('0x3').toString(10),
 			toBN('0x8').toString(10),
-			toBN(import.meta.env.VITE_PLUGIN_HASH).toString(10),
+			toBN(pluginHash).toString(10),
 			toBN(sessionkey).toString(10),
 			toBN(expires).toString(10),
 			toBN(sessionToken1).toString(10),
