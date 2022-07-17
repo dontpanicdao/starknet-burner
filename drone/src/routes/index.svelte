@@ -1,11 +1,31 @@
+<script context="module" lang="ts">
+	/** @type {import('./__types/[slug]').Load} */
+	export async function load({ url }) {
+		console.log('load...');
+		let session = url.searchParams.get('s');
+
+		return {
+			status: 200,
+			props: {
+				sessionkey: session
+			}
+		};
+	}
+</script>
+
 <script lang="ts">
-	import { getStarknet } from 'get-starknet';
 	import { Buffer } from 'buffer';
 	import { toBN } from 'starknet/utils/number';
 	import QR from '$lib/QR.svelte';
+	import Upgrade from '$lib/Upgrade.svelte';
+	import AddPlugin from '$lib/AddPlugin.svelte';
+	import Downgrade from '$lib/Downgrade.svelte';
+	import Refill from '$lib/Refill.svelte';
+	import Refresh from '$lib/Refresh.svelte';
+	import { connect } from '$lib/ts/utils';
 
 	const baseURL = import.meta.env.VITE_BURNER_BASEURL || 'http://localhost:3000';
-	let sessionkey = '';
+	export let sessionkey = '';
 	let account = '';
 	let token1 = '';
 	let token2 = '';
@@ -23,17 +43,10 @@
 		errMessage = '';
 	};
 
-	const connect = async () => {
-		if (!sessionkey || sessionkey === '') {
+	const sign = async () => {
+		let account = await connect();
+		if (!account) {
 			return;
-		}
-		let starknet = getStarknet();
-		console.log('connect...');
-		if (!starknet.isConnected) {
-			await starknet.enable();
-		}
-		if (starknet.selectedAddress) {
-			account = starknet.selectedAddress;
 		}
 		let msg: any = {
 			domain: {
@@ -58,13 +71,9 @@
 				expires: expires
 			}
 		};
-		let signature = await starknet.account.signMessage(msg);
+		let signature = await account.signMessage(msg);
 		token1 = `0x${toBN(signature[0], 10).toString(16)}`;
 		token2 = `0x${toBN(signature[1], 10).toString(16)}`;
-	};
-
-	const sign = async () => {
-		await connect();
 	};
 </script>
 
@@ -126,7 +135,7 @@
 			<input id="token2" disabled type="text" class="key" placeholder="0x..." bind:value={token2} />
 		{:else}
 			<h1>Drone</h1>
-			<p>sign your session key...</p>
+			<p>see also <a href="/admin?s={sessionkey}">manage your account</a></p>
 			<label for="sessionkey">sessionkey</label>
 			<input id="sessionkey" type="text" class="key" placeholder="0x..." bind:value={sessionkey} />
 			<div class="message">{errMessage}</div>

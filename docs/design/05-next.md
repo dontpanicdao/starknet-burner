@@ -23,6 +23,10 @@ There is a number of things we can added to the project to make it better:
    v0.3.0)
 2. make the contract upgradable from drone (target v0.4.0) as for now, the
    procedure requires you interact with your argent-x wallet on voyager.
+3. develop offchain collaborations that could be sealed with a set of
+   signatures. It could be a fraud detection system, a 2FA service or even
+   some third party authentication. The goal would be to rely on 3rd parties
+   to prevents fraud. (target v0.5.0)
 
 ## Expected technical evolution
 
