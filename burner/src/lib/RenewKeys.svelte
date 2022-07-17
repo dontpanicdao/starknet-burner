@@ -39,7 +39,17 @@
 
 	.command {
 		display: flex;
-		justify-content: space-between;
-		margin-top: 20px;
+		min-width: 300px;
+		flex-direction: row;
+		align-content: space-around;
+		justify-content: space-around;
+		margin-top: 10px;
+	}
+
+	.command button {
+		display: block;
+		padding: 4px;
+		min-width: 120px;
+		margin-left: 5px;
 	}
 </style>

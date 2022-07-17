@@ -1,28 +1,29 @@
-## Starkpiller
+## Deploy an ERC20 token
 
-StarkPiller is a demo project that is used to demonstrate the burner plugin.
-For now on, the idea is that you can use the burner to send a specific token
-we have deployed on goerli to other people.
+In order to demonstrate the burner wallet, we have created a demo project
+called Starkpiller. It is a simple project that uses an ERC20 token called
+STRK. The following sessions explain how to deploy the token and how to
+use it. 
 
 ### Deploy an ERC20 token
 
 To deploy the contract, here again, for now we have done it manually.
 
-- the script below saves the compiled ERC20 contract in `starkpiller/contracts`
+- the script below saves the compiled ERC20 contract in `plugin/contracts`
 
 ```shell
 cd plugin/cairo-contracts/src
 starknet-compile \
-   --output ../../../starkpiller/contracts/erc20.json \
-   --abi ../../../starkpiller/contracts/erc20_abi.json \
+   --output ../../contracts/erc20.json \
+   --abi ../../contracts/erc20_abi.json \
    openzeppelin/token/erc20/ERC20.cairo
 ```
 
 - to deploy the contract and send 1000 Stark Pill to `0x0207aCC15dc241e7d167E67e30E769719A727d3E0fa47f9E187707289885Dfde`, run:
 
 ```shell
-cd starkpiller
-starknet deploy --gateway_url http://localhost:8080 \
+cd plugin
+starknet deploy --gateway_url https://alpha4.starknet.io \
    --salt 0x918187 \
    --contract contracts/erc20.json \
    --inputs 100890435118921322741918835 357896964874 0 1000 0 918185940135292206422541882614518470140962972696466615727279704460583362526 

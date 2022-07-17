@@ -42,23 +42,21 @@
 
 <div class="register-keys">
 	<label for="sessionkey">session key</label>
-	<div>
-		<input
-			id="sessionkey"
-			type="text"
-			class="key"
-			placeholder="0x..."
-			bind:value={publicKey}
-			disabled
-		/>
-		<button
-			class="renew-session"
-			on:click={() => {
-				console.log('new...');
-				setState('renewkey');
-			}}>Change</button
-		>
-	</div>
+	<input
+		id="sessionkey"
+		type="text"
+		class="key"
+		placeholder="0x..."
+		bind:value={publicKey}
+		disabled
+	/>
+	<button
+		class="renew-session"
+		on:click={() => {
+			console.log('new...');
+			setState('renewkey');
+		}}>Change</button
+	>
 	<label for="account">account</label>
 	<input id="account" type="text" class="key" placeholder="0x..." bind:value={account} />
 	<label for="expires">expires</label>
@@ -82,7 +80,7 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		width: 100%;
+		margin: 0 auto;
 		height: 100%;
 		background-color: #fff;
 		padding: 20px;
@@ -100,12 +98,22 @@
 
 	.command {
 		display: flex;
-		justify-content: space-between;
-		margin-top: 20px;
+		min-width: 300px;
+		flex-direction: row;
+		align-content: space-around;
+		justify-content: space-around;
+		margin-top: 10px;
+	}
+
+	.command button {
+		display: block;
+		padding: 4px;
+		min-width: 120px;
+		margin-left: 5px;
 	}
 
 	.renew-session {
-		margin-left: -75px;
-		width: 70px;
+		min-width: 300px;
+		padding: 4px;
 	}
 </style>
