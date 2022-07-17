@@ -1,6 +1,5 @@
 ## CHANGELOG
 
-
 ### v0.2.0 - 🐈‍⬛ not yet a tiger...  - 2022-07-16
 
 This release works and implement the session key pattern. It can now be used as
