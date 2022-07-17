@@ -8,7 +8,13 @@ const config = {
 	preprocess: preprocess(),
 
 	kit: {
-		adapter: adapter()
+		adapter: adapter(),
+		package: {
+			dir: 'package',
+			emitTypes: true,
+			exports: (filepath) => /^Burner\.svelte$/.test(filepath),
+			files: () => true
+		}
 	}
 };
 
