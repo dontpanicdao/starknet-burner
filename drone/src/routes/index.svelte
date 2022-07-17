@@ -1,12 +1,10 @@
 <script lang="ts">
 	import { getStarknet } from 'get-starknet';
-	import type { TypedData } from 'starknet/utils/typedData/types';
-	import { getMessageHash } from 'starknet/utils/typedData';
 	import { Buffer } from 'buffer';
 	import { toBN } from 'starknet/utils/number';
 	import QR from '$lib/QR.svelte';
 
-	let baseURL = 'http://localhost:3000?key=';
+	const baseURL = import.meta.env.VITE_BURNER_BASEURL || 'http://localhost:3000';
 	let sessionkey = '';
 	let account = '';
 	let token1 = '';
@@ -37,7 +35,7 @@
 		if (starknet.selectedAddress) {
 			account = starknet.selectedAddress;
 		}
-		let msg: TypedData = {
+		let msg: any = {
 			domain: {
 				name: 'burner.starknet',
 				version: '0.4',
@@ -60,11 +58,6 @@
 				expires: expires
 			}
 		};
-		let messageHash = await getMessageHash(
-			msg,
-			'0x66a69b58c8fff69a48c4d1284431a56b0e95bdd97cd846e4093f2e1f0a12e4'
-		);
-		console.log(messageHash);
 		let signature = await starknet.account.signMessage(msg);
 		token1 = `0x${toBN(signature[0], 10).toString(16)}`;
 		token2 = `0x${toBN(signature[1], 10).toString(16)}`;
@@ -76,13 +69,11 @@
 </script>
 
 <content>
-	<h1>drone</h1>
-	<p>drone let you sign a session key with your argent-x browser extension</p>
 	<div class="selection">
 		{#if token1 && sessionkey}
 			<div>
 				<a
-					href={`${baseURL}${encode(
+					href={`${baseURL}?key=${encode(
 						JSON.stringify({
 							sessionkey,
 							account,
@@ -93,7 +84,7 @@
 					)}`}
 				>
 					<QR
-						value={`${baseURL}${encode(
+						value={`${baseURL}?key=${encode(
 							JSON.stringify({
 								sessionkey,
 								account,
@@ -134,16 +125,10 @@
 			<label for="token2">token (section #2)</label>
 			<input id="token2" disabled type="text" class="key" placeholder="0x..." bind:value={token2} />
 		{:else}
+			<h1>Drone</h1>
+			<p>sign your session key...</p>
 			<label for="sessionkey">sessionkey</label>
 			<input id="sessionkey" type="text" class="key" placeholder="0x..." bind:value={sessionkey} />
-			<label for="account">account (see argent-x)</label>
-			<input id="account" disabled type="text" class="key" placeholder="0" bind:value={account} />
-			<label for="expires">expires</label>
-			<input id="expires" disabled type="int" class="key" placeholder="0" bind:value={expires} />
-			<label for="token1">token (section #1)</label>
-			<input id="token1" disabled type="text" class="key" placeholder="0x..." bind:value={token1} />
-			<label for="token2">token (section #2)</label>
-			<input id="token2" disabled type="text" class="key" placeholder="0x..." bind:value={token2} />
 			<div class="message">{errMessage}</div>
 			<div class="buttons">
 				<button
@@ -162,6 +147,9 @@
 </content>
 
 <style>
+	h1 {
+		margin-bottom: 0px;
+	}
 	content {
 		margin: 0 auto;
 		max-width: 1024px;

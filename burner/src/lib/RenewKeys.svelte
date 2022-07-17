@@ -1,10 +1,9 @@
 <script type="ts">
 	import { setState } from '$lib/stores/burner';
-	import { loadKeys } from '$lib/ts/keys';
-	import { onMount } from 'svelte';
 	import QR from '$lib/QR.svelte';
 	import { wallet, renewSessionKey } from '$lib/stores/wallet';
 
+	const baseURL = import.meta.env.VITE_DRONE_BASEURL || 'http://localhost:5173';
 	const back = () => {
 		setState('keys');
 	};
@@ -15,7 +14,9 @@
 </script>
 
 <div class="register-keys">
-	<QR value={$wallet.token.sessionkey} />
+	<a href="{baseURL}?s={$wallet.token.sessionkey}">
+		<QR value={baseURL + '?s=' + $wallet.token.sessionkey} />
+	</a>
 	<div>{$wallet.token.sessionkey.slice(0, 6)}...{$wallet.token.sessionkey.slice(-4)}</div>
 	<div class="command">
 		<button on:click={renew}>Renew</button>
