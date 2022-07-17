@@ -14,10 +14,15 @@
 </script>
 
 <script lang="ts">
-	import { getStarknet } from 'get-starknet';
 	import { Buffer } from 'buffer';
 	import { toBN } from 'starknet/utils/number';
 	import QR from '$lib/QR.svelte';
+	import Upgrade from '$lib/Upgrade.svelte';
+	import AddPlugin from '$lib/AddPlugin.svelte';
+	import Downgrade from '$lib/Downgrade.svelte';
+	import Refill from '$lib/Refill.svelte';
+	import Refresh from '$lib/Refresh.svelte';
+	import { connect } from '$lib/ts/utils';
 
 	const baseURL = import.meta.env.VITE_BURNER_BASEURL || 'http://localhost:3000';
 	export let sessionkey = '';
@@ -38,17 +43,10 @@
 		errMessage = '';
 	};
 
-	const connect = async () => {
-		if (!sessionkey || sessionkey === '') {
+	const sign = async () => {
+		let account = await connect();
+		if (!account) {
 			return;
-		}
-		let starknet = getStarknet();
-		console.log('connect...');
-		if (!starknet.isConnected) {
-			await starknet.enable();
-		}
-		if (starknet.selectedAddress) {
-			account = starknet.selectedAddress;
 		}
 		let msg: any = {
 			domain: {
@@ -73,13 +71,9 @@
 				expires: expires
 			}
 		};
-		let signature = await starknet.account.signMessage(msg);
+		let signature = await account.signMessage(msg);
 		token1 = `0x${toBN(signature[0], 10).toString(16)}`;
 		token2 = `0x${toBN(signature[1], 10).toString(16)}`;
-	};
-
-	const sign = async () => {
-		await connect();
 	};
 </script>
 
@@ -142,6 +136,13 @@
 		{:else}
 			<h1>Drone</h1>
 			<p>sign your session key...</p>
+			<div class="menu">
+				<Refresh />
+				<Upgrade />
+				<AddPlugin />
+				<Downgrade />
+				<Refill />
+			</div>
 			<label for="sessionkey">sessionkey</label>
 			<input id="sessionkey" type="text" class="key" placeholder="0x..." bind:value={sessionkey} />
 			<div class="message">{errMessage}</div>
@@ -164,6 +165,11 @@
 <style>
 	h1 {
 		margin-bottom: 0px;
+	}
+	.menu {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
 	}
 	content {
 		margin: 0 auto;
