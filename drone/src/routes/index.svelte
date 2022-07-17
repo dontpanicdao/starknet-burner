@@ -135,14 +135,7 @@
 			<input id="token2" disabled type="text" class="key" placeholder="0x..." bind:value={token2} />
 		{:else}
 			<h1>Drone</h1>
-			<p>sign your session key...</p>
-			<div class="menu">
-				<Refresh />
-				<Upgrade />
-				<AddPlugin />
-				<Downgrade />
-				<Refill />
-			</div>
+			<p>see also <a href="/admin?s={sessionkey}">manage your account</a></p>
 			<label for="sessionkey">sessionkey</label>
 			<input id="sessionkey" type="text" class="key" placeholder="0x..." bind:value={sessionkey} />
 			<div class="message">{errMessage}</div>
@@ -165,11 +158,6 @@
 <style>
 	h1 {
 		margin-bottom: 0px;
-	}
-	.menu {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-around;
 	}
 	content {
 		margin: 0 auto;

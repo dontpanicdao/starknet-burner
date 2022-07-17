@@ -24,5 +24,6 @@
 
 <button
 	on:click={click}
-	disabled={$account.currentClass !== upgradeAccountHash || $account.token >= 2}>Refill</button
+	disabled={$account.currentClass !== upgradeAccountHash || $account.tokens >= 2}
+	>Refill ({$account.tokens})</button
 >
