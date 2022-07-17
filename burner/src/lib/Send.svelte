@@ -6,7 +6,7 @@
 	import ScanIcon from './ScanIcon.svelte';
 
 	let to = '';
-	let amount = 0;
+	let amount = 1;
 	let errMessage = '';
 	let displayScan = false;
 
