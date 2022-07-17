@@ -1,3 +1,18 @@
+<script context="module" lang="ts">
+	/** @type {import('./__types/[slug]').Load} */
+	export async function load({ url }) {
+		console.log('load...');
+		let session = url.searchParams.get('s');
+
+		return {
+			status: 200,
+			props: {
+				sessionkey: session
+			}
+		};
+	}
+</script>
+
 <script lang="ts">
 	import { getStarknet } from 'get-starknet';
 	import { Buffer } from 'buffer';
@@ -5,7 +20,7 @@
 	import QR from '$lib/QR.svelte';
 
 	const baseURL = import.meta.env.VITE_BURNER_BASEURL || 'http://localhost:3000';
-	let sessionkey = '';
+	export let sessionkey = '';
 	let account = '';
 	let token1 = '';
 	let token2 = '';
