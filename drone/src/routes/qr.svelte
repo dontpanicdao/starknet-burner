@@ -1,0 +1,69 @@
+<script context="module" lang="ts">
+	/** @type {import('./__types/[slug]').Load} */
+	export async function load({ url }) {
+		console.log('load...');
+		let qrcode = url.searchParams.get('qr');
+
+		return {
+			status: 200,
+			props: {
+				qr: qrcode
+			}
+		};
+	}
+</script>
+
+<script lang="ts">
+	import QR from '$lib/QR.svelte';
+	import { connect } from '$lib/ts/utils';
+
+	export let qr = '';
+
+	const load = async () => {
+		let wallet = await connect();
+		if (!wallet) {
+			return;
+		}
+		qr = wallet.address;
+	};
+</script>
+
+<div class="display">
+	{#if qr && qr !== ''}
+		<QR bind:value={qr} />
+		<div class="check">
+			<a href={`https://goerli.voyager.online/contract/${qr}`}>{qr.slice(0, 6)}...{qr.slice(-4)}</a>
+		</div>
+	{/if}
+	<div class="command"><button on:click={load}>Load...</button></div>
+</div>
+
+<style>
+	.display {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		margin: 0 auto;
+	}
+
+	.display button {
+		margin-top: 1rem;
+	}
+
+	.command {
+		display: flex;
+		min-width: 300px;
+		flex-direction: row;
+		align-content: space-around;
+		justify-content: space-around;
+		margin-top: 10px;
+	}
+
+	.command button {
+		display: block;
+		padding: 4px;
+		min-width: 120px;
+		margin-left: 5px;
+	}
+</style>
