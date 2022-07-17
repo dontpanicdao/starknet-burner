@@ -44,8 +44,8 @@
 	};
 
 	const sign = async () => {
-		let account = await connect();
-		if (!account) {
+		let wallet = await connect();
+		if (!wallet) {
 			return;
 		}
 		let msg: any = {
@@ -71,7 +71,8 @@
 				expires: expires
 			}
 		};
-		let signature = await account.signMessage(msg);
+		account = wallet.address;
+		let signature = await wallet.signMessage(msg);
 		token1 = `0x${toBN(signature[0], 10).toString(16)}`;
 		token2 = `0x${toBN(signature[1], 10).toString(16)}`;
 	};

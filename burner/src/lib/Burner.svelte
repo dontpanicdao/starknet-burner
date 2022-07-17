@@ -1,6 +1,7 @@
 <script type="ts">
 	import { loadKeys } from '$lib/ts/keys';
 	import RegisterKeys from '$lib/RegisterKeys.svelte';
+	import RefreshIcon from '$lib/RefreshIcon.svelte';
 	import RenewKeys from '$lib/RenewKeys.svelte';
 	import Transactions from '$lib/Transactions.svelte';
 	import Send from '$lib/Send.svelte';
@@ -21,7 +22,10 @@
 		loadKeys();
 	};
 
-	onMount(connect);
+	onMount(async () => {
+		await connect();
+		allBalance();
+	});
 </script>
 
 <div class="burner">
@@ -36,18 +40,21 @@
 			<li>{$wallet.token?.account?.slice(0, 6)}...{$wallet.token?.account?.slice(-4)}</li>
 		</ul>
 		<div class="command">
-			<button on:click={allBalance}>Refresh</button>
+			<button class="refresh" on:click={allBalance}><RefreshIcon /></button>
 			<button
+				class="standard"
 				on:click={() => {
 					setState('send');
 				}}>Send...</button
 			>
 			<button
+				class="standard"
 				on:click={() => {
 					setState('transactions');
 				}}>Transactions</button
 			>
 			<button
+				class="standard"
 				on:click={() => {
 					setState('keys');
 				}}>Keys...</button
@@ -113,8 +120,25 @@
 
 	.command {
 		display: flex;
-		justify-content: space-between;
+		min-width: 300px;
+		flex-direction: row;
+		align-content: space-around;
+		justify-content: space-around;
 		margin-top: 10px;
 		margin-bottom: 10px;
+	}
+
+	.command .refresh {
+		display: block;
+		padding: 4px;
+		min-width: 24px;
+		margin-left: 5px;
+	}
+
+	.command .standard {
+		display: block;
+		padding: 4px;
+		min-width: 90px;
+		margin-left: 5px;
 	}
 </style>

@@ -2,9 +2,13 @@
 	import { burner, setState, track } from '$lib/stores/burner';
 	import { sendToken } from '$lib/stores/wallet';
 	import { STRKCONTRACT } from '$lib/ts/constants';
+	import Scanner from './Scanner.svelte';
+	import ScanIcon from './ScanIcon.svelte';
+
 	let to = '';
 	let amount = 0;
 	let errMessage = '';
+	let displayScan = false;
 
 	const cancel = () => {
 		setState('view');
@@ -19,6 +23,15 @@
 		}
 		await sendToken(STRKCONTRACT.contract, to, amount, track);
 		setState('transactions');
+	};
+
+	function onSuccess(res) {
+		to = res;
+		displayScan = false;
+	}
+
+	const onClick = () => {
+		displayScan = !displayScan;
 	};
 </script>
 
@@ -35,6 +48,16 @@
 	{:else}
 		<label for="to">to</label>
 		<input id="to" type="text" class="key" placeholder="0x..." bind:value={to} />
+		{#if displayScan}
+			<div class="scanner">
+				<Scanner {onSuccess} disableFlip={true} qrbox={{ width: 480, height: 480 }} />
+			</div>
+			<div class="command">
+				<button on:click={onClick}>Close</button>
+			</div>
+		{:else}
+			<ScanIcon {onClick} />
+		{/if}
 		<label for="account">pills</label>
 		<input id="account" type="text" class="key" bind:value={amount} />
 		{#if errMessage}
@@ -71,7 +94,17 @@
 
 	.command {
 		display: flex;
-		justify-content: space-between;
-		margin-top: 20px;
+		min-width: 300px;
+		flex-direction: row;
+		align-content: space-around;
+		justify-content: space-around;
+		margin-top: 10px;
+	}
+
+	.command button {
+		display: block;
+		padding: 4px;
+		min-width: 120px;
+		margin-left: 5px;
 	}
 </style>
