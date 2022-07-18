@@ -106,6 +106,10 @@
 		z-index: 10;
 	}
 
+	.error {
+		text-align: center;
+		color: crimson;
+	}
 	.key {
 		min-width: 300px;
 		height: 1em;

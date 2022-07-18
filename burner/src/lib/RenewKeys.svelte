@@ -36,6 +36,7 @@
 		background-color: #ebebeb;
 		padding: 20px;
 		border-radius: 5px;
+		z-index: 10;
 	}
 
 	.command {
