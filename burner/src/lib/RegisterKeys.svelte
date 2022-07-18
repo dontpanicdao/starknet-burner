@@ -69,7 +69,7 @@
 		<div class="error">{errMessage}</div>
 	{/if}
 	<div class="command">
-		<button on:click={cancel}>Cancel</button>
+		<button class="secondary" on:click={cancel}>Cancel</button>
 		<button on:click={save}>Save</button>
 	</div>
 </div>

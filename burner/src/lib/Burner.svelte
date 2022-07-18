@@ -162,4 +162,22 @@
 		color: #2e4057;
 		background-color: #ff6700;
 	}
+
+	:global(button.secondary) {
+		color: #2e4057;
+		background-color: #c0c0c0;
+	}
+
+	:global(button.secondary:hover) {
+		color: #c0c0c0;
+		background-color: #2e4057;
+	}
+
+	test {
+		color: #ff6700;
+		color: #ebebeb;
+		color: #c0c0c0;
+		color: #3a6ea5;
+		color: #2f2d2e;
+	}
 </style>
