@@ -29,6 +29,8 @@
 </script>
 
 <div class="burner">
+	<i class="cometOne" />
+	<i class="cometTwo" />
 	<h1 class="title">Burner Wallet</h1>
 	{#if !$wallet.isLoggedIn}
 		loading...
@@ -74,6 +76,74 @@
 </div>
 
 <style>
+	.cometOne {
+		display: inline-block;
+		position: absolute;
+		border-radius: 5% 40% 70%;
+		box-shadow: inset 0px 0px 1px #294b67;
+		border: 1px solid #333;
+		z-index: 1;
+		background-color: #fff;
+		opacity: 0.7;
+		left: 25vw;
+		height: 73px;
+		width: 3px;
+		animation-name: fallingOne;
+		animation-timing-function: ease-in;
+		animation-duration: 8s;
+		animation-delay: 0s;
+		background-color: #fff;
+		animation-iteration-count: infinite;
+	}
+	.cometTwo {
+		display: inline-block;
+		position: absolute;
+		border-radius: 5% 40% 70%;
+		box-shadow: inset 0px 0px 1px #294b67;
+		border: 1px solid #333;
+		z-index: 1;
+		background-color: #fff;
+		opacity: 0.7;
+		height: 35px;
+		width: 4px;
+		left: -5vw;
+		top: 20vh;
+		animation-name: fallingTwo;
+		animation-timing-function: ease-in;
+		animation-duration: 8s;
+		animation-delay: 2s;
+		animation-iteration-count: infinite;
+	}
+
+	@keyframes fallingOne {
+		0% {
+			-webkit-transform: translate3d(-100px, -500px, 0px) rotate(160deg);
+		}
+
+		30% {
+			-webkit-transform: translate3d(450px, 900px, 0) rotate(160deg);
+			opacity: 0;
+		}
+		100% {
+			-webkit-transform: translate3d(450px, 900px, 0) rotate(160deg);
+			opacity: 0;
+		}
+	}
+	@keyframes fallingTwo {
+		0% {
+			-webkit-transform: translate3d(0, 0, 0) rotate(115deg);
+		}
+
+		45% {
+			-webkit-transform: translate3d(120vw, 55vh, 0) rotate(120deg);
+			opacity: 0;
+		}
+
+		100% {
+			-webkit-transform: translate3d(120vw, 55vh, 0) rotate(120deg);
+			opacity: 0;
+		}
+	}
 	.title {
 		color: #ff6700;
 	}
