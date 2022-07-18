@@ -29,6 +29,7 @@
 </script>
 
 <div class="burner">
+	<h1 class="title">Burner Wallet</h1>
 	{#if !$wallet.isLoggedIn}
 		loading...
 	{:else if $burner.state == 'renewkey'}
@@ -73,21 +74,19 @@
 </div>
 
 <style>
-body {
-	font-family: 'Lato', sans-serif;
-	font-family: 'Lobster', cursive;
-}
+	.title {
+		color: #ff6700;
+	}
 	.burner {
 		display: flex;
+		font-family: 'Coustard', serif;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		max-width: 512px;
+		width: 100vw;
 		margin: 0 auto;
-		height: 100%;
-		background-color: #fff;
-		padding: 20px;
-		border-radius: 5px;
+		height: 100vh;
+		background-color: #2f2d2e;
 	}
 
 	.key {

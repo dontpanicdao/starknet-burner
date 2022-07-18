@@ -2,6 +2,7 @@
 	import { setState } from '$lib/stores/burner';
 	import QR from '$lib/QR.svelte';
 	import { wallet, renewSessionKey } from '$lib/stores/wallet';
+	import { red } from 'bn.js';
 
 	const baseURL = import.meta.env.VITE_DRONE_BASEURL || 'http://localhost:5173';
 	const back = () => {
@@ -32,7 +33,7 @@
 		justify-content: center;
 		width: 100%;
 		height: 100%;
-		background-color: #fff;
+		background-color: #ebebeb;
 		padding: 20px;
 		border-radius: 5px;
 	}

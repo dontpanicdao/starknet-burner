@@ -79,12 +79,15 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		justify-content: center;
+		justify-content: space-between;
 		margin: 0 auto;
-		height: 100%;
-		background-color: #fff;
-		padding: 20px;
-		border-radius: 5px;
+		height: 55vh;
+		background-color: rgba(192, 192, 192, 0.2);
+		padding: 2%;
+		border-radius: 10px;
+	}
+	.register-keys label {
+		color: #ff6700;
 	}
 
 	.key {
