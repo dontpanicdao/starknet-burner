@@ -32,6 +32,9 @@
 	<i class="cometOne" />
 	<i class="cometTwo" />
 	<h1 class="title">Burner Wallet</h1>
+	<div class="subtitle-container">
+		<h3 class="subtitle">Powered by</h3>
+	</div>
 	{#if !$wallet.isLoggedIn}
 		loading...
 	{:else if $burner.state == 'renewkey'}
@@ -146,6 +149,15 @@
 	.title {
 		color: #ff6700;
 	}
+	.subtitle-container {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+	}
+	.subtitle {
+		color: #c0c0c0;
+	}
+
 	.burner {
 		display: flex;
 		font-family: 'Coustard', serif;
@@ -155,7 +167,13 @@
 		width: 100vw;
 		margin: 0 auto;
 		height: 100vh;
-		background-color: #2f2d2e;
+		background: rgb(2, 0, 36);
+		background: linear-gradient(
+			180deg,
+			rgba(2, 0, 36, 1) 0%,
+			rgba(9, 9, 121, 1) 49%,
+			rgba(11, 132, 157, 1) 100%
+		);
 	}
 
 	.key {
