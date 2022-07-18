@@ -86,9 +86,6 @@
 		padding: 2%;
 		border-radius: 10px;
 	}
-	.register-keys label {
-		color: #ff6700;
-	}
 
 	.key {
 		min-width: 300px;

@@ -144,4 +144,22 @@
 		min-width: 90px;
 		margin-left: 5px;
 	}
+
+	:global(button) {
+		border-radius: 5px;
+		border: 1px;
+		font: inherit;
+		color: #ff6700;
+		background-color: #2e4057;
+	}
+
+	:global(label) {
+		color: white;
+	}
+
+	:global(button:hover) {
+		cursor: pointer;
+		color: #2e4057;
+		background-color: #ff6700;
+	}
 </style>
