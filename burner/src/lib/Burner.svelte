@@ -92,7 +92,6 @@
 		animation-timing-function: ease-in;
 		animation-duration: 8s;
 		animation-delay: 0s;
-		background-color: #fff;
 		animation-iteration-count: infinite;
 	}
 	.cometTwo {
