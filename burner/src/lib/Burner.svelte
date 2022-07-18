@@ -175,6 +175,7 @@
 
 	:global(label) {
 		text-transform: capitalize;
+		color: #ebebeb;
 	}
 
 	test {

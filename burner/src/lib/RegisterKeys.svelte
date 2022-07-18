@@ -57,7 +57,7 @@
 			setState('renewkey');
 		}}>Change</button
 	>
-	<label for="account">account</label>
+	<label style="margin-top: 20px" for="account">account</label>
 	<input id="account" type="text" class="key" placeholder="0x..." bind:value={account} />
 	<label for="expires">expires</label>
 	<input id="expires" type="text" class="key" placeholder="" bind:value={expires} />
@@ -100,7 +100,7 @@
 		flex-direction: row;
 		align-content: space-around;
 		justify-content: space-around;
-		margin-top: 10px;
+		margin-top: 20px;
 	}
 
 	.command button {
