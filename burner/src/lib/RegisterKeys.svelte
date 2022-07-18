@@ -4,6 +4,7 @@
 	import { loadKeys } from '$lib/ts/keys';
 	import type { Txn } from '$lib/ts/txns';
 	import { onMount } from 'svelte';
+	import CopyIcon from '$lib/icons/CopyIcon.svelte';
 
 	let publicKey = '';
 	let expires = 0;
@@ -26,6 +27,15 @@
 		setState('view');
 	};
 
+	const copyInClipBoard = async (value) => {
+		const elem = document.createElement('textarea');
+		elem.value = value;
+		document.body.appendChild(elem);
+		elem.select();
+		document.execCommand('copy');
+		document.body.removeChild(elem);
+	}
+
 	onMount(() => {
 		loadKeys();
 		wallet.subscribe((data) => {
@@ -42,14 +52,22 @@
 
 <div class="register-keys">
 	<label for="sessionkey">session key</label>
-	<input
-		id="sessionkey"
-		type="text"
-		class="key"
-		placeholder="0x..."
-		bind:value={publicKey}
-		disabled
-	/>
+	<div class="session-key-wrapper">
+		<input
+				id="sessionkey"
+				type="text"
+				class="key"
+				placeholder="0x..."
+				bind:value={publicKey}
+				disabled
+		/>
+		<button class="secondary"
+				on:click={() => {
+			copyInClipBoard(publicKey);
+		}}>
+			<CopyIcon/>
+		</button>
+	</div>
 	<button
 		class="renew-session"
 		on:click={() => {
@@ -113,5 +131,23 @@
 	.renew-session {
 		min-width: 300px;
 		padding: 4px;
+	}
+
+	.session-key-wrapper {
+		display: flex;
+		margin-bottom: 10px;
+	}
+
+	.session-key-wrapper .key {
+		margin-bottom: 0;
+		margin-right: 5px;
+	}
+
+	.session-key-wrapper button {
+		fill: #2e4057;
+	}
+
+	.session-key-wrapper button:hover {
+		fill: #c0c0c0;
 	}
 </style>

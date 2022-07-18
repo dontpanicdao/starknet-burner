@@ -1,7 +1,7 @@
 <script type="ts">
 	import { loadKeys } from '$lib/ts/keys';
 	import RegisterKeys from '$lib/RegisterKeys.svelte';
-	import RefreshIcon from '$lib/RefreshIcon.svelte';
+	import RefreshIcon from '$lib/icons/RefreshIcon.svelte';
 	import RenewKeys from '$lib/RenewKeys.svelte';
 	import Transactions from '$lib/Transactions.svelte';
 	import Send from '$lib/Send.svelte';
@@ -176,6 +176,10 @@
 	:global(label) {
 		text-transform: capitalize;
 		color: #ebebeb;
+	}
+
+	:global(button .icon) {
+		/*transform: scale(0.2);*/
 	}
 
 	test {

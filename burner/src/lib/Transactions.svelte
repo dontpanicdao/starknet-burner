@@ -2,7 +2,7 @@
 	import { setState } from '$lib/stores/burner';
 	import QR from '$lib/QR.svelte';
 	import { wallet, refreshTxn } from '$lib/stores/wallet';
-	import RefreshIcon from '$lib/RefreshIcon.svelte';
+	import RefreshIcon from '$lib/icons/RefreshIcon.svelte';
 </script>
 
 <div class="transactions">
