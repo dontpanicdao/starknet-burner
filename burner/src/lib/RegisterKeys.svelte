@@ -34,7 +34,7 @@
 		elem.select();
 		document.execCommand('copy');
 		document.body.removeChild(elem);
-	}
+	};
 
 	onMount(() => {
 		loadKeys();
@@ -54,18 +54,20 @@
 	<label for="sessionkey">session key</label>
 	<div class="session-key-wrapper">
 		<input
-				id="sessionkey"
-				type="text"
-				class="key"
-				placeholder="0x..."
-				bind:value={publicKey}
-				disabled
+			id="sessionkey"
+			type="text"
+			class="key"
+			placeholder="0x..."
+			bind:value={publicKey}
+			disabled
 		/>
-		<button class="secondary"
-				on:click={() => {
-			copyInClipBoard(publicKey);
-		}}>
-			<CopyIcon/>
+		<button
+			class="secondary"
+			on:click={() => {
+				copyInClipBoard(publicKey);
+			}}
+		>
+			<CopyIcon />
 		</button>
 	</div>
 	<button
@@ -101,6 +103,7 @@
 		background-color: rgba(192, 192, 192, 0.2);
 		padding: 2%;
 		border-radius: 10px;
+		z-index: 10;
 	}
 
 	.key {

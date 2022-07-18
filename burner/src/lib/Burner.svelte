@@ -2,6 +2,7 @@
 	import { loadKeys } from '$lib/ts/keys';
 	import RegisterKeys from '$lib/RegisterKeys.svelte';
 	import RefreshIcon from '$lib/icons/RefreshIcon.svelte';
+	import StarknetIcon from '$lib/icons/StarknetIcon.svelte';
 	import RenewKeys from '$lib/RenewKeys.svelte';
 	import Transactions from '$lib/Transactions.svelte';
 	import Send from '$lib/Send.svelte';
@@ -34,6 +35,7 @@
 	<h1 class="title">Burner Wallet</h1>
 	<div class="subtitle-container">
 		<h3 class="subtitle">Powered by</h3>
+		<div class="icon-wrapper"><StarknetIcon /></div>
 	</div>
 	{#if !$wallet.isLoggedIn}
 		loading...
@@ -153,9 +155,15 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: space-around;
+		align-items: center;
+		width: 170px;
 	}
 	.subtitle {
 		color: #c0c0c0;
+	}
+	.icon-wrapper {
+		height: 26px;
+		width: 26px;
 	}
 
 	.burner {
@@ -172,7 +180,7 @@
 			180deg,
 			rgba(2, 0, 36, 1) 0%,
 			rgba(9, 9, 121, 1) 49%,
-			rgba(11, 132, 157, 1) 100%
+			rgba(12, 83, 97, 1) 100%
 		);
 	}
 
