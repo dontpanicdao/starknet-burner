@@ -73,6 +73,10 @@
 </div>
 
 <style>
+body {
+	font-family: 'Lato', sans-serif;
+	font-family: 'Lobster', cursive;
+}
 	.burner {
 		display: flex;
 		flex-direction: column;
