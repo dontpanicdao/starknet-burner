@@ -173,6 +173,10 @@
 		background-color: #2e4057;
 	}
 
+	:global(label) {
+		text-transform: capitalize;
+	}
+
 	test {
 		color: #ff6700;
 		color: #ebebeb;

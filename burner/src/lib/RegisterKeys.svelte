@@ -64,7 +64,7 @@
 	<label for="token1">session token (#1)</label>
 	<input id="token1" type="text" class="key" placeholder="0x..." bind:value={token1} />
 	<label for="token2">session token (#2)</label>
-	<input id="token1" type="text" class="key" placeholder="0x..." bind:value={token2} />
+	<input id="token2" type="text" class="key" placeholder="0x..." bind:value={token2} />
 	{#if errMessage}
 		<div class="error">{errMessage}</div>
 	{/if}
@@ -78,10 +78,8 @@
 	.register-keys {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
 		justify-content: space-between;
 		margin: 0 auto;
-		height: 55vh;
 		background-color: rgba(192, 192, 192, 0.2);
 		padding: 2%;
 		border-radius: 10px;
