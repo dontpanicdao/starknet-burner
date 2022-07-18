@@ -148,6 +148,7 @@
 	.session-key-wrapper .key {
 		margin-bottom: 0;
 		margin-right: 5px;
+		color: white;
 	}
 
 	.session-key-wrapper button {
