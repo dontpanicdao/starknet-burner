@@ -357,7 +357,7 @@
 		background-color: rgba(192, 192, 192, 0.2);
 		padding: 2%;
 		border-radius: 10px;
-		z-index: 1;
+		z-index: 10;
 		width: 80%;
 	}
 </style>
