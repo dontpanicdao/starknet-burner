@@ -53,7 +53,7 @@
 
 	.command {
 		display: flex;
-		min-width: 300px;
+		min-width: 70%;
 		flex-direction: row;
 		align-content: space-around;
 		justify-content: space-around;

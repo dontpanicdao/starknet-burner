@@ -39,7 +39,7 @@
 	{#if $burner.lastError !== ''}
 		<div class="error">{$burner.lastError}</div>
 		<button
-				class="secondary"
+			class="secondary"
 			on:click={() => {
 				track(false, '');
 			}}>Return</button
@@ -85,7 +85,7 @@
 	}
 
 	.key {
-		min-width: 300px;
+		min-width: 70%;
 		height: 1em;
 		border: 1px solid #ccc;
 		border-radius: 5px;
@@ -95,7 +95,7 @@
 
 	.command {
 		display: flex;
-		min-width: 300px;
+		min-width: 70%;
 		flex-direction: row;
 		align-content: space-around;
 		justify-content: space-around;

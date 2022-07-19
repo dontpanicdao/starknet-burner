@@ -50,7 +50,7 @@
 	});
 </script>
 
-<div class="register-keys">
+<div class="container">
 	<label for="sessionkey">session key</label>
 	<div class="session-key-wrapper">
 		<input
@@ -95,23 +95,12 @@
 </div>
 
 <style>
-	.register-keys {
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		margin: 0 auto;
-		background-color: rgba(192, 192, 192, 0.2);
-		padding: 2%;
-		border-radius: 10px;
-		z-index: 10;
-	}
-
 	.error {
 		text-align: center;
 		color: crimson;
 	}
 	.key {
-		min-width: 300px;
+		min-width: 70%;
 		height: 1em;
 		border: 1px solid #ccc;
 		border-radius: 5px;
@@ -121,7 +110,7 @@
 
 	.command {
 		display: flex;
-		min-width: 300px;
+		min-width: 70%;
 		flex-direction: row;
 		align-content: space-around;
 		justify-content: space-around;
@@ -136,7 +125,7 @@
 	}
 
 	.renew-session {
-		min-width: 300px;
+		min-width: 70%;
 		padding: 4px;
 	}
 
