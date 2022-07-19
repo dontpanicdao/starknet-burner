@@ -14,11 +14,13 @@
 	};
 </script>
 
-<div class="container">
+<div class="container qr">
 	<a href="{baseURL}?s={$wallet.token.sessionkey}">
 		<QR value={baseURL + '?s=' + $wallet.token.sessionkey} />
 	</a>
-	<div>{$wallet.token.sessionkey.slice(0, 6)}...{$wallet.token.sessionkey.slice(-4)}</div>
+	<div class="sessionKey">
+		{$wallet.token.sessionkey.slice(0, 6)}...{$wallet.token.sessionkey.slice(-4)}
+	</div>
 	<div class="command">
 		<button class="secondary" on:click={back}>Back...</button>
 		<button on:click={renew}>Renew</button>
@@ -26,9 +28,15 @@
 </div>
 
 <style>
+	.qr {
+		align-items: center;
+	}
+	.sessionKey {
+		color: #c0c0c0;
+	}
 	.command {
 		display: flex;
-		min-width: 300px;
+		min-width: 70%;
 		flex-direction: row;
 		align-content: space-around;
 		justify-content: space-around;

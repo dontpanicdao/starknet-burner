@@ -76,7 +76,7 @@
 		flex-direction: row;
 		align-items: center;
 		justify-content: space-between;
-		min-width: 300px;
+		min-width: 70%;
 		list-style: none;
 		height: 2em;
 		border: 1px solid #ccc;
@@ -86,7 +86,7 @@
 	}
 
 	.transaction {
-		min-width: 300px;
+		min-width: 70%;
 		list-style: none;
 		height: 2em;
 		border: 1px solid #ccc;
@@ -97,7 +97,7 @@
 
 	.command {
 		display: flex;
-		min-width: 300px;
+		min-width: 70%;
 		flex-direction: row;
 		align-content: space-around;
 		justify-content: space-around;

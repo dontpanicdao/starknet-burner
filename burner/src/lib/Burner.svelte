@@ -208,6 +208,7 @@
 		width: 100vw;
 		margin: 0 auto;
 		height: 100vh;
+		overflow: hidden;
 		background: rgb(2, 0, 36);
 		background: linear-gradient(
 			180deg,
@@ -218,7 +219,7 @@
 	}
 
 	.key {
-		min-width: 300px;
+		min-width: 70%;
 		height: 1em;
 		border: 1px solid #ccc;
 		border-radius: 5px;
@@ -241,7 +242,7 @@
 	}
 
 	.token {
-		min-width: 300px;
+		min-width: 70%;
 		list-style: none;
 		height: 1em;
 		border: 1px solid #ccc;
@@ -253,7 +254,7 @@
 
 	.command {
 		display: flex;
-		min-width: 300px;
+		min-width: 70%;
 		flex-direction: row;
 		align-content: space-around;
 		justify-content: space-around;
@@ -322,5 +323,6 @@
 		padding: 2%;
 		border-radius: 10px;
 		z-index: 10;
+		width: 80%;
 	}
 </style>
