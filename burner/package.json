@@ -1,5 +1,5 @@
 {
-	"name": "burner",
+	"name": "@starknet/burner-wallet",
 	"version": "0.3.0-beta1",
 	"scripts": {
 		"dev": "vite dev --port 3000",
