@@ -151,11 +151,11 @@
 	}
 	.cometOne {
 		display: inline-block;
-		position: absolute;
+		position: fixed;
 		border-radius: 5% 40% 70%;
 		box-shadow: inset 0px 0px 1px #294b67;
 		border: 1px solid #333;
-		z-index: 1;
+		z-index: 10;
 		background-color: #fff;
 		opacity: 0.7;
 		left: 25vw;
@@ -169,11 +169,11 @@
 	}
 	.cometTwo {
 		display: inline-block;
-		position: absolute;
+		position: fixed;
 		border-radius: 5% 40% 70%;
 		box-shadow: inset 0px 0px 1px #294b67;
 		border: 1px solid #333;
-		z-index: 1;
+		z-index: 10;
 		background-color: #fff;
 		opacity: 0.7;
 		height: 35px;
@@ -300,7 +300,7 @@
 	.command .refresh {
 		display: flex;
 		padding: 4px;
-		min-width: 24px;
+		min-width: 32px;
 		margin-left: 5px;
 		fill: #2e4057;
 	}
@@ -357,7 +357,7 @@
 		background-color: rgba(192, 192, 192, 0.2);
 		padding: 2%;
 		border-radius: 10px;
-		z-index: 10;
+		z-index: 1;
 		width: 80%;
 	}
 </style>
