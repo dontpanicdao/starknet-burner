@@ -14,31 +14,18 @@
 	};
 </script>
 
-<div class="register-keys">
+<div class="container">
 	<a href="{baseURL}?s={$wallet.token.sessionkey}">
 		<QR value={baseURL + '?s=' + $wallet.token.sessionkey} />
 	</a>
 	<div>{$wallet.token.sessionkey.slice(0, 6)}...{$wallet.token.sessionkey.slice(-4)}</div>
 	<div class="command">
+		<button class="secondary" on:click={back}>Back...</button>
 		<button on:click={renew}>Renew</button>
-		<button on:click={back}>Back...</button>
 	</div>
 </div>
 
 <style>
-	.register-keys {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		width: 100%;
-		height: 100%;
-		background-color: #ebebeb;
-		padding: 20px;
-		border-radius: 5px;
-		z-index: 10;
-	}
-
 	.command {
 		display: flex;
 		min-width: 300px;
