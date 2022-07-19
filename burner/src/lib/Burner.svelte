@@ -44,35 +44,37 @@
 	{:else if $burner.state == 'keys' || !$wallet.token?.account}
 		<RegisterKeys />
 	{:else if $burner.state == 'view'}
-		<ul class="key">
-			<li>{$wallet.token?.account?.slice(0, 6)}...{$wallet.token?.account?.slice(-4)}</li>
-		</ul>
-		<div class="command">
-			<button class="refresh" on:click={allBalance}><RefreshIcon /></button>
-			<button
-				class="standard"
-				on:click={() => {
-					setState('send');
-				}}>Send...</button
-			>
-			<button
-				class="standard"
-				on:click={() => {
-					setState('transactions');
-				}}>Transactions</button
-			>
-			<button
-				class="standard"
-				on:click={() => {
-					setState('keys');
-				}}>Keys...</button
-			>
+		<div class="container">
+			<ul class="key">
+				<li>{$wallet.token?.account?.slice(0, 6)}...{$wallet.token?.account?.slice(-4)}</li>
+			</ul>
+			<div class="command">
+				<button class="refresh secondary" on:click={allBalance}><RefreshIcon /></button>
+				<button
+					class="standard"
+					on:click={() => {
+						setState('send');
+					}}>Send...</button
+				>
+				<button
+					class="standard"
+					on:click={() => {
+						setState('transactions');
+					}}>Transactions</button
+				>
+				<button
+					class="standard"
+					on:click={() => {
+						setState('keys');
+					}}>Keys...</button
+				>
+			</div>
+			<ul class="token-panel">
+				{#each $wallet.erc20 as token}
+					<li class="token">{token.symbol}: {token.displayQuantity}</li>
+				{/each}
+			</ul>
 		</div>
-		<ul class="token-panel">
-			{#each $wallet.erc20 as token}
-				<li class="token">{token.symbol}: {token.displayQuantity}</li>
-			{/each}
-		</ul>
 	{:else if $burner.state == 'transactions'}
 		<Transactions />
 	{:else if $burner.state == 'send'}
@@ -228,6 +230,7 @@
 		list-style: none;
 		margin: 0;
 		padding: 0;
+		color: #ebebeb;
 	}
 
 	.token-panel {
@@ -245,6 +248,7 @@
 		border-radius: 5px;
 		margin-bottom: 10px;
 		padding: 10px;
+		color: #ebebeb;
 	}
 
 	.command {
@@ -258,10 +262,15 @@
 	}
 
 	.command .refresh {
-		display: block;
+		display: flex;
 		padding: 4px;
 		min-width: 24px;
 		margin-left: 5px;
+		fill: #2e4057;
+	}
+
+	.command .refresh:hover {
+		fill: #c0c0c0;
 	}
 
 	.command .standard {
@@ -304,15 +313,14 @@
 		color: #ebebeb;
 	}
 
-	:global(button .icon) {
-		/*transform: scale(0.2);*/
-	}
-
-	test {
-		color: #ff6700;
-		color: #ebebeb;
-		color: #c0c0c0;
-		color: #3a6ea5;
-		color: #2f2d2e;
+	:global(div.container) {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		margin: 0 auto;
+		background-color: rgba(192, 192, 192, 0.2);
+		padding: 2%;
+		border-radius: 10px;
+		z-index: 10;
 	}
 </style>
