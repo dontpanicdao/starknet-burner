@@ -3,6 +3,7 @@
 	import RegisterKeys from '$lib/RegisterKeys.svelte';
 	import RefreshIcon from '$lib/icons/RefreshIcon.svelte';
 	import StarknetIcon from '$lib/icons/StarknetIcon.svelte';
+	import Stars from '$lib/Stars.svelte';
 	import RenewKeys from '$lib/RenewKeys.svelte';
 	import Transactions from '$lib/Transactions.svelte';
 	import Send from '$lib/Send.svelte';
@@ -30,6 +31,8 @@
 </script>
 
 <div class="burner">
+	<Stars />
+
 	<i class="cometOne" />
 	<i class="cometTwo" />
 	<h1 class="title">Burner Wallet</h1>
@@ -83,6 +86,38 @@
 </div>
 
 <style>
+	.star {
+		position: absolute;
+		width: 2px;
+		height: 2px;
+		background: rgba(255, 255, 255, 0);
+		border-radius: 5px;
+		animation-name: twinkle;
+		animation-timing-function: ease-in;
+		animation-iteration-count: infinite;
+	}
+
+	@keyframes twinkle {
+		0% {
+			transform: scale(1, 1);
+			background: rgba(255, 255, 255, 0);
+			animation-timing-function: ease-in;
+		}
+		60% {
+			transform: scale(0.8, 0.8);
+			background: rgba(255, 255, 255, 1);
+			animation-timing-function: ease-out;
+		}
+		80% {
+			background: rgba(255, 255, 255, 0);
+			transform: scale(1, 1);
+		}
+		100% {
+			background: rgba(255, 255, 255, 0);
+			transform: scale(1, 1);
+		}
+	}
+
 	.lds-hourglass {
 		display: inline-block;
 		position: relative;
@@ -116,11 +151,11 @@
 	}
 	.cometOne {
 		display: inline-block;
-		position: absolute;
+		position: fixed;
 		border-radius: 5% 40% 70%;
 		box-shadow: inset 0px 0px 1px #294b67;
 		border: 1px solid #333;
-		z-index: 1;
+		z-index: 10;
 		background-color: #fff;
 		opacity: 0.7;
 		left: 25vw;
@@ -134,11 +169,11 @@
 	}
 	.cometTwo {
 		display: inline-block;
-		position: absolute;
+		position: fixed;
 		border-radius: 5% 40% 70%;
 		box-shadow: inset 0px 0px 1px #294b67;
 		border: 1px solid #333;
-		z-index: 1;
+		z-index: 10;
 		background-color: #fff;
 		opacity: 0.7;
 		height: 35px;
@@ -265,7 +300,7 @@
 	.command .refresh {
 		display: flex;
 		padding: 4px;
-		min-width: 24px;
+		min-width: 32px;
 		margin-left: 5px;
 		fill: #2e4057;
 	}
