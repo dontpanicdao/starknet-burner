@@ -4,6 +4,7 @@
 	import { loadKeys } from '$lib/ts/keys';
 	import type { Txn } from '$lib/ts/txns';
 	import { onMount } from 'svelte';
+	import CopyIcon from '$lib/icons/CopyIcon.svelte';
 
 	let publicKey = '';
 	let expires = 0;
@@ -26,6 +27,15 @@
 		setState('view');
 	};
 
+	const copyInClipBoard = async (value) => {
+		const elem = document.createElement('textarea');
+		elem.value = value;
+		document.body.appendChild(elem);
+		elem.select();
+		document.execCommand('copy');
+		document.body.removeChild(elem);
+	};
+
 	onMount(() => {
 		loadKeys();
 		wallet.subscribe((data) => {
@@ -42,14 +52,24 @@
 
 <div class="register-keys">
 	<label for="sessionkey">session key</label>
-	<input
-		id="sessionkey"
-		type="text"
-		class="key"
-		placeholder="0x..."
-		bind:value={publicKey}
-		disabled
-	/>
+	<div class="session-key-wrapper">
+		<input
+			id="sessionkey"
+			type="text"
+			class="key"
+			placeholder="0x..."
+			bind:value={publicKey}
+			disabled
+		/>
+		<button
+			class="secondary"
+			on:click={() => {
+				copyInClipBoard(publicKey);
+			}}
+		>
+			<CopyIcon />
+		</button>
+	</div>
 	<button
 		class="renew-session"
 		on:click={() => {
@@ -57,19 +77,19 @@
 			setState('renewkey');
 		}}>Change</button
 	>
-	<label for="account">account</label>
+	<label style="margin-top: 20px" for="account">account</label>
 	<input id="account" type="text" class="key" placeholder="0x..." bind:value={account} />
 	<label for="expires">expires</label>
 	<input id="expires" type="text" class="key" placeholder="" bind:value={expires} />
 	<label for="token1">session token (#1)</label>
 	<input id="token1" type="text" class="key" placeholder="0x..." bind:value={token1} />
 	<label for="token2">session token (#2)</label>
-	<input id="token1" type="text" class="key" placeholder="0x..." bind:value={token2} />
+	<input id="token2" type="text" class="key" placeholder="0x..." bind:value={token2} />
 	{#if errMessage}
 		<div class="error">{errMessage}</div>
 	{/if}
 	<div class="command">
-		<button on:click={cancel}>Cancel</button>
+		<button class="secondary" on:click={cancel}>Cancel</button>
 		<button on:click={save}>Save</button>
 	</div>
 </div>
@@ -78,15 +98,18 @@
 	.register-keys {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		justify-content: center;
+		justify-content: space-between;
 		margin: 0 auto;
-		height: 100%;
-		background-color: #fff;
-		padding: 20px;
-		border-radius: 5px;
+		background-color: rgba(192, 192, 192, 0.2);
+		padding: 2%;
+		border-radius: 10px;
+		z-index: 10;
 	}
 
+	.error {
+		text-align: center;
+		color: crimson;
+	}
 	.key {
 		min-width: 300px;
 		height: 1em;
@@ -102,7 +125,7 @@
 		flex-direction: row;
 		align-content: space-around;
 		justify-content: space-around;
-		margin-top: 10px;
+		margin-top: 20px;
 	}
 
 	.command button {
@@ -115,5 +138,24 @@
 	.renew-session {
 		min-width: 300px;
 		padding: 4px;
+	}
+
+	.session-key-wrapper {
+		display: flex;
+		margin-bottom: 10px;
+	}
+
+	.session-key-wrapper .key {
+		margin-bottom: 0;
+		margin-right: 5px;
+		color: white;
+	}
+
+	.session-key-wrapper button {
+		fill: #2e4057;
+	}
+
+	.session-key-wrapper button:hover {
+		fill: #c0c0c0;
 	}
 </style>
