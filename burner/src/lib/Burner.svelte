@@ -3,6 +3,7 @@
 	import RegisterKeys from '$lib/RegisterKeys.svelte';
 	import RefreshIcon from '$lib/icons/RefreshIcon.svelte';
 	import StarknetIcon from '$lib/icons/StarknetIcon.svelte';
+	import Stars from '$lib/Stars.svelte';
 	import RenewKeys from '$lib/RenewKeys.svelte';
 	import Transactions from '$lib/Transactions.svelte';
 	import Send from '$lib/Send.svelte';
@@ -30,6 +31,8 @@
 </script>
 
 <div class="burner">
+	<Stars />
+
 	<i class="cometOne" />
 	<i class="cometTwo" />
 	<h1 class="title">Burner Wallet</h1>
@@ -83,6 +86,38 @@
 </div>
 
 <style>
+	.star {
+		position: absolute;
+		width: 2px;
+		height: 2px;
+		background: rgba(255, 255, 255, 0);
+		border-radius: 5px;
+		animation-name: twinkle;
+		animation-timing-function: ease-in;
+		animation-iteration-count: infinite;
+	}
+
+	@keyframes twinkle {
+		0% {
+			transform: scale(1, 1);
+			background: rgba(255, 255, 255, 0);
+			animation-timing-function: ease-in;
+		}
+		60% {
+			transform: scale(0.8, 0.8);
+			background: rgba(255, 255, 255, 1);
+			animation-timing-function: ease-out;
+		}
+		80% {
+			background: rgba(255, 255, 255, 0);
+			transform: scale(1, 1);
+		}
+		100% {
+			background: rgba(255, 255, 255, 0);
+			transform: scale(1, 1);
+		}
+	}
+
 	.lds-hourglass {
 		display: inline-block;
 		position: relative;
