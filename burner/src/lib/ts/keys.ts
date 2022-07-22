@@ -2,6 +2,7 @@ import { ec } from 'starknet';
 import { toBN } from 'starknet/utils/number';
 import type { Txn } from '$lib/ts/txns';
 import { wallet } from '$lib/stores/wallet';
+import { burner } from '$lib/stores/burner';
 
 export const loadKeys = () => {
 	let sessPrivateKey = localStorage.getItem('bwpk');
@@ -28,9 +29,10 @@ export const loadKeys = () => {
 			return {
 				...data,
 				token,
-				isLoggedIn: true
+				history: [] as Txn[]
 			};
 		});
+		burner.update((data) => ({ ...data, isLoggedIn: true }));
 		return;
 	}
 	let tokenData = JSON.parse(bwtk);
@@ -50,10 +52,10 @@ export const loadKeys = () => {
 		return {
 			...data,
 			token,
-			history,
-			isLoggedIn: true
+			history
 		};
 	});
+	burner.update((data) => ({ ...data, isLoggedIn: true }));
 	return;
 };
 

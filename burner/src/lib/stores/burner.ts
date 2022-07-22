@@ -19,5 +19,6 @@ export const track = (loading: boolean, lastError: string) => {
 export const burner = writable({
 	lastError: '',
 	loading: false,
-	state: 'view'
+	state: 'view',
+	isLoggedIn: false
 });

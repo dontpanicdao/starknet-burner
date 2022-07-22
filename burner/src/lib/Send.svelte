@@ -5,7 +5,7 @@
 	import Scanner from './Scanner.svelte';
 	import ScanIcon from './ScanIcon.svelte';
 
-	let to = '';
+	let to = '0x0207aCC15dc241e7d167E67e30E769719A727d3E0fa47f9E187707289885Dfde';
 	let amount = 1;
 	let errMessage = '';
 	let displayScan = false;
