@@ -39,8 +39,7 @@ export const saveToken = async (
 		return {
 			...data,
 			token,
-			history: tx,
-			isLoggedIn: true
+			history: tx
 		};
 	});
 };
@@ -51,16 +50,11 @@ export const renewSessionKey = () => {
 		throw new Error('failed to generate key');
 	}
 	localStorage.setItem('bwpk', pk);
-	let token = localStorage.getItem('bwtk');
-	if (!token || token === '') {
-		return;
-	}
-	let tokenData = JSON.parse(token);
 	localStorage.setItem(
 		'bwtk',
 		JSON.stringify({
 			sessionkey: publicKey as string,
-			account: tokenData.account,
+			account: '',
 			expires: 0,
 			token: [] as string[]
 		})
@@ -70,7 +64,7 @@ export const renewSessionKey = () => {
 			...data,
 			token: {
 				sessionkey: publicKey as string,
-				account: tokenData.account,
+				account: '',
 				expires: 0,
 				token: [] as string[]
 			}
@@ -240,7 +234,6 @@ export const refreshTxn = async (hash: string) => {
 export const wallet = writable({
 	lastError: null,
 	loading: false,
-	isLoggedIn: false,
 	token: {
 		sessionkey: '',
 		account: '',

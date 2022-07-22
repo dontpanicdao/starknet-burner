@@ -40,7 +40,7 @@
 		<h3 class="subtitle">Powered by</h3>
 		<div class="icon-wrapper"><StarknetIcon /></div>
 	</div>
-	{#if !$wallet.isLoggedIn}
+	{#if !$burner.isLoggedIn}
 		<div class="lds-hourglass" />
 	{:else if $burner.state == 'renewkey'}
 		<RenewKeys />
@@ -86,17 +86,6 @@
 </div>
 
 <style>
-	.star {
-		position: absolute;
-		width: 2px;
-		height: 2px;
-		background: rgba(255, 255, 255, 0);
-		border-radius: 5px;
-		animation-name: twinkle;
-		animation-timing-function: ease-in;
-		animation-iteration-count: infinite;
-	}
-
 	@keyframes twinkle {
 		0% {
 			transform: scale(1, 1);

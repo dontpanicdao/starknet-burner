@@ -6,28 +6,11 @@
 	import { onMount } from 'svelte';
 	import CopyIcon from '$lib/icons/CopyIcon.svelte';
 
-	let publicKey = '';
-	let expires = 0;
-	let token1 = '';
-	let token2 = '';
-	let account = '';
-	let errMessage = '';
-
 	const cancel = () => {
 		setState('view');
 	};
 
-	const save = () => {
-		if (!account) {
-			errMessage = 'Enter an account';
-			return;
-		}
-		const history: Txn[] = [];
-		saveToken(account, expires, token1, token2, history);
-		setState('view');
-	};
-
-	const copyInClipBoard = async (value) => {
+	const copyInClipBoard = async (value: string) => {
 		const elem = document.createElement('textarea');
 		elem.value = value;
 		document.body.appendChild(elem);
@@ -38,15 +21,6 @@
 
 	onMount(() => {
 		loadKeys();
-		wallet.subscribe((data) => {
-			publicKey = data.token.sessionkey;
-			expires = data.token.expires;
-			if (data.token.token.length >= 2) {
-				token1 = data.token.token[0];
-				token2 = data.token.token[1];
-			}
-			account = data.token.account;
-		});
 	});
 </script>
 
@@ -58,13 +32,13 @@
 			type="text"
 			class="key"
 			placeholder="0x..."
-			bind:value={publicKey}
+			value={$wallet.token?.sessionkey}
 			disabled
 		/>
 		<button
 			class="secondary"
 			on:click={() => {
-				copyInClipBoard(publicKey);
+				copyInClipBoard($wallet.token?.sessionkey);
 			}}
 		>
 			<CopyIcon />
@@ -78,27 +52,47 @@
 		}}>Change</button
 	>
 	<label style="margin-top: 20px" for="account">account</label>
-	<input id="account" type="text" class="key" placeholder="0x..." bind:value={account} />
+	<input
+		id="account"
+		disabled
+		type="text"
+		class="key"
+		placeholder="0x..."
+		value={$wallet.token?.account}
+	/>
 	<label for="expires">expires</label>
-	<input id="expires" type="text" class="key" placeholder="" bind:value={expires} />
+	<input
+		id="expires"
+		disabled
+		type="text"
+		class="key"
+		placeholder=""
+		value={$wallet.token?.expires}
+	/>
 	<label for="token1">session token (#1)</label>
-	<input id="token1" type="text" class="key" placeholder="0x..." bind:value={token1} />
+	<input
+		id="token1"
+		disabled
+		type="text"
+		class="key"
+		placeholder="0x..."
+		value={$wallet.token?.token[0]}
+	/>
 	<label for="token2">session token (#2)</label>
-	<input id="token2" type="text" class="key" placeholder="0x..." bind:value={token2} />
-	{#if errMessage}
-		<div class="error">{errMessage}</div>
-	{/if}
+	<input
+		id="token2"
+		disabled
+		type="text"
+		class="key"
+		placeholder="0x..."
+		value={$wallet.token?.token[1]}
+	/>
 	<div class="command">
-		<button class="secondary" on:click={cancel}>Cancel</button>
-		<button on:click={save}>Save</button>
+		<button class="secondary" on:click={cancel}>Back</button>
 	</div>
 </div>
 
 <style>
-	.error {
-		text-align: center;
-		color: crimson;
-	}
 	.key {
 		min-width: 70%;
 		height: 1em;

@@ -2,15 +2,10 @@
 	import { setState } from '$lib/stores/burner';
 	import QR from '$lib/QR.svelte';
 	import { wallet, renewSessionKey } from '$lib/stores/wallet';
-	import { red } from 'bn.js';
 
 	const baseURL = import.meta.env.VITE_DRONE_BASEURL || 'http://localhost:5173';
 	const back = () => {
 		setState('keys');
-	};
-
-	const renew = () => {
-		renewSessionKey();
 	};
 </script>
 
@@ -23,7 +18,7 @@
 	</div>
 	<div class="command">
 		<button class="secondary" on:click={back}>Back...</button>
-		<button on:click={renew}>Renew</button>
+		<button on:click={renewSessionKey}>Renew</button>
 	</div>
 </div>
 
