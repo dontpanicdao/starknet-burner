@@ -1,5 +1,7 @@
 .container {
   padding: 0 2rem;
+  width: 100vw;
+  height: 100vh;
 }
 
 .main {
