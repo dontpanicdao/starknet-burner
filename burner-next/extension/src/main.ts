@@ -12,7 +12,7 @@ window.addEventListener("message", (event) => {
     try {
       const evtIn = JSON.parse(event.data);
       if (evtIn.name) {
-        console.log(`outside: ${evtIn.name}`);
+        console.log(`outside from extension: ${evtIn.name}`);
       }
     } catch {
       // ignore
