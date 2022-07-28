@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Router from "next/router";
 import styles from "styles/Home.module.css";
 import { useEffect, useState } from "react";
 import { useStateContext } from "lib/context";
@@ -9,7 +8,7 @@ import Loader from "components/Loader";
 
 export default function Home() {
   const [state, setState] = useStateContext();
-  const [key, setKey] = useState("");
+  const [key, setKey] = useState();
 
   useEffect(() => {
     if (window) {
@@ -19,17 +18,16 @@ export default function Home() {
         const timer = setTimeout(() => {
           const key = generateKey();
           saveLocalStorage("test", key);
-          Router.reload();
+          setState("UNINITIALIZED");
+          setKey(key);
         }, 1000);
         return () => clearTimeout(timer);
       } else {
-        console.log("there is session key");
-        console.log(" session key : ", sessionKey);
         setState("INITIALIZED");
         setKey(sessionKey);
       }
     }
-  }, []);
+  }, [key]);
 
   return (
     <div className={styles.container}>
