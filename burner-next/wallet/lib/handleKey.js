@@ -6,10 +6,10 @@ const generateKey = () => {
   return sessionKey;
 };
 
-const getPublicKey = (sessionKey) => {
+const getSessionPublicKey = (sessionKey) => {
   const keypair = ec.getKeyPair(toBN(sessionKey));
   const sessionPublicKey = ec.getStarkKey(keypair);
   return sessionPublicKey;
 };
 
-export { generateKey, getPublicKey };
+export { generateKey, getSessionPublicKey };
