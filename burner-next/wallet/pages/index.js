@@ -1,18 +1,20 @@
 import Head from "next/head";
 import styles from "styles/Home.module.css";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useStateContext } from "lib/context";
 import { getLocalStorage, saveLocalStorage } from "lib/handleLocalStorage";
 import { generateKey } from "lib/handleKey";
 import Loader from "components/Loader";
 
 export default function Home() {
-  const [state, setState] = useStateContext();
-  const [key, setKey] = useState();
+  const [state, setState, key, setKey] = useStateContext();
+  //TODO :  Understand and FIX this - I use a key named 'test' because when i work with
+  // "bwsessionkey", my localstorage is automatically regenerated
 
   useEffect(() => {
     if (window) {
       const sessionKey = getLocalStorage("test");
+
       if (!sessionKey) {
         setState("UNINITIALIZED");
         const timer = setTimeout(() => {
