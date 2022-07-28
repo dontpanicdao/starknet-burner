@@ -86,8 +86,8 @@ We can find some work here and there to support hashing/signing with other
 schemes than [sn_keccak and pederson](https://docs.starknet.io/docs/Hashing/hash-functions/).
 
 For instance, you can find these resources:
-- [A cairo implementation of NIST P-256](https://github.com/spartucus/nistp256-cairo) 
-- [Cairo examples](https://github.com/starkware-libs/cairo-examples/tree/master/secp)
+- [A cairo implementation of NIST P-256, aka secp256r1](https://github.com/spartucus/nistp256-cairo) 
+- [Cairo examples, including Ethereum secp256k1](https://github.com/starkware-libs/cairo-examples/tree/master/secp)
 
 This area has still to be research, both to change the validation scheme in Cairo and to
 rely on the secure enclave, including with webauthn. the following documentations might
@@ -101,16 +101,20 @@ be interesting to read in detail:
 Then there are a number of additional features that we could target. The list
 below is provided without any specific order or priority:
 
+- Building demos to help people boostrap their projects.
 - enrich the interface to make the wallet perform more actions, like minting
   token or claiming a reward.
 - providing an interface that is close to the one from the other wallets so
   that we can use starknet.js or a subset of it
 - addition a sign/autosign feature so that the user does not even see he is
   minting tokens.
-- Building demos to help people boostrap their projects.
 - Have `drone` hosted or running on-demand to make it easier to use with
   hackathons. The project would "just implement the burner side" not the
   validation side to begin.
+- Manage multiple accounts/sessionkeys in the same wallet so that we can
+  interact with different dapps from the same wallet.
+- Add extra filtering feature on an account to prevent the user from accessing
+  dangerous resources via a 2nd signer.
 - Setting up the same feature with other accounts, including OpenZeppelin, Braavos
   and Metamask.
 - Integrate an Indexer to check the assets minted, transferred and burned with the
@@ -129,3 +133,7 @@ below is provided without any specific order or priority:
   to see if that can somehow be leverage
 - Checkout [abdelhamidbakhta/starkvest](https://github.com/abdelhamidbakhta/starkvest)
   to see if it can make sense to use it for the project.
+- Checkout [Random thoughts on Account Abstraction](https://hackmd.io/@s0lness/BJUb16Yo9)
+  as another source of inspiration.
+- Checkout [An implementation of sessionkey](https://github.com/rvorias/starkdew-valley)
+  by the people at Briq.
