@@ -37,7 +37,7 @@ export default function Home() {
         <title>Wallet</title>
         <meta name="description" content="wallet view" />
       </Head>
-      <main className={styles.main} style={{ width: "100vw", height: "100vh" }}>
+      <main className={styles.main}>
         {state === "UNINITIALIZED" && <Loader message="Key generation..." />}
         {state === "INITIALIZED" && (
           <>
