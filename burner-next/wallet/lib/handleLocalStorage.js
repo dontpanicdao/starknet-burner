@@ -1,9 +1,9 @@
-const isLocalStorage = (keyName) => {
-  return localStorage.getItem(keyName) ? true : false;
+const getLocalStorage = (keyName) => {
+  return localStorage.getItem(keyName);
 };
 
-const saveInLocalStorage = (keyName, value) => {
+const saveLocalStorage = (keyName, value) => {
   return localStorage.setItem(keyName, value);
 };
 
-export { isLocalStorage, saveInLocalStorage };
+export { getLocalStorage, saveLocalStorage };
