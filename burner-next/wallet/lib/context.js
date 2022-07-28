@@ -4,8 +4,11 @@ const Context = createContext();
 
 const StateProvider = ({ children }) => {
   const [state, setState] = useState(null);
+  const [key, setKey] = useState(null);
   return (
-    <Context.Provider value={[state, setState]}>{children}</Context.Provider>
+    <Context.Provider value={[state, setState, key, setKey]}>
+      {children}
+    </Context.Provider>
   );
 };
 
