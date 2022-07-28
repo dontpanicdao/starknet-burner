@@ -1,9 +1,13 @@
 import { createContext, useContext, useState } from "react";
 
+export const UNINITIALIZED = "UNINITIALIZED";
+export const INITIALIZED = "INITIALIZED";
+export const CONNECTED = "CONNECTED";
+
 const Context = createContext();
 
-const StateProvider = ({ children }) => {
-  const [state, setState] = useState(null);
+export const StateProvider = ({ children }) => {
+  const [state, setState] = useState(UNINITIALIZED);
   const [key, setKey] = useState(null);
   return (
     <Context.Provider value={[state, setState, key, setKey]}>
@@ -12,8 +16,6 @@ const StateProvider = ({ children }) => {
   );
 };
 
-const useStateContext = () => {
+export const useStateContext = () => {
   return useContext(Context);
 };
-
-export { StateProvider, useStateContext };
