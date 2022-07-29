@@ -41,8 +41,14 @@ export default function Home() {
       const evtIn =
         typeof event.data === "string" ? JSON.parse(event.data) : event.data;
       if (evtIn.name) {
-        console.log(`inside: ${evtIn.name}, value: ${evtIn.value}`);
-        reply({ name: "test" });
+        switch (evtIn.name) {
+          case "initialize":
+            handleCloseSession();
+            break;
+          default:
+            console.log(`inside: ${evtIn.name}, value: ${evtIn.value}`);
+            reply({ name: "test" });
+        }
       }
     }
   };
