@@ -1,8 +1,6 @@
 const reply = (event) => {
   if (event) {
-    console.log("from reply");
-
-    console.log(JSON.stringify(event));
+    console.log(`reply from wallet: ${JSON.stringify(event)}`);
   }
 };
 
