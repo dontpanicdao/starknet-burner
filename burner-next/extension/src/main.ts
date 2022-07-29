@@ -3,7 +3,7 @@ import { Button } from "./button";
 
 document.querySelector<HTMLDivElement>("#starknetburner")!.innerHTML = `
   <div class="burner-wallet">
-	  <iframe id="iframe"/>
+	  <iframe id="iframe" allow="clipboard-write" onload='javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+"px";}(this));' style="height:300px;width:300px;border:none;overflow:hidden;"/>
   </div>
 `;
 
