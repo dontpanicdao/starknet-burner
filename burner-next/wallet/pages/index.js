@@ -96,42 +96,40 @@ export default function Home() {
         <meta name="description" content="wallet view" />
       </Head>
       <main className={styles.main}>
-        {state === UNINITIALIZED && <Loader message="Key generation..." />}
+        {state === UNINITIALIZED && <Loader />}
         {state === INITIALIZED && (
           <>
-            <div className={styles.title}>
-              <h1>Welcome (back) Fren !</h1>
-              <p>Life is all about choices, so...</p>
-              <button onClick={handleCloseSession}>reset session</button>
-            </div>
-
             <div className={styles.choicesContainer}>
               <div className={styles.choice}>
                 <a target="_blank" href={`https://drone.blaqkube.io/?s=${key}`}>
                   <QRCode value={`https://drone.blaqkube.io/?s=${key}`} />
                 </a>
-                <h4>You can scan this QR Code</h4>
               </div>
               <div className={styles.choice}>
                 <button className={styles.button} onClick={handleClick}>
                   {isLoading ? "Loading..." : "Load..."}
                 </button>
-
-                <h3>Click once signed</h3>
               </div>
             </div>
           </>
         )}
         {state === CONNECTED && (
-          <>
-            <button onClick={handleCloseSession}>reset session</button>
-            <h6>Account : {sessionToken?.account}</h6>
+          <div className={styles.sessionContent}>
             <Jazzicon
-              diameter={48}
+              diameter={16}
               seed={jsNumberForAddress(sessionToken?.account)}
             />
-            <h6>Expires : {sessionToken?.expires}</h6>
-          </>
+            <p
+              className={styles.accountAddress}
+              onClick={() =>
+                navigator.clipboard.writeText(sessionToken?.account)
+              }
+            >
+              {sessionToken?.account.slice(0, 5) +
+                "..." +
+                sessionToken?.account.slice(-4)}
+            </p>
+          </div>
         )}
       </main>
     </div>

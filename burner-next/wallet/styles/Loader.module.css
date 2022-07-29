@@ -3,7 +3,7 @@
   height: 200px;
   width: 200px;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
 }
 
