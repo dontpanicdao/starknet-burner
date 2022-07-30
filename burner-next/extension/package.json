@@ -7,7 +7,6 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "prebuild": "tsc",
     "preview": "vite preview"
   },
   "devDependencies": {
