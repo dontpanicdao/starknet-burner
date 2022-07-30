@@ -4,6 +4,3 @@
 [submodule "plugin/cairo-contracts"]
 	path = plugin/cairo-contracts
 	url = https://github.com/OpenZeppelin/cairo-contracts.git
-[submodule "burner-next/extension/argent-x"]
-	path = burner-next/extension/argent-x
-	url = https://github.com/argentlabs/argent-x
