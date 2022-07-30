@@ -3,7 +3,7 @@
 set -e
 
 version() {
-    gally list -p $1 | jq -r '.[0].version'
+    git log -1 --pretty=%h ..
 }
 
-echo '{"version": "'$(version api)'"}'
+echo '{"version": "'$(version)'"}'

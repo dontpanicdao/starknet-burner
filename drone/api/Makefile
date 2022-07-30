@@ -1,5 +1,6 @@
 
 PROJECT := burner
+BUCKET := $(shell grep BUCKET .env | cut -d'=' -f2 | tr -d '"')
 VERSION := $(shell git log -1 --pretty=%h)
 
 .PHONY: build

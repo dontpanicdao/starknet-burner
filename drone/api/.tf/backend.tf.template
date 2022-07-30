@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
-    profile        = "resetlogs"
-    bucket         = "bots-registry.blaqkube.io"
+    profile        = "profile"
+    bucket         = "bucket"
     key            = "state/burner.state"
     region         = "us-east-1"
   }

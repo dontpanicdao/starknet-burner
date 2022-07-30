@@ -1,13 +1,13 @@
 resource "aws_dynamodb_table" "sessionkey" {
   name         = "${terraform.workspace}BurnerSession"
-  hash_key     = "sessionKey"
+  hash_key     = "sessionPublicKey"
   billing_mode = "PAY_PER_REQUEST"
 
   attribute {
-	name  = "sessionKey"
-	type  = "S"
+    name = "sessionPublicKey"
+    type = "S"
   }
-  
+
   ttl {
     attribute_name = "TTL"
     enabled        = false
@@ -34,7 +34,7 @@ data "aws_iam_policy_document" "sessionkey" {
 resource "aws_iam_policy" "dynamodb_policy" {
   name        = "${terraform.workspace}BurnerSessionPolicy"
   description = "The policy to access the Burner Wallet Session Token"
-  policy      = data.aws_iam_policy_document.dynamodb.json
+  policy      = data.aws_iam_policy_document.sessionkey.json
 }
 
 resource "aws_iam_role_policy_attachment" "dynamodb_for_lambda" {

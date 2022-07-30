@@ -18,17 +18,12 @@ import (
 var sessionKeyTable = aws.String(os.Getenv("table"))
 
 type SessionKey struct {
-	sessionKey string  `dynamodbav:"sessionKey"`
-	Content    *string `dynamodbav:"content,omitempty"`
-	TTL        int     `dynamodbav:"TTL"`
-}
-
-type SessionToken struct {
-	SessionPublicKey string   `json:"sessionPublicKey"`
-	Account          string   `json:"account"`
-	Expires          int      `json:"expires"`
-	Contract         string   `json:"contract"`
-	Token            []string `json:"token"`
+	SessionPublicKey string   `dynamodbav:"sessionPublicKey" json:"sessionPublicKey"`
+	Account          string   `dynamodbav:"account" json:"account"`
+	Expires          int      `dynamodbav:"expires" json:"expires"`
+	Contract         *string  `dynamodbav:"contract,omitempty" json:"contract,omitempty"`
+	Token            []string `dynamodbav:"token" json:"token"`
+	TTL              int      `dynamodbav:"TTL" json:"-"`
 }
 
 type pathKeys struct {
@@ -96,7 +91,7 @@ func (pk *pathKeys) uploadJSON(ctx context.Context, request events.APIGatewayV2H
 	}
 	return events.APIGatewayV2HTTPResponse{
 		StatusCode: http.StatusCreated,
-		Body:       fmt.Sprintf(`{"message": "Created", "sessionKey": "%s"}`, fmt.Sprintf("0x%s", metadata.sessionKey)),
+		Body:       fmt.Sprintf(`{"message": "Created", "sessionKey": "%s"}`, fmt.Sprintf("0x%s", metadata.SessionPublicKey)),
 		Headers:    map[string]string{"Content-Type": "application/json"},
 	}, nil
 }
@@ -111,9 +106,9 @@ func (pk *pathKeys) getJSON(ctx context.Context, request events.APIGatewayV2HTTP
 			Headers:    map[string]string{"Content-Type": "application/json"},
 		}, nil
 	}
-	sha := strings.ToLower(pk.keys["sha"])
+	sessionPublicKey := strings.ToLower(pk.keys["sessionPublicKey"])
 	item := &SessionKey{
-		sessionKey: sha,
+		SessionPublicKey: sessionPublicKey,
 	}
 	keys, err := attributevalue.MarshalMap(item)
 	if err != nil {
@@ -136,7 +131,7 @@ func (pk *pathKeys) getJSON(ctx context.Context, request events.APIGatewayV2HTTP
 		}, nil
 	}
 	if output.Item == nil {
-		fmt.Println("could not find item with key", sha)
+		fmt.Println("could not find item with key", sessionPublicKey)
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusNotFound,
 			Body:       fmt.Sprintf(`{"message": "NotFound"}`),
@@ -151,16 +146,17 @@ func (pk *pathKeys) getJSON(ctx context.Context, request events.APIGatewayV2HTTP
 			Headers:    map[string]string{"Content-Type": "application/json"},
 		}, nil
 	}
-	if item.Content == nil {
+	if item.SessionPublicKey == "" {
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusNotFound,
 			Body:       fmt.Sprintf(`{"message": "NotFound"}`),
 			Headers:    map[string]string{"Content-Type": "application/json"},
 		}, nil
 	}
+	body, _ := json.Marshal(item)
 	return events.APIGatewayV2HTTPResponse{
 		StatusCode:      http.StatusCreated,
-		Body:            *item.Content,
+		Body:            string(body),
 		IsBase64Encoded: true,
 		Headers:         map[string]string{"Content-Type": "application/json"},
 	}, nil

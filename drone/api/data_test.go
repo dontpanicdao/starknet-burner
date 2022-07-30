@@ -24,10 +24,11 @@ func (m *MockDynamoDB) GetItem(ctx context.Context, params *dynamodb.GetItemInpu
 
 func TestUploadJSONMessage(t *testing.T) {
 	godotenv.Load()
-	token := SessionToken{
+	contract := "0xdeadbeef"
+	token := SessionKey{
 		SessionPublicKey: "0xdeadbeef",
 		Account:          "0xdeadbeef",
-		Contract:         "0xdeadbeef",
+		Contract:         &contract,
 		Expires:          1659210039,
 		Token:            []string{"0x01", "0x02"},
 	}
