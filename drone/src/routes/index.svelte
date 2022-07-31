@@ -17,13 +17,16 @@
 	import { Buffer } from 'buffer';
 	import { toBN } from 'starknet/utils/number';
 	import QR from '$lib/QR.svelte';
-	import Upgrade from '$lib/Upgrade.svelte';
-	import AddPlugin from '$lib/AddPlugin.svelte';
-	import Downgrade from '$lib/Downgrade.svelte';
-	import Refill from '$lib/Refill.svelte';
-	import Refresh from '$lib/Refresh.svelte';
 	import { connect } from '$lib/ts/utils';
+	interface sessionToken {
+		sessionPublicKey: string;
+		account: string;
+		expires: number;
+		token: string[];
+		contract: string;
+	}
 
+	const apiURL = import.meta.env.VITE_API_BASEURL || '';
 	const baseURL = import.meta.env.VITE_BURNER_BASEURL || 'http://localhost:3000';
 	export let sessionkey = '';
 	let account = '';
@@ -41,6 +44,22 @@
 			return;
 		}
 		errMessage = '';
+	};
+
+	const save = async (t: sessionToken) => {
+		if (apiURL === '') {
+			return;
+		}
+		const response = await fetch(`${apiURL}/${t.sessionPublicKey}`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(t)
+		});
+		if (response.status !== 201) {
+			throw new Error(`${response.status} ${response.statusText}`);
+		}
 	};
 
 	const sign = async () => {
@@ -75,6 +94,13 @@
 		let signature = await wallet.signMessage(msg);
 		token1 = `0x${toBN(signature[0], 10).toString(16)}`;
 		token2 = `0x${toBN(signature[1], 10).toString(16)}`;
+		await save({
+			sessionPublicKey: sessionkey,
+			account: account,
+			expires: expires,
+			token: [token1, token2],
+			contract: '0xdeadbeef'
+		});
 	};
 </script>
 
