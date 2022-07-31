@@ -1,8 +1,11 @@
 # Drone Simple Storage
 
-Once the sessionkey signed on drone the token should be generated and sent back
-to the burner. This directory provides a simple storage to store the token and
-re-import it on the burner.
+Drone Simple Storage is a simple way of exchanging data between the burner and
+drone the way it works is:
+- the burner can store a session token request and the service returns a 6-digit
+  code. Then you can use that 6-digit code to find the request back on drone
+- once the session key signed, drone can store the detail so that the burner can
+  import it
 
 > Note: the session token is not useful per se as the sessionkey ensure the
 > security and the token cannot be used without it. However whether the service
@@ -24,7 +27,7 @@ that are not part of the repository
   deploy the components on AWS. `.tf/default.auto.tfvars.template` provides an
   example of the content of the file
 
-## How to deploy the service
+## Deploying the service
 
 Once you have configure the connection to AWS and the various configuration,
 you should be able to deploy the service with the following commands:
@@ -38,10 +41,31 @@ terraform init
 terraform apply
 ```
 
-##
+## Using the service
+
+The service provides 2 ways of exchanging data:
+
+- storing/retrieving a request for a token
 
 ```shell
 export BASEURL=https://...
-curl -XPUT ${BASEURL}/0xdeadbeef -d'{"sessionPublicKey": "0xdeadbeef", "account": "0xdeadbeef", "contract": "0xdeadbeef", "token": ["0x1", "0x2"], "expires": 1659210039}'
+export REQUESTID=$(curl -XPOST ${BASEURL}/requests \
+  -d'{"sessionPublicKey": "0xdeadbeef"}' | \
+   jq -r '.requestID')
+curl ${BASEURL}/requests/${REQUESTID}
+```
+
+- storing/retrieving a session token
+
+```shell
+export BASEURL=https://...
+curl -XPUT ${BASEURL}/0xdeadbeef \
+  -d'{
+	"sessionPublicKey": "0xdeadbeef",
+	"account": "0xdeadbeef",
+	"contract": "0xdeadbeef",
+	"token": ["0x1", "0x2"],
+	"expires": 1659210039
+  }'
 curl ${BASEURL}/0xdeadbeef
 ```
