@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -110,6 +111,7 @@ func (pk *pathKeys) getJSON(ctx context.Context, request events.APIGatewayV2HTTP
 	}
 	output, err := pk.store.client.GetItem(ctx, input)
 	if err != nil {
+		log.Println("dynamodb error:", err)
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusInternalServerError,
 			Body:       fmt.Sprintf(`{"message": "%v"}`, err),
@@ -127,6 +129,7 @@ func (pk *pathKeys) getJSON(ctx context.Context, request events.APIGatewayV2HTTP
 	item := SessionKey{}
 	err = attributevalue.UnmarshalMap(output.Item, &item)
 	if err != nil {
+		log.Println("conversion error:", err)
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusInternalServerError,
 			Body:       fmt.Sprintf(`{"message": "%v"}`, err),
