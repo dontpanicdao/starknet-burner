@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 	"testing"
@@ -88,9 +89,10 @@ func TestIntegrationDownloadJSONMessage(t *testing.T) {
 	if err != nil {
 		t.Fatal("client should be connect, instead:", err)
 	}
-	if event.StatusCode != http.StatusCreated {
+	if event.StatusCode != http.StatusOK {
 		t.Fatal("status code should be 200, instead:", event.StatusCode)
 	}
+	fmt.Println(event.Body)
 }
 
 func TestIntegrationSimpleJSONMessage(t *testing.T) {

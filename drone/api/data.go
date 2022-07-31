@@ -93,6 +93,7 @@ func (pk *pathKeys) uploadJSON(ctx context.Context, request events.APIGatewayV2H
 
 // getJSON reads a sessionPublicKey and returns the associated token if it exists
 func (pk *pathKeys) getJSON(ctx context.Context, request events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
+	log.Println("entering here")
 	if request.RequestContext.HTTP.Method != "GET" {
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusNotFound,
@@ -146,7 +147,7 @@ func (pk *pathKeys) getJSON(ctx context.Context, request events.APIGatewayV2HTTP
 	}
 	body, _ := json.Marshal(item)
 	return events.APIGatewayV2HTTPResponse{
-		StatusCode:      http.StatusCreated,
+		StatusCode:      http.StatusOK,
 		Body:            string(body),
 		IsBase64Encoded: true,
 		Headers:         map[string]string{"Content-Type": "application/json"},

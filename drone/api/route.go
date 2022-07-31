@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 	"regexp"
 
@@ -44,17 +45,18 @@ func handleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) 
 			StatusCode: 204,
 		}, nil
 	}
-	store, err := NewStore(ctx)
-	if err != nil {
-		return events.APIGatewayV2HTTPResponse{
-			StatusCode: http.StatusInternalServerError,
-			Body:       err.Error(),
-		}, nil
-	}
 	if _, ok := regexPath(request.RequestContext.HTTP.Path, `\/version$`); ok {
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusOK,
 			Body:       fmt.Sprintf(`{"version": "%s"}`, version),
+		}, nil
+	}
+	store, err := NewStore(ctx)
+	if err != nil {
+		log.Println("error accessing the store", err)
+		return events.APIGatewayV2HTTPResponse{
+			StatusCode: http.StatusInternalServerError,
+			Body:       err.Error(),
 		}, nil
 	}
 	if keys, ok := regexPath(request.RequestContext.HTTP.Path, `\/(?P<sessionPublicKey>0x[0-9a-fA-F]+)$`); ok {
@@ -62,6 +64,7 @@ func handleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) 
 			store: store,
 			keys:  keys,
 		}
+		log.Println("we are keeping data with", request.RequestContext.HTTP.Method)
 		switch request.RequestContext.HTTP.Method {
 		case http.MethodGet:
 			return ks.getJSON(ctx, request)
