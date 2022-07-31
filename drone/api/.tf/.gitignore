@@ -1,0 +1,3 @@
+default.auto.tfvars
+backend.tf
+/.terraform*
