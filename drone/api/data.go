@@ -93,7 +93,7 @@ func (pk *pathKeys) uploadJSON(ctx context.Context, request events.APIGatewayV2H
 
 // getJSON reads a sessionPublicKey and returns the associated token if it exists
 func (pk *pathKeys) getJSON(ctx context.Context, request events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
-	log.Println("entering here")
+	log.Println("entering getJSON")
 	if request.RequestContext.HTTP.Method != "GET" {
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusNotFound,
@@ -102,6 +102,7 @@ func (pk *pathKeys) getJSON(ctx context.Context, request events.APIGatewayV2HTTP
 		}, nil
 	}
 	sessionPublicKey := strings.ToLower(pk.keys["sessionPublicKey"])
+	log.Println("sessionPublicKey", sessionPublicKey)
 	input := &dynamodb.GetItemInput{
 		TableName: aws.String(os.Getenv("table")),
 		Key: map[string]types.AttributeValue{
@@ -110,8 +111,10 @@ func (pk *pathKeys) getJSON(ctx context.Context, request events.APIGatewayV2HTTP
 			},
 		},
 	}
+	log.Println("GetItem...")
 	output, err := pk.store.client.GetItem(ctx, input)
 	if err != nil {
+		log.Println("dynamodb error:", err)
 		log.Println("dynamodb error:", err)
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusInternalServerError,
@@ -119,8 +122,9 @@ func (pk *pathKeys) getJSON(ctx context.Context, request events.APIGatewayV2HTTP
 			Headers:    map[string]string{"Content-Type": "application/json"},
 		}, nil
 	}
+	log.Println("continue with output...")
 	if output.Item == nil {
-		fmt.Println("could not find item with key", sessionPublicKey)
+		log.Println("could not find item with key", sessionPublicKey)
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusNotFound,
 			Body:       fmt.Sprintf(`{"message": "NotFound"}`),
@@ -130,14 +134,14 @@ func (pk *pathKeys) getJSON(ctx context.Context, request events.APIGatewayV2HTTP
 	item := SessionKey{}
 	err = attributevalue.UnmarshalMap(output.Item, &item)
 	if err != nil {
-		log.Println("conversion error:", err)
+		log.Println("could not convert data", err)
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusInternalServerError,
 			Body:       fmt.Sprintf(`{"message": "%v"}`, err),
 			Headers:    map[string]string{"Content-Type": "application/json"},
 		}, nil
 	}
-
+	log.Println("continue", item.SessionPublicKey)
 	if item.SessionPublicKey == "" {
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusNotFound,
@@ -145,7 +149,15 @@ func (pk *pathKeys) getJSON(ctx context.Context, request events.APIGatewayV2HTTP
 			Headers:    map[string]string{"Content-Type": "application/json"},
 		}, nil
 	}
-	body, _ := json.Marshal(item)
+	body, err := json.Marshal(item)
+	if err != nil {
+		log.Println("could not convert body", err)
+		return events.APIGatewayV2HTTPResponse{
+			StatusCode: http.StatusInternalServerError,
+			Body:       fmt.Sprintf(`{"message": "%v"}`, err),
+			Headers:    map[string]string{"Content-Type": "application/json"},
+		}, nil
+	}
 	return events.APIGatewayV2HTTPResponse{
 		StatusCode:      http.StatusOK,
 		Body:            string(body),

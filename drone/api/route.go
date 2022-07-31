@@ -64,7 +64,6 @@ func handleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) 
 			store: store,
 			keys:  keys,
 		}
-		log.Println("we are keeping data with", request.RequestContext.HTTP.Method)
 		switch request.RequestContext.HTTP.Method {
 		case http.MethodGet:
 			return ks.getJSON(ctx, request)
