@@ -59,6 +59,20 @@ func handleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) 
 			Body:       err.Error(),
 		}, nil
 	}
+	if _, ok := regexPath(request.RequestContext.HTTP.Path, `\/requests$`); ok {
+		ks := &pathKeys{
+			store: store,
+			keys:  map[string]string{},
+		}
+		return ks.uploadRequest(ctx, request)
+	}
+	if keys, ok := regexPath(request.RequestContext.HTTP.Path, `\/requests/(?P<requestID>[0-9]{6})$`); ok {
+		ks := &pathKeys{
+			store: store,
+			keys:  keys,
+		}
+		return ks.downloadRequest(ctx, request)
+	}
 	if keys, ok := regexPath(request.RequestContext.HTTP.Path, `\/(?P<sessionPublicKey>0x[0-9a-fA-F]+)$`); ok {
 		ks := &pathKeys{
 			store: store,
@@ -66,9 +80,9 @@ func handleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) 
 		}
 		switch request.RequestContext.HTTP.Method {
 		case http.MethodGet:
-			return ks.getJSON(ctx, request)
+			return ks.downloadSessionToken(ctx, request)
 		case http.MethodPut:
-			return ks.uploadJSON(ctx, request)
+			return ks.uploadSessionToken(ctx, request)
 		}
 	}
 	return events.APIGatewayV2HTTPResponse{

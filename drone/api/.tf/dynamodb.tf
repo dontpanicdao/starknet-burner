@@ -12,6 +12,22 @@ resource "aws_dynamodb_table" "sessionkey" {
     attribute_name = "TTL"
     enabled        = true
   }
+}
+
+resource "aws_dynamodb_table" "request" {
+  name         = "${terraform.workspace}BurnerRequest"
+  hash_key     = "requestID"
+  billing_mode = "PAY_PER_REQUEST"
+
+  attribute {
+    name = "requestID"
+    type = "S"
+  }
+
+  ttl {
+    attribute_name = "TTL"
+    enabled        = true
+  }
 
 }
 
@@ -27,6 +43,7 @@ data "aws_iam_policy_document" "sessionkey" {
     ]
     resources = [
       aws_dynamodb_table.sessionkey.arn,
+      aws_dynamodb_table.request.arn,
     ]
   }
 }

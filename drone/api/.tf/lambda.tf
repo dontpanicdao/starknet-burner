@@ -31,8 +31,9 @@ resource "aws_lambda_function" "lambda" {
 
   environment {
     variables = {
-      version = data.external.version.result["version"]
-      table   = "${terraform.workspace}BurnerSession"
+      version       = data.external.version.result["version"]
+      table_session = "${terraform.workspace}BurnerSession"
+      table_request = "${terraform.workspace}BurnerRequest"
     }
   }
 }

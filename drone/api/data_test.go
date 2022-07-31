@@ -48,7 +48,7 @@ func TestIntegrationUploadJSONMessage(t *testing.T) {
 		},
 	}
 	body, _ := json.Marshal(token)
-	event, err := key.uploadJSON(ctx, events.APIGatewayV2HTTPRequest{
+	event, err := key.uploadSessionToken(ctx, events.APIGatewayV2HTTPRequest{
 		RequestContext: events.APIGatewayV2HTTPRequestContext{
 			HTTP: events.APIGatewayV2HTTPRequestContextHTTPDescription{
 				Method: "PUT",
@@ -78,7 +78,7 @@ func TestIntegrationDownloadJSONMessage(t *testing.T) {
 			"sessionPublicKey": "0xdeadbeef",
 		},
 	}
-	event, err := key.getJSON(ctx, events.APIGatewayV2HTTPRequest{
+	event, err := key.downloadSessionToken(ctx, events.APIGatewayV2HTTPRequest{
 		RequestContext: events.APIGatewayV2HTTPRequestContext{
 			HTTP: events.APIGatewayV2HTTPRequestContextHTTPDescription{
 				Method: "GET",
