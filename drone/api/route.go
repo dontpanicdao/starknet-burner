@@ -2,11 +2,14 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"regexp"
 
 	"github.com/aws/aws-lambda-go/events"
 )
+
+var version = "dev"
 
 func path(path, matcher string) bool {
 	if path == matcher || path == "/production"+matcher {
@@ -48,19 +51,23 @@ func handleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) 
 			Body:       err.Error(),
 		}, nil
 	}
-	if keys, ok := regexPath(request.RequestContext.HTTP.Path, `\/(?P<sessionPublicKey>0x[0-9a-fA-F])$`); ok {
-		ks := &pathKeys{
-			store: store,
-			keys:  keys,
-		}
-		return ks.getJSON(ctx, request)
+	if _, ok := regexPath(request.RequestContext.HTTP.Path, `\/version$`); ok {
+		return events.APIGatewayV2HTTPResponse{
+			StatusCode: http.StatusOK,
+			Body:       fmt.Sprintf(`{"version": "%s"}`, version),
+		}, nil
 	}
-	if keys, ok := regexPath(request.RequestContext.HTTP.Path, `\/(?P<sessionPublicKey>0x[0-9a-fA-F])$`); ok {
+	if keys, ok := regexPath(request.RequestContext.HTTP.Path, `\/(?P<sessionPublicKey>0x[0-9a-fA-F]+)$`); ok {
 		ks := &pathKeys{
 			store: store,
 			keys:  keys,
 		}
-		return ks.uploadJSON(ctx, request)
+		switch request.RequestContext.HTTP.Method {
+		case http.MethodGet:
+			return ks.getJSON(ctx, request)
+		case http.MethodPut:
+			return ks.uploadJSON(ctx, request)
+		}
 	}
 	return events.APIGatewayV2HTTPResponse{
 		Headers:    map[string]string{"Content-Type": "application/json"},

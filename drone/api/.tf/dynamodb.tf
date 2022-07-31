@@ -10,7 +10,7 @@ resource "aws_dynamodb_table" "sessionkey" {
 
   ttl {
     attribute_name = "TTL"
-    enabled        = false
+    enabled        = true
   }
 
 }

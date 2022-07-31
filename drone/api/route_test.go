@@ -16,7 +16,7 @@ type routeTest struct {
 
 func TestRoute(t *testing.T) {
 	routes := []routeTest{
-		{initialRoute: "/production/v1/me", environment: "production", expectedRoute: "/v1/me", data: nil},
+		{initialRoute: "/production/version", environment: "production", expectedRoute: "/version", data: nil},
 	}
 	for _, route := range routes {
 		request := events.APIGatewayV2HTTPRequest{
@@ -32,8 +32,8 @@ func TestRoute(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Error: %s", err)
 		}
-		if v.Body != `{"message": "NotFound"}` {
-			t.Fatalf("Expected %s, got %s", `{"message": "NotFound"}`, v.Body)
+		if v.Body != `{"version": "dev"}` {
+			t.Fatalf("Expected %s, got %s", `{"version": "dev"}`, v.Body)
 		}
 	}
 }

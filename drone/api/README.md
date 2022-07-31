@@ -37,3 +37,11 @@ cd .tf
 terraform init
 terraform apply
 ```
+
+##
+
+```shell
+export BASEURL=https://...
+curl -XPUT ${BASEURL}/0xdeadbeef -d'{"sessionPublicKey": "0xdeadbeef", "account": "0xdeadbeef", "contract": "0xdeadbeef", "token": ["0x1", "0x2"], "expires": 1659210039}'
+curl ${BASEURL}/0xdeadbeef
+```
