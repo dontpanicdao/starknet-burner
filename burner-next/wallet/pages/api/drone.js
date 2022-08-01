@@ -1,9 +1,11 @@
-export default function handler(req, res) {
-  res.status(200).json({
-    sessionPublicKey: req.sessionPublicKey,
-    account: "0xdeadbeef",
-    expires: 1658875466,
-    contract: "0x...",
-    token: ["0x...", "0x..."],
-  });
-}
+const handler = async (req, res) => {
+  const { k } = req.query;
+  const resp = await fetch(`${process.env.DRONE_BASE_URL}/${k}`);
+  if (resp.status !== 200) {
+    return res.status(204).send("");
+  }
+  const data = await resp.json();
+  res.status(200).json(data);
+};
+
+export default handler;

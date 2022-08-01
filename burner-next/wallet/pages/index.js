@@ -22,16 +22,22 @@ export default function Home() {
   const [state, setState, key, setKey] = useStateContext();
   const [sessionToken, setSessionToken] = useState(null);
   const [isLoading, setLoading] = useState(false);
+  const [isError, setIsError] = useState("");
 
   const handleClick = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/drone");
+      const res = await fetch(`/api/drone/?k=${key}`);
+      if (res.status !== 200) {
+        setLoading(false);
+        return setIsError("Sign with drone!");
+      }
       const data = await res.json();
       saveLocalStorage("bwsessiontoken", JSON.stringify(data));
       setSessionToken(data);
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      setIsError(error);
     }
     setLoading(false);
   };
@@ -110,6 +116,7 @@ export default function Home() {
                   {isLoading ? "Loading..." : "Load..."}
                 </button>
               </div>
+              <p className={styles.alert}>{isError}</p>
             </div>
           </>
         )}
