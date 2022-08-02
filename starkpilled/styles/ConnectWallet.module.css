@@ -1,0 +1,31 @@
+.connectedWrapper {
+  display: flex;
+  flex-direction: row;
+  width: 30%;
+  height: 150px;
+  justify-content: space-around;
+  align-items: center;
+  cursor: pointer;
+}
+.disconnectedWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.connectButton {
+  width: 100px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  cursor: pointer;
+}
+.iconDisconnect {
+  transform: rotate(180deg);
+}
+.iconConnect {
+  transform: rotate(90deg);
+}
