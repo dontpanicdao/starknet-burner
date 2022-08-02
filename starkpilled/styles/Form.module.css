@@ -1,2 +1,62 @@
 .form {
+  align-items: center;
+  height: 60%;
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+}
+.formTitle {
+  font-family: monospace;
+  font-size: 2rem;
+  color: #403866;
+  line-height: 1.2;
+  text-transform: uppercase;
+  text-align: center;
+}
+.input {
+  height: 60px;
+  margin: 2rem 0;
+  padding: 0.5rem 2rem;
+  width: 80%;
+  background: #fff;
+  border-radius: 30px;
+  font-family: monospace;
+  font-size: 1.2rem;
+  text-align: center;
+  color: #403866;
+  border: none;
+  box-shadow: 5px 5px 15px 5px;
+}
+
+.input:focus::placeholder {
+  color: transparent;
+}
+
+.input:focus {
+  color: #403866;
+}
+
+.send {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+  width: 150px;
+  height: 62px;
+  background-color: transparent;
+  border-radius: 30px;
+  font-family: monospace;
+  font-size: 1.2rem;
+  color: #403866;
+  line-height: 1.2;
+  text-transform: uppercase;
+  transition: all 0.8s;
+  border: none;
+}
+.send:hover {
+  width: 180px;
+  height: 66px;
+  font-size: 1.4rem;
+  background-color: #ebf1f5;
+  box-shadow: 5px 5px 15px 5px;
 }
