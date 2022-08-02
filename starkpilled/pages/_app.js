@@ -1,7 +1,16 @@
-import '../styles/globals.css'
+import {
+  getInstalledInjectedConnectors,
+  StarknetProvider,
+} from "@starknet-react/core";
+import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+  const connectors = getInstalledInjectedConnectors();
+  return (
+    <StarknetProvider connectors={connectors} autoConnect>
+      <Component {...pageProps} />
+    </StarknetProvider>
+  );
 }
 
-export default MyApp
+export default MyApp;
