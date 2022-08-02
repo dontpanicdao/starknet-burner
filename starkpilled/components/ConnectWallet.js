@@ -7,7 +7,6 @@ import styles from "../styles/ConnectWallet.module.css";
 export default function ConnectWallet() {
   const { account } = useStarknet();
   const { available, connect, disconnect } = useConnectors();
-  console.log("avalaible", available[0].name());
 
   return account ? (
     <div

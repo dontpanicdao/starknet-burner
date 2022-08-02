@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import styles from "../styles/Home.module.css";
@@ -6,6 +7,14 @@ import Form from "../components/Form";
 export default function Home() {
   const ConnectWallet = dynamic(() => import("../components/ConnectWallet"), {
     ssr: false,
+  });
+
+  useEffect(() => {
+    if (window.starknet) {
+      window.starknet.on("networkChanged", () => {
+        window.location.reload();
+      });
+    }
   });
 
   return (

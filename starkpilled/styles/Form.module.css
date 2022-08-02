@@ -36,7 +36,15 @@
   color: #403866;
 }
 
-.send {
+.buttonsContainer {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -52,10 +60,10 @@
   text-transform: uppercase;
   transition: all 0.8s;
   border: none;
+  cursor: pointer;
+  text-align: center;
 }
-.send:hover {
-  width: 180px;
-  height: 66px;
+.button:hover {
   font-size: 1.4rem;
   background-color: #ebf1f5;
   box-shadow: 5px 5px 15px 5px;
