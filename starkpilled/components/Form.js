@@ -35,6 +35,7 @@ const Form = () => {
     low: toBN(formData.amount),
     high: toBN(0),
   };
+
   return (
     <form className={styles.form}>
       <h2 className={styles.formTitle}>SEND SOME STARKPILLS</h2>
@@ -66,7 +67,7 @@ const Form = () => {
         <div
           className={styles.button}
           value="Send Pills"
-          onClickCapture={() => {
+          onClick={() => {
             tokenTransferInvoke({
               args: [formData.address, parsedValue],
               metadata: {
