@@ -1,18 +1,21 @@
-import { useStarknet } from "@starknet-react/core";
+import { useStarknet, useStarknetInvoke } from "@starknet-react/core";
+import { useCallback } from "react";
 import styles from "../styles/Form.module.css";
 import { useState } from "react";
 import useTokenContract from "../lib/useTokenContract";
 
 const Form = () => {
   const { contract } = useTokenContract();
-
-  console.log("contract from form:", contract);
+  const { account } = useStarknet();
+  const { loading, error, reset, invoke } = useStarknetInvoke({
+    contract,
+    method: "transfer",
+  });
 
   const [formData, setFormData] = useState({
     address: "",
     amount: "",
   });
-  const { account } = useStarknet();
 
   const handleClick = (type) => {
     if (type === "cancel") {
@@ -28,6 +31,15 @@ const Form = () => {
       });
     }
   };
+  const onTransfer = useCallback(() => {
+    reset();
+    if (account) {
+      invoke({
+        args: [formData.address, [formData.amount, 0]],
+        metadata: { method: "transfer" },
+      });
+    }
+  }, [account, invoke, reset]);
 
   return (
     <form className={styles.form}>
@@ -59,14 +71,14 @@ const Form = () => {
         </div>
         <input
           className={styles.button}
-          type="submit"
           value="Send Pills"
-          onClick={handleClick("submit")}
+          onClick={onTransfer}
         />
         <div className={styles.button} onClick={() => handleClick("faucet")}>
           Faucet
         </div>
       </div>
+      {error && <p>Error: {error}</p>}
     </form>
   );
 };
