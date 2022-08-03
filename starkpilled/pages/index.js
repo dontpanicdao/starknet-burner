@@ -3,6 +3,7 @@ import Head from "next/head";
 import dynamic from "next/dynamic";
 import styles from "../styles/Home.module.css";
 import Form from "../components/Form";
+import UserBalance from "../components/userBalance";
 
 export default function Home() {
   const ConnectWallet = dynamic(() => import("../components/ConnectWallet"), {
@@ -26,7 +27,11 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Ready to Starkpill?</h1>
-        <ConnectWallet />
+        <div className={styles.walletContainer}>
+          <ConnectWallet />
+          <UserBalance />
+        </div>
+
         <Form />
       </main>
     </div>

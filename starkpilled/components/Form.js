@@ -1,8 +1,13 @@
 import { useStarknet } from "@starknet-react/core";
 import styles from "../styles/Form.module.css";
 import { useState } from "react";
+import useTokenContract from "../lib/useTokenContract";
 
 const Form = () => {
+  const { contract } = useTokenContract();
+
+  console.log("contract from form:", contract);
+
   const [formData, setFormData] = useState({
     address: "",
     amount: "",
