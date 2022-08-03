@@ -1,10 +1,9 @@
 import { useContract } from "@starknet-react/core";
-import { Abi } from "starknet";
 import Erc20Abi from "../abi/erc20.json";
 
 const useTokenContract = () => {
   let starkPillAddress =
-    "0x05a87f6bec0b6121e55f291f8e06e6149accd706fb43c725a7f1fd3f3f62aadf";
+    "0x7a1a9784591aad3cc294ed3d89fa45add74e96e8c20e46a21153a6aa979a9cb";
   return useContract({
     abi: Erc20Abi,
     address: starkPillAddress,

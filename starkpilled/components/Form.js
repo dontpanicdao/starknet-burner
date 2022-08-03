@@ -1,17 +1,11 @@
 import { useStarknet, useStarknetInvoke } from "@starknet-react/core";
-import { useCallback } from "react";
+import useTokenContract from "../lib/useTokenContract";
+import { toBN } from "starknet/dist/utils/number";
 import styles from "../styles/Form.module.css";
 import { useState } from "react";
-import useTokenContract from "../lib/useTokenContract";
 
 const Form = () => {
-  const { contract } = useTokenContract();
   const { account } = useStarknet();
-  const { loading, error, reset, invoke } = useStarknetInvoke({
-    contract,
-    method: "transfer",
-  });
-
   const [formData, setFormData] = useState({
     address: "",
     amount: "",
@@ -31,16 +25,16 @@ const Form = () => {
       });
     }
   };
-  const onTransfer = useCallback(() => {
-    reset();
-    if (account) {
-      invoke({
-        args: [formData.address, [formData.amount, 0]],
-        metadata: { method: "transfer" },
-      });
-    }
-  }, [account, invoke, reset]);
 
+  const { contract: transferContract } = useTokenContract();
+  const { invoke: tokenTransferInvoke } = useStarknetInvoke({
+    contract: transferContract,
+    method: "transfer",
+  });
+  const parsedValue = {
+    low: toBN(formData.amount),
+    high: toBN(0),
+  };
   return (
     <form className={styles.form}>
       <h2 className={styles.formTitle}>SEND SOME STARKPILLS</h2>
@@ -69,16 +63,25 @@ const Form = () => {
         <div className={styles.button} onClick={() => handleClick("cancel")}>
           Cancel
         </div>
-        <input
+        <div
           className={styles.button}
           value="Send Pills"
-          onClick={onTransfer}
-        />
+          onClickCapture={() => {
+            tokenTransferInvoke({
+              args: [formData.address, parsedValue],
+              metadata: {
+                method: "Transfer",
+                message: "Transfer Starkpills to another address",
+              },
+            });
+          }}
+        >
+          Send
+        </div>
         <div className={styles.button} onClick={() => handleClick("faucet")}>
           Faucet
         </div>
       </div>
-      {error && <p>Error: {error}</p>}
     </form>
   );
 };
