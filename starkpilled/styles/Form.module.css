@@ -1,23 +1,24 @@
 .form {
   align-items: center;
-  height: 60%;
-  width: 70%;
+  height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
 }
 .formTitle {
+  margin: 0.8rem 0;
   font-family: monospace;
-  font-size: 2rem;
+  font-size: 1.2rem;
   color: #403866;
-  line-height: 1.2;
   text-transform: uppercase;
   text-align: center;
 }
 .input {
-  height: 60px;
-  margin: 2rem 0;
+  height: 40px;
+  margin: 0.5rem 0;
   padding: 0.5rem 2rem;
-  width: 80%;
+  width: 100%;
   background: #fff;
   border-radius: 30px;
   font-family: monospace;
@@ -39,7 +40,7 @@
 .buttonsContainer {
   display: flex;
   width: 100%;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-around;
   align-items: center;
 }
@@ -49,8 +50,8 @@
   justify-content: center;
   align-items: center;
   padding: 0 20px;
-  width: 150px;
-  height: 62px;
+  width: 6rem;
+  height: 2rem;
   background-color: transparent;
   border-radius: 30px;
   font-family: monospace;
@@ -67,4 +68,28 @@
   font-size: 1.4rem;
   background-color: #ebf1f5;
   box-shadow: 5px 5px 15px 5px;
+}
+
+@media (min-width: 768px) {
+  .form {
+    width: 70%;
+    height: inherit;
+  }
+  .formTitle {
+    margin: 1rem;
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+  .input {
+    height: 60px;
+    margin: 2rem 0;
+    width: 80%;
+  }
+  .buttonsContainer {
+    flex-direction: row;
+  }
+  .button {
+    width: 180px;
+    height: 62px;
+  }
 }

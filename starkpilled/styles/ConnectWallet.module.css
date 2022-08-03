@@ -1,9 +1,8 @@
 .connectedWrapper {
   display: flex;
   flex-direction: row;
-  width: 30%;
-  height: 150px;
-  justify-content: space-around;
+  width: 100%;
+  justify-content: space-evenly;
   align-items: center;
   cursor: pointer;
 }
@@ -28,4 +27,12 @@
 }
 .iconConnect {
   transform: rotate(90deg);
+}
+
+@media (min-width: 768px) {
+  .connectedWrapper {
+    width: 30%;
+    height: 150px;
+    justify-content: space-around;
+  }
 }

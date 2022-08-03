@@ -23,7 +23,6 @@ const UserBalance = () => {
     }
 
     const balance = uint256ToBN(data[0]);
-    console.log("data : ", data);
     return <span>Balance : {balance.toString(10)} STARKPILLS</span>;
   }, [data, loading, error]);
 
