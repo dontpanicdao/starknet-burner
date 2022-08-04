@@ -1,8 +1,3 @@
-const style = ` max-width: 1280px;
-margin: 0 auto;
-padding: 2rem;
-text-align: center;`;
-
 const hello = () => {
   return console.log("hello from NPM");
 };
@@ -20,7 +15,7 @@ const setupCounter = (element) => {
 const displayCounter = () => {
   document.querySelector("#counter").innerHTML = `
   <div>
-    <div class="card" style="${style}">
+    <div class="card" style="max-width:1280px;margin:0 auto;padding:2rem;text-align:center">
       <button id="counter" type="button"></button>
     </div>
   </div>
