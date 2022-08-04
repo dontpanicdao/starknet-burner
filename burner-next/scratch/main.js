@@ -10,3 +10,5 @@ document.querySelector("#app").innerHTML = `
 `;
 
 setupCounter(document.querySelector("#counter"));
+
+module.exports = setupCounter;
