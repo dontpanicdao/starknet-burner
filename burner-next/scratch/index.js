@@ -1,4 +1,4 @@
-import "./style.css";
+import "./styles.css";
 
 const hello = () => {
   return console.log("hello from NPM");
