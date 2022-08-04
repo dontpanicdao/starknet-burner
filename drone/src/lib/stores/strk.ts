@@ -27,7 +27,6 @@ export const sendSTRK = async (to: string, amount: number) => {
 		import.meta.env.VITE_STRK_CONTRACT_ADDRESS ||
 		'0x7a1a9784591aad3cc294ed3d89fa45add74e96e8c20e46a21153a6aa979a9cb';
 	let erc20 = new Contract(erc20_abi, starkpillAddress, currentAccount);
-	console.log('erc20  from appGreg:', erc20);
 	try {
 		let tx = await erc20.transfer(to, [amount, 0]);
 		console.log(tx);
