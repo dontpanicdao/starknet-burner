@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import styles from "../styles/Home.module.css";
 import Form from "../components/Form";
 import UserBalance from "../components/userBalance";
-import { getBurnerWalletIframe } from "@blaqkube/scratch";
+import { BurnerWalletButton } from "@blaqkube/scratch";
 
 export default function Home() {
   const Wallet = dynamic(() => import("../components/Wallet"), {
@@ -13,9 +13,12 @@ export default function Home() {
 
   const [network, setNetwork] = useState("");
 
+  const BurnerButton = () => {
+    return <div dangerouslySetInnerHTML={{ __html: BurnerWalletButton() }} />;
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => setNetwork(window.starknet.chainId), 500);
-    getBurnerWalletIframe();
     return () => clearTimeout(timer);
   }, []);
 
@@ -42,7 +45,7 @@ export default function Home() {
         <p>
           {network !== "SN_GOERLI" ? "Check current network" : "Goërli Network"}
         </p>
-        <div id="starknetburner" />
+        <BurnerButton />
         <div className={styles.walletContainer}>
           <Wallet />
           <UserBalance />
