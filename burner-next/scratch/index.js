@@ -1,3 +1,5 @@
+import "./style.css";
+
 const hello = () => {
   return console.log("hello from NPM");
 };
