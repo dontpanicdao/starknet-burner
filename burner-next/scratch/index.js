@@ -1,32 +1,17 @@
-const hello = () => {
-  return console.log("hello from NPM");
-};
-
-const setupCounter = (element) => {
-  let counter = 0;
-  const setCounter = (count) => {
-    counter = count;
-    element.innerHTML = `count is ${counter}`;
-  };
-  element.addEventListener("click", () => setCounter(++counter));
-  setCounter(0);
-};
-
-const displayCounter = () => {
-  const counter = document.querySelector("#counter");
-  counter.innerHTML = `
-  <div>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-  </div>
+const BurnerWallet = () => {
+  const iFrameContainer = document.querySelector("#starknetburner");
+  iFrameContainer.innerHTML = `
+	  <iframe id="iframe" allow="clipboard-write"/>
 `;
-  counter.style.cssText +=
-    "max-width:1280px;margin:0 auto;padding:2rem;text-align:center;background-color:red";
+  iFrameContainer.style.cssText +=
+    "height:300px;width:300px;border:none;overflow:hidden;";
 
-  setupCounter(document.querySelector("#counter"));
+  const iFrame = document.querySelector("#iframe");
+  iFrame.style.cssText += "height:100%;width:100%";
+  iFrame.addEventListener("load", function () {
+    console.log("wallet loaded...");
+  });
+  iFrame.src = "http://localhost:3000";
 };
 
-//displayCounter();
-
-export { hello, displayCounter };
+export { BurnerWallet };

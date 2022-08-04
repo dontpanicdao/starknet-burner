@@ -24,3 +24,14 @@ const iframe = document.querySelector<HTMLIFrameElement>("#iframe");
 Button(document.querySelector<HTMLButtonElement>("#message")!);
 
 iFrame(iframe!);
+
+
+
+//TODO: ajouter dans scratch 
+{/*
+DANS SCRATCH 
+
+- Separer main.ts en main.js et index.js
+  Mains.js contiendra event listenner, iframe, 
+
+*/}

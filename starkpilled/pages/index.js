@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import styles from "../styles/Home.module.css";
 import Form from "../components/Form";
 import UserBalance from "../components/userBalance";
-import { displayCounter } from "@blaqkube/scratch";
+import { getBurnerWalletIframe } from "@blaqkube/scratch";
 
 export default function Home() {
   const Wallet = dynamic(() => import("../components/Wallet"), {
@@ -15,7 +15,7 @@ export default function Home() {
 
   useEffect(() => {
     const timer = setTimeout(() => setNetwork(window.starknet.chainId), 500);
-    displayCounter();
+    getBurnerWalletIframe();
     return () => clearTimeout(timer);
   }, []);
 
@@ -42,7 +42,7 @@ export default function Home() {
         <p>
           {network !== "SN_GOERLI" ? "Check current network" : "Goërli Network"}
         </p>
-        <div id="counter" />
+        <div id="starknetburner" />
         <div className={styles.walletContainer}>
           <Wallet />
           <UserBalance />
