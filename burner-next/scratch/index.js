@@ -68,6 +68,5 @@ const BurnerWallet = () => {
     clicked = false;
   });
 };
-BurnerWallet();
 
 export { BurnerWalletButton, BurnerWallet };

@@ -3,7 +3,9 @@ import { BurnerWallet } from "@blaqkube/scratch";
 
 const Burner = () => {
   useEffect(() => {
-    BurnerWallet();
+    if (window) {
+      BurnerWallet();
+    }
   }, []);
 
   return <div id="starknetburner"></div>;
