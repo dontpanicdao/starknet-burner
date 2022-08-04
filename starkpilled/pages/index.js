@@ -38,7 +38,9 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Ready to Starkpill?</h1>
-        <p>{network === "SN_GOERLI" ? "Goerli network" : "Mainnet"}</p>
+        <p>
+          {network !== "SN_GOERLI" ? "Check current network" : "Goërli Network"}
+        </p>
         <div className={styles.walletContainer}>
           <Wallet />
           <UserBalance />
