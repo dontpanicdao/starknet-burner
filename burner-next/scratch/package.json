@@ -1,7 +1,7 @@
 {
   "name": "@blaqkube/scratch",
   "private": false,
-  "version": "0.1.19",
+  "version": "0.1.29",
   "description": "",
   "main": "index.js",
   "type": "module",
@@ -15,9 +15,6 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
-
-
- 
+  "license": "MIT"
   
 }

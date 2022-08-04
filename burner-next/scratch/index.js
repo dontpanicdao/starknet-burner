@@ -1,3 +1,11 @@
+import {
+  containerStyle,
+  HiddenStyle,
+  iframeStyle,
+  buttonStyle,
+  modalStyle,
+} from "./styles.js";
+
 const BurnerWalletButton = () => {
   return `<button style="border: none;
   outline: none;
@@ -23,19 +31,43 @@ const BurnerWalletButton = () => {
 };
 
 const BurnerWallet = () => {
-  const iFrameContainer = document.querySelector("#starknetburner");
-  iFrameContainer.innerHTML = `
-	  <iframe id="iframe" allow="clipboard-write"/>
-`;
-  iFrameContainer.style.cssText +=
-    "height:300px;width:300px;border:none;overflow:hidden;";
+  const container = document.querySelector("#starknetburner");
 
-  const iFrame = document.querySelector("#iframe");
-  iFrame.style.cssText += "height:100%;width:100%";
-  iFrame.addEventListener("load", function () {
+  container.innerHTML = `
+    <button id="button-burner">connect</button>
+    <div id="modal-wrapper">
+	    <iframe id="iframe" allow="clipboard-write"/>
+    </div>
+`;
+
+  container.style.cssText = containerStyle;
+  const iFrame = container.querySelector("#iframe");
+  iFrame.style.cssText = HiddenStyle;
+
+  iFrame.addEventListener("load", () => {
     console.log("wallet loaded...");
   });
+
   iFrame.src = "https://stark.blaqkube.io";
+
+  const buttonBurner = container.querySelector("#button-burner");
+  const modalWrapper = container.querySelector("#modal-wrapper");
+  let clicked = false;
+
+  buttonBurner.addEventListener("click", () => {
+    if (!clicked) {
+      modalWrapper.style.cssText = modalStyle;
+      buttonBurner.style.cssText = buttonStyle;
+
+      iFrame.style.cssText = iframeStyle;
+      clicked = true;
+      return;
+    }
+    iFrame.style.cssText = HiddenStyle;
+    modalWrapper.style.cssText = HiddenStyle;
+    clicked = false;
+  });
 };
+BurnerWallet();
 
 export { BurnerWalletButton, BurnerWallet };
