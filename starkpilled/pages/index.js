@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import styles from "../styles/Home.module.css";
 import Form from "../components/Form";
 import UserBalance from "../components/userBalance";
+import setupCounter from "@blaqkube/scratch";
 
 export default function Home() {
   const Wallet = dynamic(() => import("../components/Wallet"), {
@@ -12,6 +13,7 @@ export default function Home() {
 
   const [network, setNetwork] = useState("");
 
+  console.log("counter", setupCounter);
   useEffect(() => {
     const timer = setTimeout(() => setNetwork(window.starknet.chainId), 500);
     return () => clearTimeout(timer);
