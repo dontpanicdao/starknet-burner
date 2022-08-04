@@ -13,15 +13,20 @@ const setupCounter = (element) => {
 };
 
 const displayCounter = () => {
-  document.querySelector("#counter").innerHTML = `
+  const counter = document.querySelector("#counter");
+  counter.innerHTML = `
   <div>
-    <div class="card" style="max-width:1280px;margin:0 auto;padding:2rem;text-align:center">
+    <div class="card">
       <button id="counter" type="button"></button>
     </div>
   </div>
 `;
+  counter.style.cssText +=
+    "max-width:1280px;margin:0 auto;padding:2rem;text-align:center;background-color:red";
 
   setupCounter(document.querySelector("#counter"));
 };
+
+//displayCounter();
 
 export { hello, displayCounter };
