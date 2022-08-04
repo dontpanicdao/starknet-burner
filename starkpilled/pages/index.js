@@ -4,7 +4,6 @@ import dynamic from "next/dynamic";
 import styles from "../styles/Home.module.css";
 import Form from "../components/Form";
 import UserBalance from "../components/userBalance";
-import { useConnectors } from "@starknet-react/core";
 
 export default function Home() {
   const Wallet = dynamic(() => import("../components/Wallet"), {
