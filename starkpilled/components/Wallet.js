@@ -2,9 +2,9 @@ import { useStarknet, useConnectors } from "@starknet-react/core";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import Image from "next/image";
 import { sliceAddress } from "../lib/handleData";
-import styles from "../styles/ConnectWallet.module.css";
+import styles from "../styles/Wallet.module.css";
 
-export default function ConnectWallet() {
+export default function Wallet() {
   const { account } = useStarknet();
   const { available, connect, disconnect } = useConnectors();
 

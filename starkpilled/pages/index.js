@@ -1,19 +1,30 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import styles from "../styles/Home.module.css";
 import Form from "../components/Form";
 import UserBalance from "../components/userBalance";
+import { useConnectors } from "@starknet-react/core";
 
 export default function Home() {
-  const ConnectWallet = dynamic(() => import("../components/ConnectWallet"), {
+  const Wallet = dynamic(() => import("../components/Wallet"), {
     ssr: false,
   });
 
+  const [network, setNetwork] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => setNetwork(window.starknet.chainId), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
   useEffect(() => {
     if (window.starknet) {
+      window.starknet.on("accountsChanged", () => {
+        setNetwork(window.starknet.chainId);
+      });
       window.starknet.on("networkChanged", () => {
-        window.location.reload();
+        setNetwork(window.starknet.chainId);
       });
     }
   });
@@ -27,11 +38,11 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Ready to Starkpill?</h1>
+        <p>{network === "SN_GOERLI" ? "Goerli network" : "Mainnet"}</p>
         <div className={styles.walletContainer}>
-          <ConnectWallet />
+          <Wallet />
           <UserBalance />
         </div>
-
         <Form />
       </main>
     </div>
