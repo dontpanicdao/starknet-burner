@@ -2,7 +2,9 @@ const containerStyleClicked =
   "position:absolute;top:0;left:0;display:flex;justify-content:center;flex-direction:column;align-items:center;width:100vw;height:100vh;";
 const HiddenStyle = "display:none;";
 const iframeStyle = (isDesktop) =>
-  `display:flex;position:absolute; width:${isDesktop ? "60" : "90"}vw;height:${
+  `display:flex;position:absolute;background-color:white;width:${
+    isDesktop ? "60" : "90"
+  }vw;height:${
     isDesktop ? "50" : "90"
   }vh;z-index:100;border-radius:1rem;border:none;box-shadow:1rem 0.6rem 2rem 0.2rem rgba(0,0,0,0.5);`;
 const burnerButtonStyle =
