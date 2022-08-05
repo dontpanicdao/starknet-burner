@@ -32,8 +32,8 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Starkpilled - Why not starkpill your fren?</title>
-        <meta name="description" content="Starkpill your fren!" />
+        <title>Starkpilled</title>
+        <meta name="description" content="Fren, you've been Starkpilled!" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#90cdf4" />
       </Head>
