@@ -107,7 +107,11 @@ export default function Home() {
           <>
             <div className={styles.choicesContainer}>
               <div className={styles.choice}>
-                <a target="_blank" href={`https://drone.blaqkube.io/?s=${key}`}>
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href={`https://drone.blaqkube.io/?s=${key}`}
+                >
                   <QRCode value={`https://drone.blaqkube.io/?s=${key}`} />
                 </a>
               </div>
