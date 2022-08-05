@@ -6,7 +6,7 @@ const generateIframe = (container) => {
   iFrame.addEventListener("load", () => {
     console.log("wallet loaded...");
   });
-  iFrame.src = "https://stark.blaqkube.io";
+  iFrame.src = "https://starknet-burner.vercel.app";
   return iFrame;
 };
 
