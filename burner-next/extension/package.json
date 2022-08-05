@@ -1,17 +1,20 @@
 {
-  "name": "@starknet/burner-wallet",
+  "name": "@blaqkube/scratch",
   "private": false,
-  "version": "0.3.0-alpha1",
+  "version": "0.3.5",
+  "description": "",
+  "main": "index.js",
   "type": "module",
-  "repository": "github:dontpanicdao/starknet-burner",
+  "keywords": [],
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
-    "typescript": "^4.6.4",
-    "vite": "^3.0.4",
-    "vitest": "^0.19.1"
-  }
+    "vite": "^3.0.4"
+  },
+  "author": "",
+  "license": "MIT"
+  
 }
