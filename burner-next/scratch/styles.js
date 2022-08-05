@@ -1,15 +1,25 @@
-const containerStyle = "height:300px;width:300px;border:none;";
+const containerStyleClicked =
+  "position:absolute;top:0;left:0;display:flex;justify-content:center;flex-direction:column;align-items:center;width:100vw;height:100vh;";
 const HiddenStyle = "display:none;";
-const iframeStyle = "display:block; with:80vw;height:80vh";
+const iframeStyle = (isDesktop) =>
+  `display:flex;position:absolute; width:${isDesktop ? "60" : "90"}vw;height:${
+    isDesktop ? "50" : "90"
+  }vh;z-index:100;border-radius:1rem;border:none;box-shadow:1rem 0.6rem 2rem 0.2rem rgba(0,0,0,0.5);`;
 const burnerButtonStyle =
-  "position:absolute;z-index:90;border:none;outline:none;padding:1rem 2rem;border-radius:1rem;letter-spacing:0.1rem;background-color:#5086bd;color:#fff;font-size:1rem;cursor:pointer;box-shadow:1rem 0.6rem 2rem 0.2rem rgba(0,0,0,0.5);";
+  "display:flex;justify-content:center;align-items:center;font-family:monospace;position:absolute;z-index:90;border:none;outline:none;padding:1rem 2rem;border-radius:1rem;letter-spacing:0.1rem;background-color:#5086bd;color:#fff;font-size:1rem;cursor:pointer;box-shadow:1rem 0.6rem 2rem 0.2rem rgba(0,0,0,0.5);";
 const modalStyle =
-  "display:flex; width:100vw; height:100vh;position:absolute; top:0;left:0; background-color:rgba(0,0,0,0.2); justify-content:center;align-items:center";
+  "display:flex;width:100vw;height:100vh;position:absolute;top:0;left:0;background-color:rgba(0,0,0,0.4);filter:blur(0.6rem);justify-content:center;align-items:center";
+const iFrameButtonStyle = (iFramePosition) => {
+  const topPosition = iFramePosition.top + iFramePosition.height * 0.025;
+  const leftPosition = iFramePosition.left + iFramePosition.width * 0.025;
+  return `display:flex;justify-content:center;align-items:center;width:2rem;height:2rem;border-radius:1rem;background-color:#FA7575;z-index:101;position:absolute;top:${topPosition}px;left:${leftPosition}px;`;
+};
 
 export {
-  containerStyle,
+  containerStyleClicked,
   HiddenStyle,
   iframeStyle,
   burnerButtonStyle,
   modalStyle,
+  iFrameButtonStyle,
 };

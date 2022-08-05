@@ -1,13 +1,9 @@
-import { containerStyle } from "./styles";
-
 const generateContainer = (element) => {
   element.innerHTML = `
-    <button id="button-burner">connect</button>
-    <div id="modal-wrapper">
-	    <iframe id="iframe" allow="clipboard-write"/>
-    </div>
+    <div id="button-burner">connect</div>
+    <div id="modal-wrapper"></div>
+    <iframe id="iframe" allow="clipboard-write"/>
 `;
-  element.style.cssText = containerStyle;
 
   return element;
 };

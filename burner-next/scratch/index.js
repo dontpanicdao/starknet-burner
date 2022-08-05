@@ -1,4 +1,13 @@
-import { HiddenStyle, modalStyle, iframeStyle } from "./styles.js";
+import {
+  containerStyleClicked,
+  HiddenStyle,
+  modalStyle,
+  iframeStyle,
+  iFrameButtonStyle,
+  burnerButtonStyle,
+} from "./styles.js";
+import { isMatchMoreThanPx } from "./responsive.js";
+import { walletSVG, closeSVG } from "./svg.js";
 import generateButton from "./button.js";
 import generateContainer from "./container.js";
 import generateModal from "./modal.js";
@@ -13,18 +22,26 @@ const BurnerWallet = () => {
   let clicked = false;
 
   buttonBurner.addEventListener("click", () => {
-    console.log("click from button");
     if (!clicked) {
+      container.style.cssText = containerStyleClicked;
       modalWrapper.style.cssText = modalStyle;
-      iFrame.style.cssText = iframeStyle;
+      const isDesktop = isMatchMoreThanPx(768);
+      iFrame.style.cssText = iframeStyle(isDesktop);
+      const iFramePosition = iFrame.getBoundingClientRect();
+      buttonBurner.style.cssText = iFrameButtonStyle(iFramePosition);
+      buttonBurner.textContent = "";
+      buttonBurner.innerHTML += closeSVG;
       clicked = true;
       return;
     }
+    container.style.cssText = "";
     iFrame.style.cssText = HiddenStyle;
     modalWrapper.style.cssText = HiddenStyle;
+    buttonBurner.style.cssText = burnerButtonStyle;
+    buttonBurner.textContent = "Connect";
+    buttonBurner.innerHTML += walletSVG;
     clicked = false;
   });
 };
-BurnerWallet();
 
 export { BurnerWallet };
