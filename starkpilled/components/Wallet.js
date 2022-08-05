@@ -23,7 +23,7 @@ export default function Wallet() {
         onClick={() => disconnect()}
       />
     </div>
-  ) : (
+  ) : available?.length > 0 ? (
     <div className={styles.disconnectedWrapper}>
       <div
         className={styles.connectButton}
@@ -38,5 +38,7 @@ export default function Wallet() {
         <span>{available[0].name()}</span>
       </div>
     </div>
+  ) : (
+    <></>
   );
 }
