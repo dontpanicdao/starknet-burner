@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import styles from "../styles/Home.module.css";
 import Form from "../components/Form";
 import UserBalance from "../components/userBalance";
+import Burner from "../components/Burner";
 
 export default function Home() {
   const Wallet = dynamic(() => import("../components/Wallet"), {
@@ -40,6 +41,8 @@ export default function Home() {
         <p>
           {network !== "SN_GOERLI" ? "Check current network" : "Goërli Network"}
         </p>
+        <Burner />
+        <div />
         <div className={styles.walletContainer}>
           <Wallet />
           <UserBalance />
