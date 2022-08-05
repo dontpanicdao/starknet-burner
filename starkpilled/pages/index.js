@@ -5,7 +5,6 @@ import styles from "../styles/Home.module.css";
 import Form from "../components/Form";
 import UserBalance from "../components/userBalance";
 import Burner from "../components/Burner";
-//import { BurnerWalletButton } from "@blaqkube/scratch";
 
 export default function Home() {
   const Wallet = dynamic(() => import("../components/Wallet"), {

@@ -1,18 +1,10 @@
 {
   "name": "@blaqkube/scratch",
   "private": false,
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "",
   "main": "index.js",
   "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "devDependencies": {
-    "vite": "^3.0.4"
-  },
   "keywords": [],
   "author": "",
   "license": "MIT"

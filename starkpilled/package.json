@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@blaqkube/scratch": "^0.1.30",
+    "@blaqkube/scratch": "^0.2.2",
     "@starknet-react/core": "^0.13.2",
     "get-starknet": "^1.4.3",
     "next": "12.2.3",
