@@ -1,4 +1,4 @@
-import { HiddenStyle } from "./styles.js";
+import { HiddenStyle } from "../lib/styles.js";
 
 const generateIframe = (container) => {
   const iFrame = container.querySelector("#iframe");

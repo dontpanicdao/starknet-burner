@@ -5,13 +5,13 @@ import {
   iframeStyle,
   iFrameButtonStyle,
   burnerButtonStyle,
-} from "./styles.js";
-import { isMatchMoreThanPx } from "./responsive.js";
-import { walletSVG, closeSVG } from "./svg.js";
-import generateButton from "./button.js";
-import generateContainer from "./container.js";
-import generateModal from "./modal.js";
-import generateIframe from "./iframe.js";
+} from "./lib/styles.js";
+import { isMatchMoreThanPx } from "./lib/responsive.js";
+import { walletSVG, closeSVG } from "./components/svg.js";
+import generateButton from "./components/button.js";
+import generateContainer from "./components/container.js";
+import generateModal from "./components/modal.js";
+import generateIframe from "./components/iframe.js";
 
 const BurnerWallet = () => {
   const container = document.querySelector("#starknetburner");

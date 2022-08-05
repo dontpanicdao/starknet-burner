@@ -1,5 +1,5 @@
 import { walletSVG } from "./svg.js";
-import { burnerButtonStyle } from "./styles.js";
+import { burnerButtonStyle } from "../lib/styles.js";
 
 const generateButton = (container) => {
   const button = container.querySelector("#button-burner");
