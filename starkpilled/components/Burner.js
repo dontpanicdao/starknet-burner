@@ -7,7 +7,6 @@ const Burner = () => {
       BurnerWallet();
     }
   }, []);
-
   return <div id="starknetburner"></div>;
 };
 

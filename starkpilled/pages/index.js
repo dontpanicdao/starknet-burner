@@ -14,17 +14,19 @@ export default function Home() {
   const [network, setNetwork] = useState("");
 
   useEffect(() => {
-    const timer = setTimeout(() => setNetwork(window.starknet.chainId), 500);
-    return () => clearTimeout(timer);
+    if (window?.starknet) {
+      const timer = setTimeout(() => setNetwork(window.starknet.chainId), 500);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   useEffect(() => {
-    if (window.starknet) {
+    if (window?.starknet) {
       window.starknet.on("accountsChanged", () => {
-        setNetwork(window.starknet.chainId);
+        setNetwork(window?.starknet?.chainId);
       });
       window.starknet.on("networkChanged", () => {
-        setNetwork(window.starknet.chainId);
+        setNetwork(window?.starknet?.chainId);
       });
     }
   });

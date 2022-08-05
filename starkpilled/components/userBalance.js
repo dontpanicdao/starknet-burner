@@ -14,7 +14,10 @@ const UserBalance = () => {
   });
 
   const content = useMemo(() => {
-    if (loading || !data?.length) {
+    if (!account) {
+      return <></>;
+    }
+    if (loading || data?.length > 0) {
       return <div>Loading balance</div>;
     }
 
