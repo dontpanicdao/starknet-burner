@@ -34,6 +34,8 @@ export default function Home() {
       <Head>
         <title>Starkpilled - Why not starkpill your fren?</title>
         <meta name="description" content="Starkpill your fren!" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#90cdf4" />
       </Head>
 
       <main className={styles.main}>
