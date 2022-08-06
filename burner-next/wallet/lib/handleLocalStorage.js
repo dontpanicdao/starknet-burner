@@ -1,13 +1,13 @@
 const getLocalStorage = (keyName) => {
-  return localStorage.getItem(keyName);
+  return sessionStorage.getItem(keyName);
 };
 
 const saveLocalStorage = (keyName, value) => {
-  return localStorage.setItem(keyName, value);
+  return sessionStorage.setItem(keyName, value);
 };
 
 const removeLocalStorage = () => {
-  return localStorage.clear();
+  return sessionStorage.clear();
 };
 
 export { getLocalStorage, saveLocalStorage, removeLocalStorage };
