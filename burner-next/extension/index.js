@@ -5,15 +5,16 @@ import {
   iframeStyle,
   iFrameButtonStyle,
   burnerButtonStyle,
-} from "./lib/styles.js";
-import { isMatchMoreThanPx } from "./lib/responsive.js";
+} from "./lib/ui/styles.js";
+import { isMatchMoreThanPx } from "./lib/ui/responsive.js";
 import { walletSVG, closeSVG } from "./components/svg.js";
 import generateButton from "./components/button.js";
 import generateContainer from "./components/container.js";
 import generateModal from "./components/modal.js";
 import generateIframe from "./components/iframe.js";
+import { extensionEventHandler } from "./lib/inpage/message.js";
 
-const BurnerWallet = () => {
+const wallet = () => {
   const container = document.querySelector("#starknetburner");
   generateContainer(container);
   const buttonBurner = generateButton(container);
@@ -42,6 +43,8 @@ const BurnerWallet = () => {
     buttonBurner.innerHTML += walletSVG;
     clicked = false;
   });
+
+  window?.addEventListener("message", extensionEventHandler);
 };
 
-export { BurnerWallet };
+export { wallet };

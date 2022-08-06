@@ -1,3 +1,5 @@
+import { notify } from "./extension/message";
+
 const getLocalStorage = (keyName) => {
   return localStorage.getItem(keyName);
 };
