@@ -7,7 +7,7 @@ const generateIframe = (container) => {
     console.log("wallet loaded...");
   });
   iFrame.src =
-    import.meta.env.VITE_WALLET_URL || "https://starknet-burner.vercel.app";
+    import.meta?.env?.VITE_WALLET_URL || "https://starknet-burner.vercel.app";
   return iFrame;
 };
 
