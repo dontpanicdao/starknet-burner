@@ -1,9 +1,27 @@
+import { account } from "./account.js";
+
 const uuid = "589c80c1eb85413d";
 
-export const sendMessage = (msg) => {
+const sendMessage = (msg) => {
   if (msg && typeof msg === "object") {
     return window.postMessage({ ...msg, uuid }, window.location.origin);
   }
+};
+
+export const request = (msg) => {
+  if (!msg || typeof msg !== "object" || !msg.type) {
+    throw new Error("Invalid message");
+  }
+  const burner = document.querySelector("#starknetburner");
+  if (!burner) {
+    throw new Error("wallet not found");
+  }
+  const iframe = burner.querySelector("#iframe");
+  if (!iframe) {
+    throw new Error("iframe not found");
+  }
+  console.log("sending now...", { ...msg, uuid });
+  return iframe.contentWindow.postMessage({ ...msg, uuid }, "*");
 };
 
 export const waitForMessage = (type, timeout) => {
@@ -22,8 +40,8 @@ export const waitForMessage = (type, timeout) => {
 
 export const extensionEventHandler = (messageEvent) => {
   if (messageEvent?.data?.uuid === uuid) {
-    const output = messageEvent.data;
-    delete output.uuid;
-    console.log("wallet", output);
+    account._events[messageEvent.data.type].forEach((fn) => {
+      fn(messageEvent.data.data);
+    });
   }
 };

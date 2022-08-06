@@ -12,8 +12,12 @@ import generateButton from "./components/button.js";
 import generateContainer from "./components/container.js";
 import generateModal from "./components/modal.js";
 import generateIframe from "./components/iframe.js";
-import { extensionEventHandler } from "./lib/inpage/message.js";
-
+import {
+  addEvent,
+  reload,
+  SESSION_LOADED_EVENT,
+} from "./lib/inpage/account.js";
+import { registerWindow } from "./lib/inpage/model.js";
 const wallet = () => {
   const container = document.querySelector("#starknetburner");
   generateContainer(container);
@@ -22,29 +26,50 @@ const wallet = () => {
   const iFrame = generateIframe(container);
   let clicked = false;
 
-  buttonBurner.addEventListener("click", () => {
-    if (!clicked) {
-      container.style.cssText = containerStyleClicked;
-      modalWrapper.style.cssText = modalStyle;
-      const isDesktop = isMatchMoreThanPx(768);
-      iFrame.style.cssText = iframeStyle(isDesktop);
-      const iFramePosition = iFrame.getBoundingClientRect();
-      buttonBurner.style.cssText = iFrameButtonStyle(iFramePosition);
-      buttonBurner.textContent = "";
-      buttonBurner.innerHTML += closeSVG;
-      clicked = true;
-      return;
-    }
+  const openModal = () => {
+    container.style.cssText = containerStyleClicked;
+    modalWrapper.style.cssText = modalStyle;
+    const isDesktop = isMatchMoreThanPx(768);
+    iFrame.style.cssText = iframeStyle(isDesktop);
+    const iFramePosition = iFrame.getBoundingClientRect();
+    buttonBurner.style.cssText = iFrameButtonStyle(iFramePosition);
+    buttonBurner.textContent = "";
+    buttonBurner.innerHTML += closeSVG;
+    clicked = true;
+    reload();
+    return;
+  };
+
+  const closeModal = () => {
     container.style.cssText = "";
     iFrame.style.cssText = HiddenStyle;
     modalWrapper.style.cssText = HiddenStyle;
     buttonBurner.style.cssText = burnerButtonStyle;
-    buttonBurner.textContent = "Connect";
-    buttonBurner.innerHTML += walletSVG;
+    if (
+      window?.length > 0 &&
+      window["starknet-burner"]?.account?.selectedAddress
+    ) {
+      const accountAddress = window["starknet-burner"].account.selectedAddress;
+      buttonBurner.textContent =
+        accountAddress.slice(0, 5) + "..." + accountAddress.slice(-4);
+    } else {
+      buttonBurner.textContent = "Connect";
+      buttonBurner.innerHTML += walletSVG;
+    }
     clicked = false;
-  });
+  };
 
-  window?.addEventListener("message", extensionEventHandler);
+  const switchModal = () => {
+    if (!clicked) {
+      openModal();
+      return;
+    }
+    closeModal();
+  };
+
+  buttonBurner.addEventListener("click", switchModal);
+  addEvent(SESSION_LOADED_EVENT, closeModal);
+  registerWindow();
 };
 
 export { wallet };

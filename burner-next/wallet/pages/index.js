@@ -16,7 +16,11 @@ import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import { generateKey } from "lib/handleKey";
 import Loader from "components/Loader";
 import QRCode from "components/QRCode";
-import { notify } from "../lib/extension/message";
+import {
+  notify,
+  eventHandler,
+  SESSION_LOADED_EVENT,
+} from "../lib/extension/message";
 
 export default function Home() {
   const [state, setState, key, setKey] = useStateContext();
@@ -34,7 +38,7 @@ export default function Home() {
       }
       const data = await res.json();
       saveLocalStorage("bwsessiontoken", JSON.stringify(data));
-      notify({ type: "SESSION_TOKEN_LOADED", data });
+      notify({ type: SESSION_LOADED_EVENT, data });
       setSessionToken(data);
     } catch (error) {
       setLoading(false);
@@ -43,30 +47,24 @@ export default function Home() {
     setLoading(false);
   };
 
-  const handleMessage = (event) => {
-    if (event && event.data) {
-      const evtIn =
-        typeof event.data === "string" ? JSON.parse(event.data) : event.data;
-      if (evtIn.name) {
-        switch (evtIn.name) {
-          case "initialize":
-            handleCloseSession();
-            break;
-          default:
-            console.log(`inside: ${evtIn.name}, value: ${evtIn.value}`);
-        }
-      }
-    }
-  };
-
   const handleCloseSession = () => {
     removeLocalStorage();
     setState(UNINITIALIZED);
     setKey(null);
   };
 
+  const windowEventHandler = eventHandler({
+    resetAction: handleCloseSession,
+    reloadAction: () => {
+      let token = getLocalStorage("bwsessiontoken");
+      if (token) {
+        return notify({ type: SESSION_LOADED_EVENT, data: JSON.parse(token) });
+      }
+    },
+  });
+
   useEffect(() => {
-    window.addEventListener("message", handleMessage);
+    window.addEventListener("message", windowEventHandler);
   }, []);
 
   useEffect(() => {
@@ -90,7 +88,10 @@ export default function Home() {
       }
       if (!sessionToken) {
         setSessionToken(JSON.parse(token));
+        return;
       }
+      console.log("there is a token token");
+      notify({ type: SESSION_LOADED_EVENT, data: sessionToken });
       setState(CONNECTED);
     }
   }, [key, sessionToken]);

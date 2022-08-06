@@ -6,7 +6,8 @@ const generateIframe = (container) => {
   iFrame.addEventListener("load", () => {
     console.log("wallet loaded...");
   });
-  iFrame.src = "https://starknet-burner.vercel.app";
+  iFrame.src =
+    import.meta.env.VITE_WALLET_URL || "https://starknet-burner.vercel.app";
   return iFrame;
 };
 
