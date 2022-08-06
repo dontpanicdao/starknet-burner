@@ -16,7 +16,7 @@ import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import { generateKey } from "lib/handleKey";
 import Loader from "components/Loader";
 import QRCode from "components/QRCode";
-import { notify } from "../extension/message";
+import { notify } from "../lib/extension/message";
 
 export default function Home() {
   const [state, setState, key, setKey] = useStateContext();

@@ -17,6 +17,7 @@ export default function Wallet() {
       <p className={styles.accountAddress}>{sliceAddress(account)}</p>
       <Image
         src="/connect.svg"
+        alt="connect"
         className={styles.iconDisconnect}
         width={20}
         height={20}
@@ -31,6 +32,7 @@ export default function Wallet() {
       >
         <Image
           src="/connect.svg"
+          alt="connect"
           className={styles.iconConnect}
           width={20}
           height={20}
