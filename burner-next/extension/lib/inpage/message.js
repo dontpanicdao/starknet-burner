@@ -41,6 +41,7 @@ export const waitForMessage = (type, timeout) => {
 export const extensionEventHandler = (messageEvent) => {
   if (messageEvent?.data?.uuid === uuid) {
     account._events[messageEvent.data.type].forEach((fn) => {
+      console.log(`event ${messageEvent.data.type} received in extension`);
       fn(messageEvent.data.data);
     });
   }

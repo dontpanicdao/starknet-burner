@@ -1,6 +1,6 @@
 {
   "theme_color": "#f69435",
-  "background_color": "#ffffff",
+  "background_color": "#000000",
   "display": "fullscreen",
   "scope": "/",
   "start_url": "https://starkpilled.vercel.app",

@@ -38,6 +38,7 @@ export default function Home() {
       }
       const data = await res.json();
       saveLocalStorage("bwsessiontoken", JSON.stringify(data));
+      console.log("notify token wallet -> extension");
       notify({ type: SESSION_LOADED_EVENT, data });
       setSessionToken(data);
     } catch (error) {
@@ -90,7 +91,7 @@ export default function Home() {
         setSessionToken(JSON.parse(token));
         return;
       }
-      console.log("there is a token token");
+      console.log("notify token wallet -> extension");
       notify({ type: SESSION_LOADED_EVENT, data: sessionToken });
       setState(CONNECTED);
     }
