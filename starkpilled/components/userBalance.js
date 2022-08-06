@@ -17,16 +17,17 @@ const UserBalance = () => {
     if (!account) {
       return <></>;
     }
-    if (loading || data?.length > 0) {
+    if (loading) {
       return <div>Loading balance</div>;
     }
 
     if (error) {
       return <div>Error: {error}</div>;
     }
-
-    const balance = uint256ToBN(data[0]);
-    return <span>Balance : {balance.toString(10)} STARKPILLS</span>;
+    if (data?.length > 0) {
+      const balance = uint256ToBN(data[0]);
+      return <span>Balance : {balance.toString(10)} STARKPILLS</span>;
+    }
   }, [data, loading, error]);
 
   return content;
