@@ -1,2 +1,2 @@
-import { BurnerWallet } from "./index.js";
-BurnerWallet();
+import { wallet } from "./index.js";
+wallet();
