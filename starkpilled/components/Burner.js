@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { BurnerWallet } from "@blaqkube/scratch";
+import { wallet } from "@blaqkube/scratch";
 
 const Burner = () => {
   useEffect(() => {
     if (window) {
-      BurnerWallet();
+      wallet();
     }
   }, []);
   return <div id="starknetburner"></div>;
