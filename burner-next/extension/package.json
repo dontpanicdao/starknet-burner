@@ -1,7 +1,7 @@
 {
   "name": "@blaqkube/scratch",
   "private": false,
-  "version": "0.4.12",
+  "version": "0.4.14",
   "description": "",
   "main": "dist/@starknet/burner.js",
   "type": "module",
@@ -12,7 +12,7 @@
     "build": "tsc && vite build",
     "npmjs": "npm run build && npm publish --access public",
     "preview": "vite preview",
-    "postpublish": "git checkout -- lib/version.js"
+    "postpublish": "git checkout -- src/lib/version.ts"
   },
   "devDependencies": {
     "starknet": "^4.1.0",
