@@ -4,8 +4,7 @@ const getLocalStorage = (keyName) => {
   try {
     return sessionStorage.getItem(keyName);
   } catch (e) {
-    console.log("sessionStorage unavailable, working with variable");
-    return sessionData?.[keyName];
+    return sessionData[keyName];
   }
 };
 
@@ -14,7 +13,8 @@ const saveLocalStorage = (keyName, value) => {
     return sessionStorage.setItem(keyName, value);
   } catch (e) {
     console.log("sessionStorage unavailable, working with variable");
-    return (sessionData[keyName] = value);
+    sessionData[keyName] = value;
+    return;
   }
 };
 
@@ -22,9 +22,8 @@ const removeLocalStorage = () => {
   try {
     return sessionStorage.clear();
   } catch (e) {
-    console.log("sessionStorage unavailable, working with variable");
     for (const keyName of sessionData) {
-      delete sessionData?.[keyName];
+      delete sessionData[keyName];
     }
   }
 };
