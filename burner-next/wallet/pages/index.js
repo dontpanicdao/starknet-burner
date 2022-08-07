@@ -146,7 +146,7 @@ export default function Home() {
           </div>
         )}
       </main>
-      <footer>{version} built with 🥰 by the starknet community</footer>
+      <footer className={styles.footer}>version {version} 🥰</footer>
     </div>
   );
 }

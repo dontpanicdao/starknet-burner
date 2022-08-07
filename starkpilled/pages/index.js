@@ -53,8 +53,8 @@ export default function Home() {
           <UserBalance />
         </div>
         <Form />
+        <footer className={styles.footer}>version {version} 🥰 </footer>
       </main>
-      <footer>{version} built with 🥰 by the starknet community</footer>
     </div>
   );
 }
