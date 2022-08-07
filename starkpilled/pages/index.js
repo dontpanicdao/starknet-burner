@@ -53,7 +53,7 @@ export default function Home() {
           <UserBalance />
         </div>
         <Form />
-        <footer className={styles.footer}>version {version} 🥰 </footer>
+        <footer className={styles.footer}>version {version} 🥰</footer>
       </main>
     </div>
   );
