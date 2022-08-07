@@ -1,10 +1,12 @@
 {
   "name": "starkpilled",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node ./scripts/prebuild.js",
     "build": "next build",
+    "postbuild": "git checkout -- lib/version.js",
     "start": "next start",
     "lint": "next lint"
   },

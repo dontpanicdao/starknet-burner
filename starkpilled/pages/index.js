@@ -5,6 +5,7 @@ import styles from "../styles/Home.module.css";
 import Form from "../components/Form";
 import UserBalance from "../components/userBalance";
 import Burner from "../components/Burner";
+import { version } from "../lib/version";
 
 export default function Home() {
   const Wallet = dynamic(() => import("../components/Wallet"), {
@@ -53,6 +54,7 @@ export default function Home() {
         </div>
         <Form />
       </main>
+      <footer>{version} built with 🥰 by the starknet community</footer>
     </div>
   );
 }
