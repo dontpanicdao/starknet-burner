@@ -9,7 +9,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepublish": "node ./scripts/prepublish.js"
   },
   "devDependencies": {
     "vite": "^3.0.4"

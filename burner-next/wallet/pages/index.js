@@ -21,7 +21,7 @@ import {
   eventHandler,
   SESSION_LOADED_EVENT,
 } from "../lib/extension/message";
-import { version } from "../package.json";
+import { version } from "../lib/version";
 
 export default function Home() {
   const [state, setState, key, setKey] = useStateContext();
@@ -146,7 +146,7 @@ export default function Home() {
           </div>
         )}
       </main>
-      <footer>version "dev" built with love by the starknet community</footer>
+      <footer>{version} built with 🥰 by the starknet community</footer>
     </div>
   );
 }
