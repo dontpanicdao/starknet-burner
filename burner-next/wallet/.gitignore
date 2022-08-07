@@ -30,4 +30,4 @@ yarn-error.log*
 
 # vercel
 .vercel
-!/lib/version.js
+/lib/version.js
