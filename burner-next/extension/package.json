@@ -1,7 +1,7 @@
 {
   "name": "@blaqkube/scratch",
   "private": false,
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "",
   "main": "index.js",
   "type": "module",
@@ -10,6 +10,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "postpublish": "git checkout -- lib/version.js",
     "prepublish": "node ./scripts/prepublish.js"
   },
   "devDependencies": {

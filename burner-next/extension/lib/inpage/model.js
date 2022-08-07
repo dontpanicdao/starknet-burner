@@ -1,5 +1,6 @@
 import { account } from "./account.js";
 import { extensionEventHandler } from "./message.js";
+import { version } from "../version.js";
 
 const starketWindow = {
   id: "burner",
@@ -13,6 +14,9 @@ const starketWindow = {
   selectedAddress: null,
   chainId: null,
   version: null,
+  burnerExtension: {
+    version,
+  },
 };
 
 export const registerWindow = () => {
