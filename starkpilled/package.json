@@ -1,15 +1,17 @@
 {
   "name": "starkpilled",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node ./scripts/prebuild.js",
     "build": "next build",
+    "postbuild": "git checkout -- lib/version.js",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "@blaqkube/scratch": "^0.4.4",
+    "@blaqkube/scratch": "^0.4.7",
     "@starknet-react/core": "^0.13.2",
     "get-starknet": "^1.4.3",
     "next": "12.2.3",

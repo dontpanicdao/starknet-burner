@@ -21,6 +21,7 @@ import {
   eventHandler,
   SESSION_LOADED_EVENT,
 } from "../lib/extension/message";
+import { version } from "../lib/version";
 
 export default function Home() {
   const [state, setState, key, setKey] = useStateContext();
@@ -145,6 +146,7 @@ export default function Home() {
           </div>
         )}
       </main>
+      <footer className={styles.footer}>version {version} 🥰</footer>
     </div>
   );
 }

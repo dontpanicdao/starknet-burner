@@ -13,6 +13,11 @@
   align-items: center;
 }
 
+.footer {
+	position: absolute;
+	bottom: 8px;
+}
+
 .title {
   margin: 0.5rem;
   text-align: center;
