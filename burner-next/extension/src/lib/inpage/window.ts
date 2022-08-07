@@ -3,7 +3,7 @@ import { extensionEventHandler } from "./message.js";
 import { version } from "../version.js";
 import { IStarketWindowObject, RpcMessage, WalletEvents } from "./model";
 import { defaultProvider } from "starknet";
-import { BurnerAccount } from "./account";
+import { Account } from "./account";
 
 export class StarknetWindowObject implements IStarketWindowObject {
   public id: string = "burner";
@@ -26,7 +26,7 @@ export class StarknetWindowObject implements IStarketWindowObject {
     _: WalletEvents["type"],
     __: WalletEvents["handler"]
   ): void => {};
-  public account: BurnerAccount | undefined = undefined;
+  public account: Account | undefined = undefined;
   public provider = defaultProvider;
 }
 
