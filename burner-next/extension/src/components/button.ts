@@ -1,5 +1,5 @@
-import { walletSVG } from "./svg.js";
-import { burnerButtonStyle } from "../lib/ui/styles.js";
+import { walletSVG } from "./svg";
+import { burnerButtonStyle } from "../lib/ui/styles";
 
 const generateButton = (
   container: HTMLDivElement

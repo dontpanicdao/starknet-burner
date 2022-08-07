@@ -1,4 +1,4 @@
-import { account, SESSION_LOADED_EVENT } from "./account.js";
+import { account, SESSION_LOADED_EVENT } from "./account";
 
 const uuid = "589c80c1eb85413d";
 

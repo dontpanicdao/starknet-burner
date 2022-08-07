@@ -2,7 +2,6 @@ import { ZERO } from "starknet/constants";
 import { Provider } from "starknet/provider/default";
 import { SignerInterface } from "starknet/signer";
 import { Signer } from "./signer";
-import { ec } from "starknet";
 import {
   Abi,
   Call,
@@ -43,8 +42,7 @@ export class Account extends Provider implements AccountInterface {
   constructor(public address: string) {
     super(defaultProvider);
     this.address = address;
-    const keypair = ec.genKeyPair();
-    this.signer = new Signer(keypair);
+    this.signer = new Signer();
   }
 
   public async getNonce(): Promise<string> {

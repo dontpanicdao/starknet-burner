@@ -1,4 +1,4 @@
-import { HiddenStyle } from "../lib/ui/styles.js";
+import { HiddenStyle } from "../lib/ui/styles";
 
 const generateIframe = (
   container: HTMLDivElement

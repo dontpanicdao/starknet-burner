@@ -2,10 +2,8 @@ import {
   Abi,
   Invocation,
   InvocationsSignerDetails,
-  KeyPair,
   Signature,
 } from "starknet/types";
-import { getStarkKey, sign } from "starknet/utils/ellipticCurve";
 import {
   calculcateTransactionHash,
   getSelectorFromName,
@@ -15,14 +13,8 @@ import { TypedData, getMessageHash } from "starknet/utils/typedData";
 import { SignerInterface } from "starknet/signer/interface";
 
 export class Signer implements SignerInterface {
-  protected keyPair: KeyPair;
-
-  constructor(keyPair: KeyPair) {
-    this.keyPair = keyPair;
-  }
-
   public async getPubKey(): Promise<string> {
-    return getStarkKey(this.keyPair);
+    return "0x0";
   }
 
   public async signTransaction(
@@ -51,7 +43,7 @@ export class Signer implements SignerInterface {
       transactionsDetail.chainId
     );
 
-    return sign(this.keyPair, msgHash);
+    return ["0x0", msgHash];
   }
 
   public async signMessage(
@@ -59,6 +51,6 @@ export class Signer implements SignerInterface {
     accountAddress: string
   ): Promise<Signature> {
     const msgHash = getMessageHash(typedData, accountAddress);
-    return sign(this.keyPair, msgHash);
+    return ["0x0", msgHash];
   }
 }

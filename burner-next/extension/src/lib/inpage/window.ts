@@ -1,9 +1,8 @@
-import { account } from "./account.js";
-import { extensionEventHandler } from "./message.js";
-import { version } from "../version.js";
+import { extensionEventHandler } from "./message";
+import { version } from "../version";
 import { IStarketWindowObject, RpcMessage, WalletEvents } from "./model";
 import { defaultProvider } from "starknet";
-import { Account } from "./account";
+import { Account, account } from "./account";
 
 export class StarknetWindowObject implements IStarketWindowObject {
   public id: string = "burner";
