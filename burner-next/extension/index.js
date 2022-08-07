@@ -12,6 +12,7 @@ import generateButton from "./components/button.js";
 import generateContainer from "./components/container.js";
 import generateModal from "./components/modal.js";
 import generateIframe from "./components/iframe.js";
+import { version } from "../../package.json";
 import {
   addEvent,
   reload,
