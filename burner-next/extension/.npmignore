@@ -1,5 +1,6 @@
 /lib
 /src
+/src/*
 /index.html
 /main.js
 /public
@@ -8,3 +9,6 @@
 /.env.template
 /components
 /tsconfig.json
+/dist/*
+!/dist/@starknet
+/vite.config.ts
