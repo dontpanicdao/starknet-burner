@@ -5,21 +5,24 @@ import {
   iframeStyle,
   iFrameButtonStyle,
   burnerButtonStyle,
-} from "./lib/ui/styles.js";
-import { isMatchMoreThanPx } from "./lib/ui/responsive.js";
-import { walletSVG, closeSVG } from "./components/svg.js";
-import generateButton from "./components/button.js";
-import generateContainer from "./components/container.js";
-import generateModal from "./components/modal.js";
-import generateIframe from "./components/iframe.js";
-import {
-  addEvent,
-  reload,
-  SESSION_LOADED_EVENT,
-} from "./lib/inpage/account.js";
-import { registerWindow } from "./lib/inpage/model.js";
+} from "./lib/ui/styles";
+import { isMatchMoreThanPx } from "./lib/ui/responsive";
+import { walletSVG, closeSVG } from "./components/svg";
+import generateButton from "./components/button";
+import generateContainer from "./components/container";
+import generateModal from "./components/modal";
+import generateIframe from "./components/iframe";
+import { addEvent, SESSION_LOADED_EVENT } from "./lib/inpage/account";
+import { registerWindow } from "./lib/inpage/window";
+import { StarknetWindowObject, starketWindow } from "./lib/inpage/window";
+
 const wallet = () => {
-  const container = document.querySelector("#starknetburner");
+  const container: HTMLDivElement | null =
+    document.querySelector<HTMLDivElement>("#starknetburner");
+  if (!container) {
+    return;
+  }
+
   generateContainer(container);
   const buttonBurner = generateButton(container);
   const modalWrapper = generateModal(container);
@@ -27,6 +30,12 @@ const wallet = () => {
   let clicked = false;
 
   const openModal = () => {
+    if (!starketWindow.account?._actions?.reload) {
+      return;
+    }
+    if (!iFrame || !modalWrapper || !buttonBurner) {
+      return;
+    }
     container.style.cssText = containerStyleClicked;
     modalWrapper.style.cssText = modalStyle;
     const isDesktop = isMatchMoreThanPx(768);
@@ -36,20 +45,25 @@ const wallet = () => {
     buttonBurner.textContent = "";
     buttonBurner.innerHTML += closeSVG;
     clicked = true;
-    reload();
+    starketWindow.account?._actions.reload("reload now");
     return;
   };
 
   const closeModal = () => {
+    if (!iFrame || !modalWrapper || !buttonBurner) {
+      return;
+    }
     container.style.cssText = "";
     iFrame.style.cssText = HiddenStyle;
     modalWrapper.style.cssText = HiddenStyle;
     buttonBurner.style.cssText = burnerButtonStyle;
-    if (
-      window?.length > 0 &&
-      window["starknet-burner"]?.account?.selectedAddress
-    ) {
-      const accountAddress = window["starknet-burner"].account.selectedAddress;
+    if (!window || !("starknet-burner" in window)) {
+      return;
+    }
+    const burner: StarknetWindowObject =
+      window["starknet-burner" as keyof typeof window];
+    const accountAddress = burner?.account?.address;
+    if (accountAddress) {
       buttonBurner.textContent =
         accountAddress.slice(0, 5) + "..." + accountAddress.slice(-4);
     } else {
@@ -67,9 +81,11 @@ const wallet = () => {
     closeModal();
   };
 
-  buttonBurner.addEventListener("click", switchModal);
+  if (buttonBurner) {
+    buttonBurner.addEventListener("click", switchModal);
+  }
   addEvent(SESSION_LOADED_EVENT, closeModal);
-  registerWindow();
 };
 
+registerWindow();
 export { wallet };

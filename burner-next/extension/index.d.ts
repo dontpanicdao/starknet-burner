@@ -1,1 +1,1 @@
-export * from './index';
+export * from './dist/@starknet/burner';

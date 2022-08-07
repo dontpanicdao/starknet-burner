@@ -1,4 +1,10 @@
+/lib
+/src
 /index.html
 /main.js
 /public
 /scripts
+/.env
+/.env.template
+/components
+/tsconfig.json

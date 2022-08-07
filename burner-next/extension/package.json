@@ -1,20 +1,24 @@
 {
   "name": "@blaqkube/scratch",
   "private": false,
-  "version": "0.4.7",
+  "version": "0.4.11",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.ts",
   "type": "module",
   "keywords": [],
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "prebuild": "node ./scripts/prebuild.js",
+    "build": "tsc && vite build",
+    "npmjs": "npm run build && npm publish --access public",
     "preview": "vite preview",
-    "postpublish": "git checkout -- lib/version.js",
-    "prepublishOnly": "node ./scripts/prepublish.js"
+    "postpublish": "git checkout -- lib/version.js"
   },
   "devDependencies": {
-    "vite": "^3.0.4"
+    "starknet": "^4.1.0",
+    "typescript": "^4.7.4",
+    "vite": "^3.0.4",
+    "vite-plugin-dts": "^1.4.1"
   },
   "author": "",
   "license": "MIT"
