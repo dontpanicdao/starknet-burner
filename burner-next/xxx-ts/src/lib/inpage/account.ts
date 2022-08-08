@@ -1,5 +1,5 @@
 import { ZERO } from "starknet/constants";
-import { Provider } from "starknet/provider/default";
+import { Provider } from "./provider";
 import { SignerInterface } from "starknet/signer";
 import { Signer } from "./signer";
 import {
@@ -19,7 +19,6 @@ import { TypedData, getMessageHash } from "starknet/utils/typedData";
 import { AccountInterface } from "starknet/account";
 
 import { request } from "./message";
-import { defaultProvider } from "starknet";
 
 type EVENT = [(data: any) => void];
 type EventHandlers = {
@@ -40,7 +39,7 @@ export class Account extends Provider implements AccountInterface {
   public signer: SignerInterface;
 
   constructor(public address: string) {
-    super(defaultProvider);
+    super();
     this.address = address;
     this.signer = new Signer();
   }
