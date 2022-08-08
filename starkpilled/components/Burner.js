@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { wallet } from "@blaqkube/scratch";
+import { wallet } from "@starknet/burner";
 
 const Burner = () => {
   useEffect(() => {

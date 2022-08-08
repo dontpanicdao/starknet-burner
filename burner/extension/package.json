@@ -1,8 +1,8 @@
 {
-  "name": "@blaqkube/scratch",
+  "name": "@starknet/burner",
   "private": false,
-  "version": "0.5.3",
-  "description": "",
+  "version": "0.2.93",
+  "description": "A burner for Starknet",
   "main": "index.js",
   "type": "module",
   "keywords": [],
