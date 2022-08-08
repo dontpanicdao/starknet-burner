@@ -1,1 +1,1 @@
-export * from './dist/@starknet/burner';
+export * from "./dist/burner.js";

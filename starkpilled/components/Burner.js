@@ -1,14 +1,19 @@
 import { useEffect } from "react";
-import { wallet } from "@blaqkube/scratch";
+import { setupCounter } from "xxx-ts";
 
 const Burner = () => {
   useEffect(() => {
     if (window) {
-      wallet();
+      const element = document.querySelector("#counter");
+      setupCounter(element);
     }
   }, []);
 
-  return <div id="starknetburner"></div>;
+  return (
+    <div class="card">
+      <button id="counter" type="button"></button>
+    </div>
+  );
 };
 
 export default Burner;

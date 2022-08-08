@@ -4,16 +4,13 @@ import { defineConfig } from "vite";
 export default defineConfig({
   build: {
     lib: {
-      entry: resolve(__dirname, "src/index.ts"),
+      entry: resolve(__dirname, "src/counter.ts"),
       name: "burner",
       // the proper extensions will be added
       fileName: "burner",
     },
-    build: {
-      commonjsOptions: {
-        ignoreDynamicRequires: true,
-      },
-    },
+    build: {},
   },
   plugins: [],
 });
+

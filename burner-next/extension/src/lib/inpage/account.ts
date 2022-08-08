@@ -18,7 +18,7 @@ import { fromCallsToExecuteCalldataWithNonce } from "starknet/utils/transaction"
 import { TypedData, getMessageHash } from "starknet/utils/typedData";
 import { AccountInterface } from "starknet/account";
 
-import { request } from "./message.js";
+import { request } from "./message";
 import { defaultProvider } from "starknet";
 
 type EVENT = [(data: any) => void];

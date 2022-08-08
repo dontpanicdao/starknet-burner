@@ -85,7 +85,7 @@ const wallet = () => {
     buttonBurner.addEventListener("click", switchModal);
   }
   addEvent(SESSION_LOADED_EVENT, closeModal);
+  registerWindow();
 };
 
-registerWindow();
 export { wallet };
