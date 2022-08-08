@@ -1,6 +1,8 @@
-import type { AccountInterface, ProviderInterface } from "starknet";
+import type { ProviderInterface } from "../interface/provider";
 
-import type { Network } from "./network";
+import type { AccountInterface } from "../interface/account";
+
+import type { Network } from "../inpage/network";
 
 export type AccountChangeEventHandler = (accounts: string[]) => void;
 

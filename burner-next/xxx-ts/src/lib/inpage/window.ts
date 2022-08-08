@@ -1,6 +1,10 @@
 import { extensionEventHandler } from "./message";
 import { version } from "../version";
-import { IStarketWindowObject, RpcMessage, WalletEvents } from "./model";
+import {
+  IStarketWindowObject,
+  RpcMessage,
+  WalletEvents,
+} from "../interface/model";
 import { Account, account } from "./account";
 import { Provider } from "./provider";
 

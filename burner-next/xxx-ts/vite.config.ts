@@ -9,7 +9,6 @@ export default defineConfig({
       // the proper extensions will be added
       fileName: "burner",
     },
-    build: {},
   },
   plugins: [],
 });

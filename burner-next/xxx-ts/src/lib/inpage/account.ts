@@ -1,22 +1,22 @@
-import { ZERO } from "starknet/constants";
+import { ZERO } from "../interface/constants";
 import {
   Abi,
   Call,
   InvocationsDetails,
-  InvocationsSignerDetails,
-  InvokeFunctionResponse,
   Signature,
   RawCalldata,
-} from "starknet/types";
-import { EstimateFee, EstimateFeeDetails } from "starknet/types/account";
-import { feeTransactionVersion } from "starknet/utils/hash";
+} from "../interface/types";
+
+import { InvokeFunctionResponse } from "../interface/provider";
+
+import { InvocationsSignerDetails } from "../interface/signer";
+import { EstimateFee } from "../interface/account";
 import { BigNumberish, toBN, toHex } from "starknet/utils/number";
-import { estimatedFeeToMaxFee } from "starknet/utils/stark";
-import { TypedData } from "starknet/utils/typedData";
-import { AccountInterface } from "starknet/account";
+import { TypedData } from "../interface/typedData";
+import { AccountInterface, EstimateFeeDetails } from "../interface/account";
+import { SignerInterface } from "../interface/signer";
 
 import { Provider } from "./provider";
-import { SignerInterface } from "starknet/signer";
 import { Signer } from "./signer";
 import { request } from "./message";
 
@@ -58,7 +58,7 @@ export class Account extends Provider implements AccountInterface {
   ): Promise<EstimateFee> {
     const transactions = Array.isArray(calls) ? calls : [calls];
     const nonce = providedNonce ?? (await this.getNonce());
-    const version = toBN(feeTransactionVersion);
+    const version = toBN("0x0");
 
     const signerDetails: InvocationsSignerDetails = {
       walletAddress: this.address,
@@ -85,7 +85,7 @@ export class Account extends Provider implements AccountInterface {
       { version }
     );
 
-    const suggestedMaxFee = estimatedFeeToMaxFee(response.overall_fee);
+    const suggestedMaxFee = toBN("0x0");
 
     return {
       ...response,

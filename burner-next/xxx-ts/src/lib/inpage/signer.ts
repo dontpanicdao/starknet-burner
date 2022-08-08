@@ -1,11 +1,8 @@
-import {
-  Abi,
-  Invocation,
-  InvocationsSignerDetails,
-  Signature,
-} from "starknet/types";
+import { InvocationsSignerDetails, SignerInterface } from "../interface/signer";
+
+import { Abi, Invocation, Signature } from "../interface/types";
+
 import { TypedData } from "starknet/utils/typedData";
-import { SignerInterface } from "starknet/signer/interface";
 
 export class Signer implements SignerInterface {
   public async getPubKey(): Promise<string> {

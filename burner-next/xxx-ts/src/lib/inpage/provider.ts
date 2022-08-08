@@ -1,25 +1,28 @@
-import { StarknetChainId } from "starknet/constants";
+import { StarknetChainId } from "../interface/constants";
 import {
   BlockTag,
   Call,
+  DeclareContractPayload,
+  DeployContractPayload,
+  Invocation,
+  InvocationsDetails,
+} from "../interface/types";
+
+import {
   CallContractResponse,
   ContractClass,
-  DeclareContractPayload,
   DeclareContractResponse,
-  DeployContractPayload,
   DeployContractResponse,
   EstimateFeeResponse,
   GetBlockResponse,
   GetCodeResponse,
   GetTransactionReceiptResponse,
   GetTransactionResponse,
-  Invocation,
-  InvocationsDetails,
   InvokeFunctionResponse,
   InvokeTransactionReceiptResponse,
-} from "starknet/types";
+} from "../interface/provider";
 import { BigNumberish, toBN } from "starknet/utils/number";
-import { ProviderInterface } from "starknet/provider/interface";
+import { ProviderInterface } from "../interface/provider";
 import { BlockIdentifier } from "starknet/provider/utils";
 
 export class Provider implements ProviderInterface {
