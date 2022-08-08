@@ -11,6 +11,7 @@
     "lint": "next lint"
   },
   "devDependencies": {
+    "@blaqkube/scratch": "^0.4.26-alpha",
     "eslint": "8.21.0",
     "eslint-config-next": "12.2.3",
     "react-jazzicon": "^1.0.4",

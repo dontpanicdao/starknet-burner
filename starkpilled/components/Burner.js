@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { burner } from "xxx-ts";
+import { burner } from "@blaqkube/scratch";
 
 const Burner = () => {
   useEffect(() => {
