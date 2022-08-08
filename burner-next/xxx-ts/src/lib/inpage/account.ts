@@ -1,7 +1,4 @@
 import { ZERO } from "starknet/constants";
-import { Provider } from "./provider";
-import { SignerInterface } from "starknet/signer";
-import { Signer } from "./signer";
 import {
   Abi,
   Call,
@@ -9,15 +6,18 @@ import {
   InvocationsSignerDetails,
   InvokeFunctionResponse,
   Signature,
+  RawCalldata,
 } from "starknet/types";
 import { EstimateFee, EstimateFeeDetails } from "starknet/types/account";
-import { feeTransactionVersion, transactionVersion } from "starknet/utils/hash";
+import { feeTransactionVersion } from "starknet/utils/hash";
 import { BigNumberish, toBN, toHex } from "starknet/utils/number";
-import { compileCalldata, estimatedFeeToMaxFee } from "starknet/utils/stark";
-import { fromCallsToExecuteCalldataWithNonce } from "starknet/utils/transaction";
-import { TypedData, getMessageHash } from "starknet/utils/typedData";
+import { estimatedFeeToMaxFee } from "starknet/utils/stark";
+import { TypedData } from "starknet/utils/typedData";
 import { AccountInterface } from "starknet/account";
 
+import { Provider } from "./provider";
+import { SignerInterface } from "starknet/signer";
+import { Signer } from "./signer";
 import { request } from "./message";
 
 type EVENT = [(data: any) => void];
@@ -73,7 +73,7 @@ export class Account extends Provider implements AccountInterface {
       signerDetails
     );
 
-    const calldata = fromCallsToExecuteCalldataWithNonce(transactions, nonce);
+    const calldata: RawCalldata = [];
     const response = await super.getEstimateFee(
       {
         contractAddress: this.address,
@@ -104,74 +104,30 @@ export class Account extends Provider implements AccountInterface {
    * @returns a confirmation of invoking a function on the starknet contract
    */
   public async execute(
-    calls: Call | Call[],
-    abis: Abi[] | undefined = undefined,
-    transactionsDetail: InvocationsDetails = {}
+    _: Call | Call[],
+    __: Abi[] | undefined = undefined,
+    ___: InvocationsDetails = {}
   ): Promise<InvokeFunctionResponse> {
-    const transactions = Array.isArray(calls) ? calls : [calls];
-    const nonce = toBN(transactionsDetail.nonce ?? (await this.getNonce()));
-    let maxFee: BigNumberish = "0";
-    if (transactionsDetail.maxFee || transactionsDetail.maxFee === 0) {
-      maxFee = transactionsDetail.maxFee;
-    } else {
-      const { suggestedMaxFee } = await this.estimateFee(transactions, {
-        nonce,
-      });
-      maxFee = suggestedMaxFee.toString();
-    }
-
-    const version = toBN(transactionVersion);
-
-    const signerDetails: InvocationsSignerDetails = {
-      walletAddress: this.address,
-      nonce,
-      maxFee,
-      version,
-      chainId: this.chainId,
-    };
-
-    const signature = await this.signer.signTransaction(
-      transactions,
-      signerDetails,
-      abis
-    );
-
-    const calldata = fromCallsToExecuteCalldataWithNonce(transactions, nonce);
-
     return this.invokeFunction(
       {
-        contractAddress: this.address,
+        contractAddress: "0x0",
         entrypoint: "__execute__",
-        calldata,
-        signature,
+        calldata: [],
+        signature: [],
       },
       {
-        maxFee,
-        version,
+        maxFee: "0x0",
+        version: "0x0",
       }
     );
   }
 
-  /**
-   * Sign an JSON object with the starknet private key and return the signature
-   *
-   * @param json - JSON object to be signed
-   * @returns the signature of the JSON object
-   * @throws {Error} if the JSON object is not a valid JSON
-   */
   public async signMessage(typedData: TypedData): Promise<Signature> {
     return this.signer.signMessage(typedData, this.address);
   }
 
-  /**
-   * Hash a JSON object with pederson hash and return the hash
-   *
-   * @param json - JSON object to be hashed
-   * @returns the hash of the JSON object
-   * @throws {Error} if the JSON object is not a valid JSON
-   */
-  public async hashMessage(typedData: TypedData): Promise<string> {
-    return getMessageHash(typedData, this.address);
+  public async hashMessage(_: TypedData): Promise<string> {
+    return "0x0";
   }
 
   /**
@@ -184,22 +140,10 @@ export class Account extends Provider implements AccountInterface {
    * @throws {Error} if the JSON object is not a valid JSON or the signature is not a valid signature
    */
   public async verifyMessageHash(
-    hash: BigNumberish,
-    signature: Signature
+    _: BigNumberish,
+    __: Signature
   ): Promise<boolean> {
-    try {
-      await this.callContract({
-        contractAddress: this.address,
-        entrypoint: "is_valid_signature",
-        calldata: compileCalldata({
-          hash: toBN(hash).toString(),
-          signature: signature.map((x) => toBN(x).toString()),
-        }),
-      });
-      return true;
-    } catch {
-      return false;
-    }
+    return true;
   }
 
   /**
@@ -210,12 +154,8 @@ export class Account extends Provider implements AccountInterface {
    * @returns true if the signature is valid, false otherwise
    * @throws {Error} if the signature is not a valid signature
    */
-  public async verifyMessage(
-    typedData: TypedData,
-    signature: Signature
-  ): Promise<boolean> {
-    const hash = await this.hashMessage(typedData);
-    return this.verifyMessageHash(hash, signature);
+  public async verifyMessage(_: TypedData, __: Signature): Promise<boolean> {
+    return true;
   }
 
   public _events: EventHandlers = {

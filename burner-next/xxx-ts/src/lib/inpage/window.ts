@@ -1,8 +1,8 @@
 import { extensionEventHandler } from "./message";
 import { version } from "../version";
 import { IStarketWindowObject, RpcMessage, WalletEvents } from "./model";
-import { defaultProvider } from "starknet";
 import { Account, account } from "./account";
+import { Provider } from "./provider";
 
 export class StarknetWindowObject implements IStarketWindowObject {
   public id: string = "burner";
@@ -26,7 +26,7 @@ export class StarknetWindowObject implements IStarketWindowObject {
     __: WalletEvents["handler"]
   ): void => {};
   public account: Account | undefined = undefined;
-  public provider = defaultProvider;
+  public provider = new Provider();
 }
 
 export const starketWindow: StarknetWindowObject = {
@@ -44,7 +44,7 @@ export const starketWindow: StarknetWindowObject = {
   on: (_, __) => {},
   off: (_, __) => {},
   account,
-  provider: defaultProvider,
+  provider: new Provider(),
 };
 
 export const registerWindow = () => {

@@ -1,4 +1,4 @@
-import type { AccountInterface, Provider } from "starknet";
+import type { AccountInterface, ProviderInterface } from "starknet";
 
 import type { Network } from "./network";
 
@@ -95,7 +95,7 @@ export interface IStarketWindowObject {
     handleEvent: WalletEvents["handler"]
   ) => void;
   account?: AccountInterface;
-  provider: Provider;
+  provider: ProviderInterface;
   selectedAddress?: string;
   chainId?: string;
   version: string;
