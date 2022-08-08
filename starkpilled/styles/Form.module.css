@@ -83,6 +83,7 @@
   .form {
     width: 70%;
     height: inherit;
+    justify-content: space-evenly;
   }
   .formTitle {
     margin: 1rem;
