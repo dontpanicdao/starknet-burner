@@ -18,7 +18,7 @@
     "starknet": "^3.18.2"
   },
   "devDependencies": {
-    "@blaqkube/scratch": "^0.5.3",
+    "@starknet/burner": "^0.2.94",
     "eslint": "8.21.0",
     "eslint-config-next": "12.2.3"
   }
