@@ -1,11 +1,24 @@
 import styles from "../styles/Form.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Loader from "./Loader";
+import Modal from "./Modal";
 
 const Form = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isModal, setIsModal] = useState(false);
+
   const [formData, setFormData] = useState({
     address: "",
     amount: 0,
   });
+
+  useEffect(() => {
+    if (isModal === false)
+      setFormData({
+        address: "",
+        amount: "",
+      });
+  }, [isModal]);
 
   const cancel = () => {
     setFormData({
@@ -25,7 +38,13 @@ const Form = () => {
     if (args.address === "" || args.amount <= 1) {
       return console.log("invalid address or amount");
     }
+    setIsLoading(true);
     console.log(`executing ${metadata?.method}, message: ${metadata?.message}`);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+      setIsModal(!isModal);
+    }, 10000);
+    return () => clearTimeout(timer);
   };
 
   return (
@@ -56,25 +75,31 @@ const Form = () => {
         <div className={styles.button} onClick={cancel}>
           Cancel
         </div>
-        <div
-          className={styles.button}
-          value="Send Pills"
-          onClick={() => {
-            send({
-              args: [formData.address, formData.amount],
-              metadata: {
-                method: "Transfer",
-                message: "Sending Starkpills...",
-              },
-            });
-          }}
-        >
-          Send
-        </div>
+        {!isLoading ? (
+          <div
+            className={styles.button}
+            value="Send Pills"
+            onClick={() => {
+              send({
+                args: [formData.address, formData.amount],
+                metadata: {
+                  method: "Transfer",
+                  message: "Sending Starkpills...",
+                },
+              });
+            }}
+          >
+            Send
+          </div>
+        ) : (
+          <Loader />
+        )}
+
         <div className={styles.button} onClick={faucet}>
           Faucet
         </div>
       </div>
+      {isModal && <Modal isModal={isModal} setIsModal={setIsModal} />}
     </form>
   );
 };

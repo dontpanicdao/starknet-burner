@@ -19,6 +19,8 @@ import {
 } from "./lib/inpage/account.js";
 import { registerWindow } from "./lib/inpage/model.js";
 const wallet = () => {
+  const isDesktop = isMatchMoreThanPx(768);
+
   const container = document.querySelector("#starknetburner");
   generateContainer(container);
   const buttonBurner = generateButton(container);
@@ -29,7 +31,6 @@ const wallet = () => {
   const openModal = () => {
     container.style.cssText = containerStyleClicked;
     modalWrapper.style.cssText = modalStyle;
-    const isDesktop = isMatchMoreThanPx(768);
     iFrame.style.cssText = iframeStyle(isDesktop);
     const iFramePosition = iFrame.getBoundingClientRect();
     buttonBurner.style.cssText = iFrameButtonStyle(iFramePosition);

@@ -6,8 +6,9 @@
   flex-direction: column;
   justify-content: space-around;
 }
+
 .formTitle {
-  margin: 0.8rem 0;
+  margin: 0.8rem 0 0;
   font-family: monospace;
   font-size: 1.2rem;
   color: #403866;
@@ -15,8 +16,8 @@
   text-align: center;
 }
 .input {
-  height: 40px;
-  margin: 0.5rem 0;
+  height: 25px;
+  margin: 0.5rem 0 0;
   padding: 0.5rem 2rem;
   width: 100%;
   background: #fff;
@@ -70,10 +71,19 @@
   box-shadow: 5px 5px 15px 5px;
 }
 
+@media (min-width: 560px) {
+  .form {
+    height: 60%;
+  }
+  .buttonsContainer {
+    flex-direction: row;
+  }
+}
 @media (min-width: 768px) {
   .form {
     width: 70%;
     height: inherit;
+    justify-content: space-evenly;
   }
   .formTitle {
     margin: 1rem;
@@ -81,13 +91,11 @@
     line-height: 1.2;
   }
   .input {
-    height: 60px;
+    height: 40px;
     margin: 2rem 0;
     width: 80%;
   }
-  .buttonsContainer {
-    flex-direction: row;
-  }
+
   .button {
     width: 180px;
     height: 62px;
