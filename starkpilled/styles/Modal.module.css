@@ -1,0 +1,20 @@
+.modal {
+  display: flex;
+  width: 15rem;
+  justify-content: center;
+  align-items: center;
+  background-color: #96bdc6;
+  position: absolute;
+  top: 0;
+  left: calc((100vw - 15rem) / 2);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.modalCross {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  font-size: 0.7rem;
+  cursor: pointer;
+}

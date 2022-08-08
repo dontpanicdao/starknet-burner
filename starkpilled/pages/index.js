@@ -1,5 +1,4 @@
 import Head from "next/head";
-import dynamic from "next/dynamic";
 import styles from "../styles/Home.module.css";
 import Form from "../components/Form";
 import Burner from "../components/Burner";
@@ -14,7 +13,6 @@ export default function Home() {
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#90cdf4" />
       </Head>
-
       <main className={styles.main}>
         <h1 className={styles.title}>fren, Starkpilled?</h1>
         <Burner />

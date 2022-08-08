@@ -1,13 +1,24 @@
 import styles from "../styles/Form.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Loader from "./Loader";
+import Modal from "./Modal";
 
 const Form = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isModal, setIsModal] = useState(false);
+
   const [formData, setFormData] = useState({
     address: "",
     amount: 0,
   });
+
+  useEffect(() => {
+    if (isModal === false)
+      setFormData({
+        address: "",
+        amount: "",
+      });
+  }, [isModal]);
 
   const cancel = () => {
     setFormData({
@@ -31,7 +42,8 @@ const Form = () => {
     console.log(`executing ${metadata?.method}, message: ${metadata?.message}`);
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 15000);
+      setIsModal(!isModal);
+    }, 10000);
     return () => clearTimeout(timer);
   };
 
@@ -87,6 +99,7 @@ const Form = () => {
           Faucet
         </div>
       </div>
+      {isModal && <Modal isModal={isModal} setIsModal={setIsModal} />}
     </form>
   );
 };
