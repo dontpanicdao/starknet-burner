@@ -1,19 +1,14 @@
 import { useEffect } from "react";
-import { setupCounter } from "xxx-ts";
+import { burner } from "xxx-ts";
 
 const Burner = () => {
   useEffect(() => {
     if (window) {
-      const element = document.querySelector("#counter");
-      setupCounter(element);
+      burner();
     }
   }, []);
 
-  return (
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-  );
+  return <div className="card" id="starknetburner" />;
 };
 
 export default Burner;
