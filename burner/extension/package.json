@@ -3,8 +3,18 @@
   "private": false,
   "version": "0.2.95",
   "description": "A burner for Starknet",
-  "main": "index.js",
   "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/burner.umd.cjs",
+  "module": "./dist/burner.js",
+  "exports": {
+    ".": {
+      "import": "./dist/burner.js",
+      "require": "./dist/burner.umd.cjs"
+    }
+  },
   "homepage": "https://github.com/dontpanicdao/starknet-burner",
   "keywords": [
     "starknet",
