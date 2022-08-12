@@ -6,16 +6,28 @@
   "main": "index.js",
   "type": "module",
   "homepage": "https://github.com/dontpanicdao/starknet-burner",
-  "keywords": ["starknet", "burner", "wallet"],
+  "keywords": [
+    "starknet",
+    "burner",
+    "wallet"
+  ],
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview",
     "prepublishOnly": "node ./scripts/prepublish.js"
   },
   "devDependencies": {
+    "typescript": "^4.7.4",
     "vite": "^3.0.4"
   },
-  "contributors": [{"name": "gregoryguillou"}, {"name": "0xjilan"}],
+  "contributors": [
+    {
+      "name": "gregoryguillou"
+    },
+    {
+      "name": "0xjilan"
+    }
+  ],
   "license": "MIT"
 }

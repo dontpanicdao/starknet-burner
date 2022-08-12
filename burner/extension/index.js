@@ -18,6 +18,7 @@ import {
   SESSION_LOADED_EVENT,
 } from "./lib/inpage/account.js";
 import { registerWindow } from "./lib/inpage/model.js";
+
 const wallet = () => {
   const isDesktop = isMatchMoreThanPx(768);
 
