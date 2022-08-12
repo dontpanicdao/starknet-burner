@@ -1,8 +1,13 @@
-import { walletSVG } from "./svg.js";
-import { burnerButtonStyle } from "../lib/ui/styles.js";
+import { walletSVG } from "./svg";
+import { burnerButtonStyle } from "../lib/ui/styles";
 
-const generateButton = (container) => {
-  const button = container.querySelector("#button-burner");
+const generateButton = (
+  container: HTMLDivElement
+): HTMLButtonElement | undefined => {
+  const button = container.querySelector<HTMLButtonElement>("#button-burner");
+  if (!button) {
+    return;
+  }
   button.style.cssText = burnerButtonStyle;
   button.textContent = "Connect";
   button.innerHTML += walletSVG;
