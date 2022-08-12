@@ -12,11 +12,7 @@ import generateButton from "./components/button";
 import generateContainer from "./components/container";
 import generateModal from "./components/modal";
 import generateIframe from "./components/iframe";
-import {
-  addEvent,
-  reload,
-  SESSION_LOADED_EVENT,
-} from "../lib/inpage/account.js";
+import { addEvent, reload, SESSION_LOADED_EVENT } from "./lib/inpageJS/account";
 
 const wallet = () => {
   const container = document.querySelector<HTMLDivElement>("#starknetburner");
@@ -27,12 +23,13 @@ const wallet = () => {
 
   generateContainer(container);
   const buttonBurner = generateButton(container);
-  if (!buttonBurner) {
-    return;
-  }
   const modalWrapper = generateModal(container);
   const iFrame = generateIframe(container);
   let clicked = false;
+
+  if (!buttonBurner || !modalWrapper || !iFrame) {
+    return;
+  }
 
   const openModal = () => {
     container.style.cssText = containerStyleClicked;
