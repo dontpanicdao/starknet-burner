@@ -1,7 +1,8 @@
-import {sum} from './index'
+import {wallet} from './index'
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
 <div> 
-    <div class="card" id="starknetburner" />${sum(1,2)}</div>
+    <div class="card" id="starknetburner" /></div>
 </div>`
 
+wallet();
