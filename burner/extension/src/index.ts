@@ -6,13 +6,13 @@ import {
   iFrameButtonStyle,
   burnerButtonStyle,
 } from "./lib/ui/styles";
-import { registerWindow, StarknetWindowObject } from "./lib/inpage/window";
+import { registerWindow, StarknetWindowObject } from "./lib/inpage-next/window";
 import { walletSVG, closeSVG } from "./components/svg";
 import generateButton from "./components/button";
 import generateContainer from "./components/container";
 import generateModal from "./components/modal";
 import generateIframe from "./components/iframe";
-import { addEvent, reload, SESSION_LOADED_EVENT } from "./lib/inpageJS/account";
+import { addEvent, reload, SESSION_LOADED_EVENT } from "./lib/inpage/account";
 
 const wallet = () => {
   const container = document.querySelector<HTMLDivElement>("#starknetburner");
