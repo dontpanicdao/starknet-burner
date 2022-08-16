@@ -1,7 +1,7 @@
 import styles from "styles/AskForDrone.module.css";
 import QRCode from "components/QRCode";
 
-const AskForDrone = ({ accessKey, isLoading, sessionToken, isError }) => {
+const AskForDrone = ({ accessKey, isLoading, sessionToken }) => {
   return (
     <div className={styles.choicesContainer}>
       <div className={styles.choice}>
@@ -14,11 +14,10 @@ const AskForDrone = ({ accessKey, isLoading, sessionToken, isError }) => {
         </a>
       </div>
       <div className={styles.choice}>
-        {!isLoading && !sessionToken && "Wait after signature !"}
+        {!isLoading && !sessionToken && "Wait for signature!"}
         {isLoading && "Loading..."}
-        {!isLoading && sessionToken && "Loaded !"}
+        {!isLoading && sessionToken && "Loaded!"}
       </div>
-      <p className={styles.alert}>{isError}</p>
     </div>
   );
 };

@@ -26,7 +26,6 @@ export default function Home() {
   const [state, setState, key, setKey] = useStateContext();
   const [sessionToken, setSessionToken] = useState(null);
   const [isLoading, setLoading] = useState(false);
-  const [isError, setIsError] = useState("");
 
   const handleCloseSession = () => {
     removeLocalStorage();
@@ -44,28 +43,26 @@ export default function Home() {
     },
   });
 
-  useEffect(() => {
-    const getDroneData = async () => {
-      setLoading(true);
-      try {
-        console.log("launch call");
-        const res = await fetch(`/api/drone/?k=${key}`);
-        if (res.status !== 200) {
-          setLoading(false);
-          return setIsError("Sign with drone!");
-        }
-        const data = await res.json();
-        saveLocalStorage("bwsessiontoken", JSON.stringify(data));
-        console.log("notify token wallet -> extension");
-        notify({ type: SESSION_LOADED_EVENT, data });
-        setSessionToken(data);
-      } catch (error) {
+  const getDroneData = async () => {
+    setLoading(true);
+    try {
+      console.log("launch call");
+      const res = await fetch(`/api/drone/?k=${key}`);
+      if (res.status !== 200) {
         setLoading(false);
-        setIsError(error);
       }
+      const data = await res.json();
+      saveLocalStorage("bwsessiontoken", JSON.stringify(data));
+      console.log("notify token wallet -> extension");
+      notify({ type: SESSION_LOADED_EVENT, data });
+      setSessionToken(data);
+    } catch (error) {
       setLoading(false);
-    };
+    }
+    setLoading(false);
+  };
 
+  useEffect(() => {
     if (!sessionToken) {
       console.log("Not session Token, ready to launch call... : ");
       const interval = setInterval(async () => {
@@ -122,7 +119,6 @@ export default function Home() {
             accessKey={key}
             isLoading={isLoading}
             sessionToken={sessionToken}
-            isError={isError}
           />
         )}
         {state === CONNECTED && <Connected sessionToken={sessionToken} />}
