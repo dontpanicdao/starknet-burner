@@ -124,7 +124,7 @@ export default function Home() {
         {state === UNINITIALIZED && <Loader />}
         {state === INITIALIZED && (
           <AskForDrone
-            key={key}
+            accessKey={key}
             isLoading={isLoading}
             sessionToken={sessionToken}
             isError={isError}

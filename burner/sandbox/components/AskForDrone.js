@@ -1,16 +1,16 @@
 import styles from "styles/AskForDrone.module.css";
 import QRCode from "components/QRCode";
 
-const AskForDrone = ({ key, isLoading, sessionToken, isError }) => {
+const AskForDrone = ({ accessKey, isLoading, sessionToken, isError }) => {
   return (
     <div className={styles.choicesContainer}>
       <div className={styles.choice}>
         <a
           target="_blank"
           rel="noreferrer"
-          href={`https://drone.blaqkube.io/?s=${key}`}
+          href={`https://drone.blaqkube.io/?s=${accessKey}`}
         >
-          <QRCode value={`https://drone.blaqkube.io/?s=${key}`} />
+          <QRCode value={`https://drone.blaqkube.io/?s=${accessKey}`} />
         </a>
       </div>
       <div className={styles.choice}>
