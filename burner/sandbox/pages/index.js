@@ -12,16 +12,16 @@ import {
   saveLocalStorage,
   removeLocalStorage,
 } from "lib/handleLocalStorage";
-import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import { generateKey } from "lib/handleKey";
 import Loader from "components/Loader";
-import QRCode from "components/QRCode";
 import {
   notify,
   eventHandler,
   SESSION_LOADED_EVENT,
 } from "../lib/extension/message";
 import { version } from "../lib/version";
+import AskForDrone from "components/AskForDrone";
+import Connected from "components/Connected";
 
 export default function Home() {
   const [state, setState, key, setKey] = useStateContext();
@@ -123,44 +123,14 @@ export default function Home() {
       <main className={styles.main}>
         {state === UNINITIALIZED && <Loader />}
         {state === INITIALIZED && (
-          <>
-            <div className={styles.choicesContainer}>
-              <div className={styles.choice}>
-                <a
-                  target="_blank"
-                  rel="noreferrer"
-                  href={`https://drone.blaqkube.io/?s=${key}`}
-                >
-                  <QRCode value={`https://drone.blaqkube.io/?s=${key}`} />
-                </a>
-              </div>
-              <div className={styles.choice}>
-                {!isLoading && !sessionToken && "Wait after signature !"}
-                {isLoading && "Loading..."}
-                {!isLoading && sessionToken && "Loaded !"}
-              </div>
-              <p className={styles.alert}>{isError}</p>
-            </div>
-          </>
+          <AskForDrone
+            key={key}
+            isLoading={isLoading}
+            sessionToken={sessionToken}
+            isError={isError}
+          />
         )}
-        {state === CONNECTED && (
-          <div className={styles.sessionContent}>
-            <Jazzicon
-              diameter={16}
-              seed={jsNumberForAddress(sessionToken?.account)}
-            />
-            <p
-              className={styles.accountAddress}
-              onClick={() =>
-                navigator.clipboard.writeText(sessionToken?.account)
-              }
-            >
-              {sessionToken?.account.slice(0, 5) +
-                "..." +
-                sessionToken?.account.slice(-4)}
-            </p>
-          </div>
-        )}
+        {state === CONNECTED && <Connected sessionToken={sessionToken} />}
       </main>
       <footer className={styles.footer}>version {version} 🥰</footer>
     </div>
