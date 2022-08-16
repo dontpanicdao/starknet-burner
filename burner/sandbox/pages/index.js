@@ -29,26 +29,6 @@ export default function Home() {
   const [isLoading, setLoading] = useState(false);
   const [isError, setIsError] = useState("");
 
-  const handleClick = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/drone/?k=${key}`);
-      if (res.status !== 200) {
-        setLoading(false);
-        return setIsError("Sign with drone!");
-      }
-      const data = await res.json();
-      saveLocalStorage("bwsessiontoken", JSON.stringify(data));
-      console.log("notify token wallet -> extension");
-      notify({ type: SESSION_LOADED_EVENT, data });
-      setSessionToken(data);
-    } catch (error) {
-      setLoading(false);
-      setIsError(error);
-    }
-    setLoading(false);
-  };
-
   const handleCloseSession = () => {
     removeLocalStorage();
     setState(UNINITIALIZED);
@@ -66,8 +46,44 @@ export default function Home() {
   });
 
   useEffect(() => {
+    const getDroneData = async () => {
+      setLoading(true);
+      try {
+        console.log("launch call");
+        const res = await fetch(`/api/drone/?k=${key}`);
+        if (res.status !== 200) {
+          setLoading(false);
+          return setIsError("Sign with drone!");
+        }
+        const data = await res.json();
+        saveLocalStorage("bwsessiontoken", JSON.stringify(data));
+        console.log("notify token wallet -> extension");
+        notify({ type: SESSION_LOADED_EVENT, data });
+        setSessionToken(data);
+      } catch (error) {
+        setLoading(false);
+        setIsError(error);
+      }
+      setLoading(false);
+    };
+
+    if (!sessionToken) {
+      console.log("Not session Token, ready to launch call... : ");
+      const interval = setInterval(async () => {
+        await getDroneData().catch(console.error);
+      }, 4000);
+      return () => clearInterval(interval);
+    }
+  }, [key, sessionToken]);
+
+  {
+    //TODO: Relibérer le code de greg dans la nature
+    /**
+  useEffect(() => {
     window.addEventListener("message", windowEventHandler);
   }, []);
+*/
+  }
 
   useEffect(() => {
     if (window) {
@@ -119,9 +135,9 @@ export default function Home() {
                 </a>
               </div>
               <div className={styles.choice}>
-                <button className={styles.button} onClick={handleClick}>
-                  {isLoading ? "Loading..." : "Load..."}
-                </button>
+                {!isLoading && !sessionToken && "Wait after signature !"}
+                {isLoading && "Loading..."}
+                {!isLoading && sessionToken && "Loaded !"}
               </div>
               <p className={styles.alert}>{isError}</p>
             </div>
