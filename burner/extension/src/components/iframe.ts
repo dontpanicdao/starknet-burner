@@ -11,7 +11,7 @@ const generateIframe = (
   iFrame.addEventListener("load", () => {
     console.log("wallet loaded...");
   });
-  iFrame.src = "https://starknet-burner.vercel.app";
+  iFrame.src = "http://localhost:3000";
   return iFrame;
 };
 
