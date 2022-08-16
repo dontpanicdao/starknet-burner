@@ -1,4 +1,3 @@
-import Head from "next/head";
 import styles from "styles/Home.module.css";
 import { useEffect, useState } from "react";
 import {
@@ -19,7 +18,7 @@ import {
   eventHandler,
   SESSION_LOADED_EVENT,
 } from "../lib/extension/message";
-import { version } from "../lib/version";
+import Layout from "components/Layout";
 import AskForDrone from "components/AskForDrone";
 import Connected from "components/Connected";
 
@@ -115,11 +114,7 @@ export default function Home() {
   }, [key, sessionToken]);
 
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Wallet</title>
-        <meta name="description" content="wallet view" />
-      </Head>
+    <Layout>
       <main className={styles.main}>
         {state === UNINITIALIZED && <Loader />}
         {state === INITIALIZED && (
@@ -132,7 +127,6 @@ export default function Home() {
         )}
         {state === CONNECTED && <Connected sessionToken={sessionToken} />}
       </main>
-      <footer className={styles.footer}>version {version} 🥰</footer>
-    </div>
+    </Layout>
   );
 }
