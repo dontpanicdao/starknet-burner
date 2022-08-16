@@ -3,8 +3,10 @@ import { account } from "./account";
 import { version } from "../version";
 
 const starketWindow = {
-  id: "burner",
-  request: async () => {},
+  id: "burner2",
+  request: async () => {
+    console.log("request");
+  },
   enable: async () => {},
   isPreauthorized: async () => {},
   on: () => {},

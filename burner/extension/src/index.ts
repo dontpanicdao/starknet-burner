@@ -6,7 +6,11 @@ import {
   iFrameButtonStyle,
   burnerButtonStyle,
 } from "./lib/ui/styles";
-import { registerWindow, StarknetWindowObject } from "./lib/inpage-next/window";
+import {
+  registerWindow,
+  StarknetWindowObject,
+  exposeRequest,
+} from "./lib/inpage-next/window";
 import { walletSVG, closeSVG } from "./components/svg";
 import generateButton from "./components/button";
 import generateContainer from "./components/container";
@@ -73,6 +77,7 @@ const wallet = () => {
   buttonBurner.addEventListener("click", switchModal);
   addEvent(SESSION_LOADED_EVENT, closeModal);
   registerWindow();
+  exposeRequest();
 };
 
 export { wallet };

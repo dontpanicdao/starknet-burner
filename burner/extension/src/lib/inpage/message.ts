@@ -2,7 +2,13 @@ import { account } from "./account";
 
 const uuid = "589c80c1eb85413d";
 
-export const request = (msg: any) => {
+export type burnerMessage = {
+  uuid: string | undefined;
+  type: string;
+  data: any;
+};
+
+export const request = (msg: burnerMessage) => {
   if (!msg || typeof msg !== "object" || !msg.type) {
     throw new Error("Invalid message");
   }
@@ -18,7 +24,10 @@ export const request = (msg: any) => {
   return iframe.contentWindow?.postMessage({ ...msg, uuid }, "*");
 };
 
-export const waitForMessage = (type: any, timeout: any) => {
+export const waitForMessage = (
+  type: string,
+  timeout: number
+): Promise<string | null> => {
   return new Promise((resolve, reject) => {
     const pid = setTimeout(() => reject(new Error("timeout")), timeout);
     const handler = (event: MessageEvent) => {

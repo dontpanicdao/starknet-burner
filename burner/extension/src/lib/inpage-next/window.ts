@@ -1,4 +1,4 @@
-import { extensionEventHandler } from "./message";
+import { extensionEventHandler } from "../inpage/message";
 import { version } from "../version";
 import {
   RpcMessage,
@@ -6,6 +6,8 @@ import {
   EventType,
   EventHandler,
 } from "../interface/get-starknet";
+import { request } from "../inpage/message";
+
 import { account } from "./account";
 import { AccountInterface } from "starknet/account/interface";
 import { Provider } from "./provider";
@@ -34,7 +36,7 @@ export class StarknetWindowObject implements IStarknetWindowObject {
 }
 
 export const starketWindow: IStarknetWindowObject = {
-  name: "burner",
+  name: "burner2",
   icon: "https://burnerfactory.com/assets/images/burner-logo.png",
   id: "burner",
   version: version,
@@ -43,6 +45,7 @@ export const starketWindow: IStarknetWindowObject = {
     _: Omit<T, "result">
   ): Promise<T["result"]> => {
     return new Promise((resolve, _) => {
+      console.log("me");
       return resolve(true);
     });
   },
@@ -59,6 +62,17 @@ export const registerWindow = () => {
     window.addEventListener("message", extensionEventHandler);
     Object.defineProperty(window, "starknet-burner", {
       value: starketWindow,
+      writable: false,
+    });
+  }
+};
+
+export const exposeRequest = () => {
+  if (window) {
+    Object.defineProperty(window, "burner-request", {
+      value: {
+        request,
+      },
       writable: false,
     });
   }
