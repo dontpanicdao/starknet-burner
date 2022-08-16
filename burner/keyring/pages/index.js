@@ -17,7 +17,7 @@ import {
   notify,
   eventHandler,
   SESSION_LOADED_EVENT,
-} from "../lib/extension/message";
+} from "lib/extension/message";
 import Layout from "components/Layout";
 import AskForDrone from "components/AskForDrone";
 import Connected from "components/Connected";
