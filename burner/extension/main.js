@@ -1,2 +1,3 @@
 import { wallet } from "./index.js";
 wallet();
+// CHANGE ALL OCCURENCES OF WALLET ACROSS ALL THE PROJECT TO SOMETHING MORE RELEVANT
