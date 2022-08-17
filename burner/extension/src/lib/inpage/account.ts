@@ -152,16 +152,6 @@ export class Account extends Provider implements AccountInterface {
       },
     ],
   };
-
-  //   public _actions: ActionHandlers = {
-  //     reset: () => {
-  //       console.log("send reset action");
-  //       requestFactory(true)({ type: RESET_ACTION, data: {} });
-  //     },
-  //     reload: () => {
-  // 		requestFactory(true)({ type: RELOAD_ACTION, data: {} });
-  //     },
-  //   };
 }
 
 export const account = new Account("0x0");

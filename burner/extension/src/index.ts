@@ -54,7 +54,7 @@ const wallet = () => {
     buttonBurner.style.cssText = burnerButtonStyle;
     const burner: StarknetWindowObject =
       window["starknet-burner" as keyof typeof window];
-    if (burner?.account?.address) {
+    if (burner?.account?.address && burner.account.address != "0x0") {
       const accountAddress = burner.account.address;
       buttonBurner.textContent =
         accountAddress.slice(0, 5) + "..." + accountAddress.slice(-4);
