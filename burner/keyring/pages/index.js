@@ -86,7 +86,6 @@ export default function Home() {
   return (
     <Layout>
       <main className={styles.main}>
-        {displayed ? "is display" : "not displayed"}
         {state === UNINITIALIZED && <Loader />}
         {state === INITIALIZED && (
           <AskForDrone

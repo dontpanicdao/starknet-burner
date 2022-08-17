@@ -29,9 +29,7 @@ const wallet = () => {
   const buttonBurner = generateButton(container);
   const modalWrapper = generateModal(container);
   const iFrame = generateIframe(container);
-
   let clicked = false;
-  console.log(iFrame);
   if (!buttonBurner || !modalWrapper || !iFrame) {
     return;
   }
