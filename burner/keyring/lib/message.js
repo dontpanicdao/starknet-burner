@@ -1,3 +1,6 @@
+import { provider } from "./starknet";
+import { toBN } from "starknet/utils/number";
+
 const uuid = "589c80c1eb85413d";
 
 export const notify = (msg) => {
@@ -7,27 +10,37 @@ export const notify = (msg) => {
   return window?.parent?.postMessage({ ...msg, uuid }, "*");
 };
 
-export const eventHandler = (event) => {
+export const eventHandler = async (event) => {
   if (event?.data?.uuid !== uuid) {
     return;
   }
   const { type, data } = event.data;
+  console.log("in:keyring", type, data);
   switch (type) {
     case "ping":
-      console.log("in:keyring", type, data);
       notify({ type: "pong", data });
       break;
     case "display":
-      console.log("in:keyring", type, data);
       callBacks.setDisplay(data === "on" ? true : false);
       notify({ type: "display", data: "ack" });
       break;
     case "call":
-      console.log("in:keyring", type, data);
-      notify({ type: "call", data: ["ok"] });
+      const { call, blockIdentifier } = data;
+      const { contractAddress, entrypoint, calldata } = call;
+      console.log("toBN", toBN);
+      console.log("data args", contractAddress, entrypoint, calldata);
+
+      const newCall = {
+        contractAddress: contractAddress,
+        entrypoint: entrypoint,
+        calldata: [...calldata.map((v) => toBN(v).toString(10))],
+      };
+
+      console.log("data", newCall, blockIdentifier);
+      const output = await provider.callContract(newCall, blockIdentifier);
+      notify({ type: "call", data: output });
       break;
     default:
-      console.log("in:keyring", "unknown event", data);
       break;
   }
 };
