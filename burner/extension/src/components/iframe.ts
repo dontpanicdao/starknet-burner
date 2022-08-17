@@ -8,9 +8,6 @@ const generateIframe = (
     return;
   }
   iFrame.style.cssText = HiddenStyle;
-  iFrame.addEventListener("load", () => {
-    console.log("wallet loaded...");
-  });
   iFrame.src = "http://localhost:3000";
   return iFrame;
 };

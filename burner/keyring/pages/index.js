@@ -13,7 +13,6 @@ import {
 } from "lib/handleLocalStorage";
 import { generateKey } from "lib/handleKey";
 import Loader from "components/Loader";
-import { notify, SESSION_LOADED_EVENT } from "lib/extension/message";
 import { eventHandler } from "lib/message";
 
 import Layout from "components/Layout";
@@ -25,22 +24,6 @@ export default function Home() {
   const [sessionToken, setSessionToken] = useState(null);
   const [isLoading, setLoading] = useState(false);
 
-  const handleCloseSession = () => {
-    removeLocalStorage();
-    setState(UNINITIALIZED);
-    setKey(null);
-  };
-
-  const windowEventHandler = eventHandler({
-    resetAction: handleCloseSession,
-    reloadAction: () => {
-      let token = getLocalStorage("bwsessiontoken");
-      if (token) {
-        return notify({ type: SESSION_LOADED_EVENT, data: JSON.parse(token) });
-      }
-    },
-  });
-
   const getDroneData = async () => {
     setLoading(true);
     try {
@@ -51,7 +34,6 @@ export default function Home() {
       }
       const data = await res.json();
       saveLocalStorage("bwsessiontoken", JSON.stringify(data));
-      notify({ type: SESSION_LOADED_EVENT, data });
       setSessionToken(data);
     } catch (error) {
       setLoading(false);
@@ -68,11 +50,9 @@ export default function Home() {
     }
   }, [key, sessionToken]);
 
-  {
-    useEffect(() => {
-      window.addEventListener("message", eventHandler);
-    }, []);
-  }
+  useEffect(() => {
+    window.addEventListener("message", eventHandler);
+  }, []);
 
   useEffect(() => {
     if (window) {
@@ -97,7 +77,6 @@ export default function Home() {
         setSessionToken(JSON.parse(token));
         return;
       }
-      notify({ type: SESSION_LOADED_EVENT, data: sessionToken });
       setState(CONNECTED);
     }
   }, [key, sessionToken]);

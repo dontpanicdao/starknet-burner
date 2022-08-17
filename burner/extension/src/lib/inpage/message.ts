@@ -29,23 +29,6 @@ export const requestFactory = (
   return request;
 };
 
-export const waitForMessage = (
-  type: string,
-  timeout: number
-): Promise<string | null> => {
-  return new Promise((resolve, reject) => {
-    const pid = setTimeout(() => reject(new Error("timeout")), timeout);
-    const handler = (event: MessageEvent) => {
-      if (event?.data?.type === type) {
-        clearTimeout(pid);
-        window.removeEventListener("message", handler);
-        return resolve("data" in event.data ? event.data.data : undefined);
-      }
-    };
-    window.addEventListener("message", handler);
-  });
-};
-
 export const extensionEventHandler = (event: MessageEvent) => {
   if (event?.data?.uuid !== uuid) {
     return;
