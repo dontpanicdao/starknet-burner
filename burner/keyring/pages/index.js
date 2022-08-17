@@ -13,11 +13,9 @@ import {
 } from "lib/handleLocalStorage";
 import { generateKey } from "lib/handleKey";
 import Loader from "components/Loader";
-import {
-  notify,
-  eventHandler,
-  SESSION_LOADED_EVENT,
-} from "lib/extension/message";
+import { notify, SESSION_LOADED_EVENT } from "lib/extension/message";
+import { eventHandler } from "lib/message";
+
 import Layout from "components/Layout";
 import AskForDrone from "components/AskForDrone";
 import Connected from "components/Connected";
@@ -46,14 +44,13 @@ export default function Home() {
   const getDroneData = async () => {
     setLoading(true);
     try {
-      console.log("launch call");
+      //   console.log("launch call");
       const res = await fetch(`/api/drone/?k=${key}`);
       if (res.status !== 200) {
         setLoading(false);
       }
       const data = await res.json();
       saveLocalStorage("bwsessiontoken", JSON.stringify(data));
-      console.log("notify token wallet -> extension");
       notify({ type: SESSION_LOADED_EVENT, data });
       setSessionToken(data);
     } catch (error) {
@@ -64,7 +61,6 @@ export default function Home() {
 
   useEffect(() => {
     if (!sessionToken) {
-      console.log("Not session Token, ready to launch call... : ");
       const interval = setInterval(async () => {
         await getDroneData().catch(console.error);
       }, 4000);
@@ -73,12 +69,9 @@ export default function Home() {
   }, [key, sessionToken]);
 
   {
-    //TODO: Relibérer le code de greg dans la nature
-    /**
-  useEffect(() => {
-    window.addEventListener("message", windowEventHandler);
-  }, []);
-*/
+    useEffect(() => {
+      window.addEventListener("message", eventHandler);
+    }, []);
   }
 
   useEffect(() => {
@@ -104,7 +97,6 @@ export default function Home() {
         setSessionToken(JSON.parse(token));
         return;
       }
-      console.log("notify token wallet -> extension");
       notify({ type: SESSION_LOADED_EVENT, data: sessionToken });
       setState(CONNECTED);
     }

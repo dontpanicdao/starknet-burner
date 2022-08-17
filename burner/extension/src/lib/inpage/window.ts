@@ -1,4 +1,3 @@
-import { extensionEventHandler } from "../inpage/message";
 import { version } from "../version";
 import {
   RpcMessage,
@@ -6,7 +5,7 @@ import {
   EventType,
   EventHandler,
 } from "../interface/get-starknet";
-import { request } from "../inpage/message";
+import { requestFactory, extensionEventHandler } from "./message";
 
 import { account } from "./account";
 import { AccountInterface } from "starknet/account/interface";
@@ -67,11 +66,12 @@ export const registerWindow = () => {
   }
 };
 
-export const exposeRequest = () => {
+export const exposeRequest = (debug: boolean) => {
   if (window) {
     Object.defineProperty(window, "burner-request", {
       value: {
-        request,
+        request: requestFactory(debug),
+        debug,
       },
       writable: false,
     });

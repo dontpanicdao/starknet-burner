@@ -10,13 +10,12 @@ import {
   registerWindow,
   StarknetWindowObject,
   exposeRequest,
-} from "./lib/inpage-next/window";
+} from "./lib/inpage/window";
 import { walletSVG, closeSVG } from "./components/svg";
 import generateButton from "./components/button";
 import generateContainer from "./components/container";
 import generateModal from "./components/modal";
 import generateIframe from "./components/iframe";
-import { addEvent, reload, SESSION_LOADED_EVENT } from "./lib/inpage/account";
 
 const wallet = () => {
   const container = document.querySelector<HTMLDivElement>("#starknetburner");
@@ -44,7 +43,7 @@ const wallet = () => {
     buttonBurner.textContent = "";
     buttonBurner.innerHTML += closeSVG;
     clicked = true;
-    reload();
+    // reload();
     return;
   };
 
@@ -75,9 +74,8 @@ const wallet = () => {
   };
 
   buttonBurner.addEventListener("click", switchModal);
-  addEvent(SESSION_LOADED_EVENT, closeModal);
   registerWindow();
-  exposeRequest();
+  exposeRequest(true);
 };
 
 export { wallet };
