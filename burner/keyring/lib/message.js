@@ -17,8 +17,19 @@ export const eventHandler = (event) => {
       console.log("in:keyring", type, data);
       notify({ type: "pong", data });
       break;
+    case "display":
+      console.log("in:keyring", type, data);
+      callBacks.setDisplay(data === "on" ? true : false);
+      notify({ type: "display", data: "ack" });
+      break;
     default:
       console.log("in:keyring", "unknown event", data);
       break;
   }
+};
+const callBacks = {
+  setDisplay: () => {},
+};
+export const injectSetDisplay = (fn) => {
+  callBacks.setDisplay = fn;
 };

@@ -13,7 +13,7 @@ import {
 } from "lib/handleLocalStorage";
 import { generateKey } from "lib/handleKey";
 import Loader from "components/Loader";
-import { eventHandler } from "lib/message";
+import { eventHandler, injectSetDisplay } from "lib/message";
 
 import Layout from "components/Layout";
 import AskForDrone from "components/AskForDrone";
@@ -23,11 +23,11 @@ export default function Home() {
   const [state, setState, key, setKey] = useStateContext();
   const [sessionToken, setSessionToken] = useState(null);
   const [isLoading, setLoading] = useState(false);
+  const [displayed, setDisplayed] = useState(false);
 
   const getDroneData = async () => {
     setLoading(true);
     try {
-      //   console.log("launch call");
       const res = await fetch(`/api/drone/?k=${key}`);
       if (res.status !== 200) {
         setLoading(false);
@@ -42,16 +42,18 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (!sessionToken) {
+    if (!sessionToken && displayed) {
       const interval = setInterval(async () => {
         await getDroneData().catch(console.error);
       }, 4000);
       return () => clearInterval(interval);
     }
-  }, [key, sessionToken]);
+  }, [key, sessionToken, displayed]);
 
   useEffect(() => {
     window.addEventListener("message", eventHandler);
+    injectSetDisplay(setDisplayed);
+    setDisplayed(true);
   }, []);
 
   useEffect(() => {
