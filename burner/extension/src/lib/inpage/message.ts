@@ -1,9 +1,15 @@
+import { Call } from "starknet/types/lib";
+import { BlockIdentifier } from "starknet/provider/utils";
+import { CallContractResponse } from "starknet/types/provider";
+
 const uuid = "589c80c1eb85413d";
 
 export enum messageType {
   ping = "ping",
   display = "display",
+  call = "call",
 }
+
 export type burnerMessage = {
   uuid: string | undefined;
   type: messageType;
@@ -41,4 +47,39 @@ export const extensionEventHandler = (event: MessageEvent) => {
       console.log("in:extension", "default event", type);
       break;
   }
+};
+
+export const waitForCallContractMessage = async (
+  timeout: number
+): Promise<CallContractResponse> => {
+  return new Promise((resolve, reject) => {
+    const pid = setTimeout(() => reject(new Error("Timeout")), timeout);
+    const handler = (event: MessageEvent) => {
+      if (event?.data?.uuid !== uuid) {
+        return;
+      }
+      const { type, data } = event.data;
+      if (type !== "call") {
+        return;
+      }
+      clearTimeout(pid);
+      window.removeEventListener("message", handler);
+      return resolve(data as CallContractResponse);
+    };
+    window.addEventListener("message", handler);
+  });
+};
+
+export const callContract = async (
+  req: Call,
+  blockIdentifier: BlockIdentifier = "pending"
+): Promise<CallContractResponse> => {
+  request({
+    type: messageType.call,
+    data: { request: req, blockIdentifier },
+    uuid,
+  });
+  const a = await waitForCallContractMessage(2000);
+  console.log(a);
+  return a;
 };

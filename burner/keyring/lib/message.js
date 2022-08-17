@@ -22,6 +22,10 @@ export const eventHandler = (event) => {
       callBacks.setDisplay(data === "on" ? true : false);
       notify({ type: "display", data: "ack" });
       break;
+    case "call":
+      console.log("in:keyring", type, data);
+      notify({ type: "call", data: ["ok"] });
+      break;
     default:
       console.log("in:keyring", "unknown event", data);
       break;
