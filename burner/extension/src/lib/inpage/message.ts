@@ -3,6 +3,7 @@ import { BlockIdentifier } from "starknet/provider/utils";
 import { CallContractResponse } from "starknet/types/provider";
 
 const uuid = "589c80c1eb85413d";
+const defaultTimeoutMilliseconds = 5000;
 
 export enum messageType {
   ping = "ping",
@@ -79,5 +80,5 @@ export const callContract = async (
     data: { call, blockIdentifier },
     uuid,
   });
-  return await waitForCallContractMessage(2000);
+  return await waitForCallContractMessage(defaultTimeoutMilliseconds);
 };
