@@ -11,6 +11,7 @@ const generateIframe = (
   iFrame.src = import.meta.env.DEV
     ? "http://localhost:3000"
     : "https://starknet-burner.vercel.app/";
+  iFrame.setAttribute("loading", "eager");
   return iFrame;
 };
 

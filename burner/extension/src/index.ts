@@ -16,6 +16,7 @@ import generateButton from "./components/button";
 import generateContainer from "./components/container";
 import generateModal from "./components/modal";
 import generateIframe from "./components/iframe";
+import { burnerMessage, messageType, request } from "./lib/inpage/message";
 
 const wallet = () => {
   const container = document.querySelector<HTMLDivElement>("#starknetburner");
@@ -28,8 +29,9 @@ const wallet = () => {
   const buttonBurner = generateButton(container);
   const modalWrapper = generateModal(container);
   const iFrame = generateIframe(container);
-  let clicked = false;
 
+  let clicked = false;
+  console.log(iFrame);
   if (!buttonBurner || !modalWrapper || !iFrame) {
     return;
   }
@@ -43,8 +45,7 @@ const wallet = () => {
     buttonBurner.textContent = "";
     buttonBurner.innerHTML += closeSVG;
     clicked = true;
-    // reload();
-    return;
+    request({ type: messageType.display, data: "on" } as burnerMessage);
   };
 
   const closeModal = () => {
@@ -63,6 +64,7 @@ const wallet = () => {
       buttonBurner.innerHTML += walletSVG;
     }
     clicked = false;
+    request({ type: messageType.display, data: "off" } as burnerMessage);
   };
 
   const switchModal = () => {
