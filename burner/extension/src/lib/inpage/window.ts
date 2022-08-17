@@ -5,7 +5,7 @@ import {
   EventType,
   EventHandler,
 } from "../interface/get-starknet";
-import { request, extensionEventHandler } from "./message";
+import { request, callContract, extensionEventHandler } from "./message";
 
 import { account } from "./account";
 import { AccountInterface } from "starknet/account/interface";
@@ -71,6 +71,7 @@ export const exposeRequest = (debug: boolean) => {
     Object.defineProperty(window, "burner-request", {
       value: {
         request,
+        callContract,
         debug,
       },
       writable: false,
