@@ -8,7 +8,9 @@ const generateIframe = (
     return;
   }
   iFrame.style.cssText = HiddenStyle;
-  iFrame.src = "http://localhost:3000";
+  iFrame.src = import.meta.env.DEV
+    ? "http://localhost:3000"
+    : "https://starknet-burner.vercel.app/";
   return iFrame;
 };
 
