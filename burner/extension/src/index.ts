@@ -6,13 +6,16 @@ import {
   iFrameButtonStyle,
   burnerButtonStyle,
 } from "./lib/ui/styles";
-import { registerWindow, StarknetWindowObject } from "./lib/inpage-next/window";
+import {
+  registerWindow,
+  StarknetWindowObject,
+  exposeRequest,
+} from "./lib/inpage/window";
 import { walletSVG, closeSVG } from "./components/svg";
 import generateButton from "./components/button";
 import generateContainer from "./components/container";
 import generateModal from "./components/modal";
 import generateIframe from "./components/iframe";
-import { addEvent, reload, SESSION_LOADED_EVENT } from "./lib/inpage/account";
 
 const wallet = () => {
   const container = document.querySelector<HTMLDivElement>("#starknetburner");
@@ -40,7 +43,7 @@ const wallet = () => {
     buttonBurner.textContent = "";
     buttonBurner.innerHTML += closeSVG;
     clicked = true;
-    reload();
+    // reload();
     return;
   };
 
@@ -51,7 +54,7 @@ const wallet = () => {
     buttonBurner.style.cssText = burnerButtonStyle;
     const burner: StarknetWindowObject =
       window["starknet-burner" as keyof typeof window];
-    if (burner?.account?.address) {
+    if (burner?.account?.address && burner.account.address != "0x0") {
       const accountAddress = burner.account.address;
       buttonBurner.textContent =
         accountAddress.slice(0, 5) + "..." + accountAddress.slice(-4);
@@ -71,8 +74,8 @@ const wallet = () => {
   };
 
   buttonBurner.addEventListener("click", switchModal);
-  addEvent(SESSION_LOADED_EVENT, closeModal);
   registerWindow();
+  exposeRequest(true);
 };
 
 export { wallet };

@@ -8,10 +8,9 @@ const generateIframe = (
     return;
   }
   iFrame.style.cssText = HiddenStyle;
-  iFrame.addEventListener("load", () => {
-    console.log("wallet loaded...");
-  });
-  iFrame.src = "https://starknet-burner.vercel.app";
+  iFrame.src = import.meta.env.DEV
+    ? "http://localhost:3000"
+    : "https://starknet-burner.vercel.app/";
   return iFrame;
 };
 
