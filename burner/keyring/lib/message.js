@@ -27,16 +27,11 @@ export const eventHandler = async (event) => {
     case "call":
       const { call, blockIdentifier } = data;
       const { contractAddress, entrypoint, calldata } = call;
-      console.log("toBN", toBN);
-      console.log("data args", contractAddress, entrypoint, calldata);
-
       const newCall = {
-        contractAddress: contractAddress,
-        entrypoint: entrypoint,
+        contractAddress,
+        entrypoint,
         calldata: [...calldata.map((v) => toBN(v).toString(10))],
       };
-
-      console.log("data", newCall, blockIdentifier);
       const output = await provider.callContract(newCall, blockIdentifier);
       notify({ type: "call", data: output });
       break;
