@@ -1,3 +1,4 @@
+import { isWindowSizeLargerThan } from "../lib/ui/responsive.js";
 import { HiddenStyle, iframeStyle } from "../lib/ui/styles.js";
 
 export const injectIFrame = (): void => {
@@ -13,7 +14,8 @@ export const injectIFrame = (): void => {
     : "https://starknet-burner.vercel.app/";
   let clicked = false;
   const styleIframe = () => {
-    iFrame.style.cssText = clicked ? HiddenStyle : iframeStyle();
+    const size = isWindowSizeLargerThan(768) ? 60 : 90;
+    iFrame.style.cssText = clicked ? HiddenStyle : iframeStyle(size);
     clicked = clicked ? false : true;
   };
   button.addEventListener("click", styleIframe);

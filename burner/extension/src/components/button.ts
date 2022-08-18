@@ -20,9 +20,12 @@ export const injectButton = (): any => {
       type: messageType.display,
       data: clicked ? "off" : "on",
     } as burnerMessage);
+    const { top, left, width, height } = iFramePosition;
+    const iFrameTop = top + height * 0.025;
+    const iFrameLeft = left + width * 0.025;
     button.style.cssText = clicked
       ? burnerButtonStyle
-      : iFrameButtonStyle(iFramePosition);
+      : iFrameButtonStyle(iFrameTop, iFrameLeft);
     button.textContent = clicked ? "Connect" : "";
     button.innerHTML += clicked ? walletSVG : closeSVG;
     clicked = clicked ? false : true;
