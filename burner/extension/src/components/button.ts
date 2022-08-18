@@ -1,12 +1,10 @@
 import { walletSVG } from "./svg";
 import { burnerButtonStyle } from "../lib/ui/styles";
 
-const generateButton = (
-  container: HTMLDivElement
-): HTMLButtonElement | undefined => {
+const injectButton = (container: HTMLDivElement): HTMLButtonElement => {
   const button = container.querySelector<HTMLButtonElement>("#button-burner");
   if (!button) {
-    return;
+    throw new Error("undefined Button");
   }
   button.style.cssText = burnerButtonStyle;
   button.textContent = "Connect";
@@ -17,4 +15,4 @@ const generateButton = (
   return button;
 };
 
-export default generateButton;
+export default injectButton;

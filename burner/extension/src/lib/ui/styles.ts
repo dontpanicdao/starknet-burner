@@ -1,4 +1,6 @@
-import { isWindowSizeLargerThan } from "./responsive";
+const isWindowSizeLargerThan = (size: number): boolean => {
+  return window.matchMedia(`(min-width: ${size}px)`).matches;
+};
 
 export const containerStyleClicked =
   "position:absolute;top:0;left:0;display:flex;justify-content:center;flex-direction:column;align-items:center;width:100vw;height:100vh;";

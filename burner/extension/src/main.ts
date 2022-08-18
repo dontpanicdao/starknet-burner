@@ -1,3 +1,3 @@
-import { wallet } from "./index";
+import { keyManager } from "./index";
 
-wallet();
+keyManager();

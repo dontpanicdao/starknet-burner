@@ -1,13 +1,13 @@
 import { useEffect } from "react";
-import { wallet } from "@starknet/burner";
+import { keyManager } from "@starknet/burner";
 
-const Burner = () => {
+const KeyManager = () => {
   useEffect(() => {
     if (window) {
-      wallet();
+      keyManager();
     }
   }, []);
   return <div id="starknetburner"></div>;
 };
 
-export default Burner;
+export default KeyManager;

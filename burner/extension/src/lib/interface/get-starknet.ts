@@ -1,3 +1,5 @@
+// TODO: remove this depedency and switch these object to get-starknet
+// this might require we downgrade starknet.hs to 3.18 for now
 export interface IStorageWrapper {
   set(value: string | null | undefined): boolean;
   get(): string | null | undefined;
