@@ -17,7 +17,7 @@ export const injectButton = (): any => {
   const handleButtonClick = () => {
     const iFramePosition = iFrame.getBoundingClientRect();
     sendMessage({
-      type: clicked ? "CLOSE_MODAL" : "OPEN_MODAL",
+      type: clicked ? "keyring_CloseModal" : "keyring_OpenModal",
     });
     const { top, left, width, height } = iFramePosition;
     const iFrameTop = top + height * 0.025;

@@ -165,6 +165,7 @@ export const verifyMessageHash = async (
   });
   return await waitForMessage("account_VerifyMessageHashResponse");
 };
+
 export const getNonce = async (): Promise<string> => {
   sendMessage({
     type: "account_GetNonce",
