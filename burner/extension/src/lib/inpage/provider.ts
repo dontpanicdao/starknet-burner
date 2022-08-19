@@ -1,12 +1,10 @@
 import { StarknetChainId } from "starknet/constants";
-import { callContract } from "../messages/provider";
-
+import { callContract, getBlock } from "../messages/provider";
 import {
   ContractClass,
   DeclareContractResponse,
   DeployContractResponse,
   EstimateFeeResponse,
-  GetBlockResponse,
   GetCodeResponse,
   GetTransactionResponse,
   InvokeFunctionResponse,
@@ -18,25 +16,7 @@ import { ProviderInterface } from "starknet/provider/interface";
 export const provider: ProviderInterface = {
   chainId: StarknetChainId.TESTNET,
 
-  getBlock: async (blockIdentifier) => {
-    console.log("blockIdentifier", blockIdentifier);
-    const out: GetBlockResponse = {
-      accepted_time: 1599098983,
-      block_hash:
-        "0x0000000000000000000000000000000000000000000000000000000000000000",
-      block_number: 1,
-      gas_price: "0x1",
-      new_root:
-        "0x0000000000000000000000000000000000000000000000000000000000000000",
-      parent_hash:
-        "0x0000000000000000000000000000000000000000000000000000000000000000",
-      sequencer:
-        "0x0000000000000000000000000000000000000000000000000000000000000000",
-      status: "REJECTED",
-      transactions: [],
-    };
-    return Promise.resolve(out);
-  },
+  getBlock,
   getClassAt: async (contractAddress, blockIdentifier) => {
     console.log("contractAddress", contractAddress);
     console.log("blockIdentifier", blockIdentifier);

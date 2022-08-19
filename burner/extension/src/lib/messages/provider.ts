@@ -1,6 +1,5 @@
-// import { Call } from "starknet/types/lib";
 import { BlockIdentifier } from "starknet/provider/utils";
-import { CallContractResponse } from "starknet/types/provider";
+import { CallContractResponse, GetBlockResponse } from "starknet/types";
 
 import type { Abi, Call } from "starknet";
 import { sendMessage, waitForMessage } from "./index";
@@ -19,6 +18,14 @@ export type ProviderMessage =
   | {
       type: "CALL_CONTRACT_RES";
       data: CallContractResponse;
+    }
+  | {
+      type: "GET_BLOCK";
+      data: BlockIdentifier;
+    }
+  | {
+      type: "GET_BLOCK_RES";
+      data: GetBlockResponse;
     };
 
 export const callContract = async (
@@ -33,4 +40,16 @@ export const callContract = async (
     },
   });
   return await waitForMessage("CALL_CONTRACT_RES");
+};
+
+export const getBlock = async (
+  blockIdentifier: BlockIdentifier = "pending"
+): Promise<GetBlockResponse> => {
+  sendMessage({
+    type: "GET_BLOCK",
+    data: {
+      blockIdentifier,
+    },
+  });
+  return await waitForMessage("GET_BLOCK_RES");
 };

@@ -29,5 +29,5 @@ export const keyManager = () => {
   injectIFrame();
   injectButton();
   injectModal();
-  exposeRequest(true);
+  exposeRequest();
 };
