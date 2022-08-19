@@ -18,7 +18,7 @@
     "starknet": "^3.18.2"
   },
   "devDependencies": {
-    "@starknet/burner": "^0.2.97",
+    "@starknet/burner": "^0.2.99",
     "eslint": "8.21.0",
     "eslint-config-next": "12.2.3"
   }
