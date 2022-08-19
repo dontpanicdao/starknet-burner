@@ -17,12 +17,16 @@ export const eventHandler = async (event) => {
   const { type, data } = event.data;
   console.log("in:keyring", type, data);
   switch (type) {
-    case "ping":
-      notify({ type: "pong", data });
+    case "PING":
+      notify({ type: "PONG", data });
       break;
-    case "display":
-      callBacks.setDisplay(data === "on" ? true : false);
-      notify({ type: "display", data: "ack" });
+    case "OPEN_MODAL":
+      callBacks.setDisplay(true);
+      notify({ type: "OPEN_MODAL", data: "ack" });
+      break;
+    case "CLOSE_MODAL":
+      callBacks.setDisplay(false);
+      notify({ type: "CLOSE_MODAL", data: "ack" });
       break;
     case "call":
       const { call, blockIdentifier } = data;
