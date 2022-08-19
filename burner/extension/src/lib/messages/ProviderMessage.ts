@@ -32,5 +32,5 @@ export const callContract = async (
       blockIdentifier,
     },
   });
-  return waitForMessage("CALL_CONTRACT_RES");
+  return await waitForMessage("CALL_CONTRACT_RES");
 };

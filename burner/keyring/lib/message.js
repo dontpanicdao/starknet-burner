@@ -28,24 +28,29 @@ export const eventHandler = async (event) => {
       callBacks.setDisplay(false);
       notify({ type: "CLOSE_MODAL", data: "ack" });
       break;
-    case "call":
-      const { call, blockIdentifier } = data;
-      const { contractAddress, entrypoint, calldata } = call;
+    case "CALL_CONTRACT":
+      const { transactions, blockIdentifier } = data;
+      const { contractAddress, entrypoint, calldata } = transactions;
       const newCall = {
         contractAddress,
         entrypoint,
         calldata: [...calldata.map((v) => toBN(v).toString(10))],
       };
+      console.log(newCall);
       const output = await provider.callContract(newCall, blockIdentifier);
-      notify({ type: "call", data: output });
+      notify({ type: "CALL_CONTRACT_RES", data: output });
       break;
     default:
       break;
   }
 };
+
 const callBacks = {
-  setDisplay: () => {},
+  setDisplay: () => {
+    console.log("setDisplay is not already set");
+  },
 };
+
 export const injectSetDisplay = (fn) => {
   callBacks.setDisplay = fn;
 };

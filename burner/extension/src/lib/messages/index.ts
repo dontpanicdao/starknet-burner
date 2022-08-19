@@ -11,11 +11,10 @@ export type WindowMessageType = MessageType & {
   uuid: string;
 };
 
-const keyring = document
-  .querySelector("#starknetburner")
-  ?.querySelector<HTMLIFrameElement>("#iframe");
-
 export const sendMessage = (msg: MessageType): void => {
+  const keyring = document
+    .querySelector("#starknetburner")
+    ?.querySelector<HTMLIFrameElement>("#iframe");
   return keyring?.contentWindow?.postMessage({ ...msg, uuid }, "*");
 };
 

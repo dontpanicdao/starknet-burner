@@ -51,9 +51,8 @@ export default function Home() {
   }, [key, sessionToken, displayed]);
 
   useEffect(() => {
-    window.addEventListener("message", eventHandler);
     injectSetDisplay(setDisplayed);
-    setDisplayed(true);
+    window.addEventListener("message", eventHandler);
   }, []);
 
   useEffect(() => {

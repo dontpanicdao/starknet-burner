@@ -33,6 +33,8 @@ export const extensionEventHandler = (event: MessageEvent) => {
     case "CLOSE_MODAL":
       console.log("in:extension", type, data);
       break;
+    case "CALL_CONTRACT_RES":
+      break;
     default:
       console.log("in:extension", "unexpected event type", type);
       break;
