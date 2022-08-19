@@ -1,59 +1,36 @@
 import { version } from "../version";
-import {
-  RpcMessage,
-  IStarknetWindowObject,
-  EventType,
-  EventHandler,
-} from "../interface/get-starknet";
 import { sendMessage, callContract, extensionEventHandler } from "../messages";
-
+import { IStarknetWindowObject } from "./interface";
 import { account } from "./account";
-import { AccountInterface } from "starknet/account/interface";
-import { Provider } from "./provider";
+import { WatchAssetParameters } from "../messages";
+import { uuid } from "../messages";
 
-export class StarknetWindowObject implements IStarknetWindowObject {
-  public name: string = "burner";
-  public icon: string =
-    "https://burnerfactory.com/assets/images/burner-logo.png";
-  public id: string = "burner";
-  public version = version;
-  public request<T extends RpcMessage>(
-    _: Omit<T, "result">
-  ): Promise<T["result"]> {
-    return new Promise((resolve, _) => {
-      return resolve(true);
-    });
-  }
-  public isConnected = false;
-  public isPreauthorized = () => Promise.resolve(false);
-  public enable = () => Promise.resolve([]);
-  public on = (_: EventType, __: EventHandler): void => {};
-
-  public off = (_: EventType, __: EventHandler): void => {};
-  public account: AccountInterface | undefined = undefined;
-  public provider = new Provider();
-}
+export type EventType = "accountsChanged" | "networkChanged";
+export type EventHandler = (data: any) => void;
 
 export const starketWindow: IStarknetWindowObject = {
-  name: "burner2",
+  name: "burner",
   icon: "https://burnerfactory.com/assets/images/burner-logo.png",
-  id: "burner",
+  id: uuid,
   version: version,
   isConnected: false,
-  request: <T extends RpcMessage>(
-    _: Omit<T, "result">
-  ): Promise<T["result"]> => {
-    return new Promise((resolve, _) => {
-      console.log("me");
-      return resolve(true);
-    });
+  request: (type) => {
+    if (type === "wallet_watchAsset") {
+      const out: WatchAssetParameters = {
+        type: "ERC20",
+        options: {
+          address: "0x0000000000000000000000000000000000000000",
+        },
+      };
+      return new Promise(() => out);
+    }
+    return new Promise(() => undefined);
   },
   isPreauthorized: () => Promise.resolve(false),
   enable: () => Promise.resolve([]),
   on: (_, __) => {},
   off: (_, __) => {},
   account,
-  provider: new Provider(),
 };
 
 export const registerWindow = () => {

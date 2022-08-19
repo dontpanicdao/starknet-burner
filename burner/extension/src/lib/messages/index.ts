@@ -1,11 +1,16 @@
-import { TransactionMessage } from "./TransactionMessage";
-import { ProviderMessage, callContract } from "./ProviderMessage";
-import { extensionEventHandler, GlobalMessage } from "./GlobalMessage";
+import { TransactionMessage } from "./transaction";
+import { ProviderMessage, callContract } from "./provider";
+import { extensionEventHandler, GlobalMessage } from "./global";
+import { ConfigMessage, WatchAssetParameters } from "./configuration";
 
 export const uuid = "589c80c1eb85413d";
 const defaultTimeoutMilliseconds = 5000;
 
-export type MessageType = TransactionMessage | ProviderMessage | GlobalMessage;
+export type MessageType =
+  | TransactionMessage
+  | ProviderMessage
+  | GlobalMessage
+  | ConfigMessage;
 
 export type WindowMessageType = MessageType & {
   uuid: string;
@@ -47,4 +52,5 @@ export const waitForMessage = async <
   });
 };
 
+export type { ConfigMessage, WatchAssetParameters };
 export { callContract, extensionEventHandler };

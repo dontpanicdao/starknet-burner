@@ -1,157 +1,120 @@
 import { StarknetChainId } from "starknet/constants";
-import {
-  BlockTag,
-  Call,
-  DeclareContractPayload,
-  DeployContractPayload,
-  Invocation,
-  InvocationsDetails,
-} from "starknet/types/lib";
+import { callContract } from "../messages/provider";
 
 import {
-  CallContractResponse,
   ContractClass,
   DeclareContractResponse,
   DeployContractResponse,
   EstimateFeeResponse,
   GetBlockResponse,
   GetCodeResponse,
-  GetTransactionReceiptResponse,
   GetTransactionResponse,
   InvokeFunctionResponse,
   InvokeTransactionReceiptResponse,
 } from "starknet/types/provider";
 import { BigNumberish, toBN } from "starknet/utils/number";
 import { ProviderInterface } from "starknet/provider/interface";
-import { BlockIdentifier } from "starknet/provider/utils";
 
-export class Provider implements ProviderInterface {
-  constructor() {}
+export const provider: ProviderInterface = {
+  chainId: StarknetChainId.TESTNET,
 
-  public get chainId(): StarknetChainId {
-    return StarknetChainId.TESTNET;
-  }
-
-  public async getBlock(
-    _: BlockIdentifier = "pending"
-  ): Promise<GetBlockResponse> {
-    const response: GetBlockResponse = {
-      accepted_time: 123,
-      block_hash: "0x0",
-      block_number: 0,
-      gas_price: "0x0",
-      new_root: "0x0",
-      parent_hash: "0x0",
-      sequencer: "0x0",
-      status: "PENDING",
+  getBlock: async (blockIdentifier) => {
+    console.log("blockIdentifier", blockIdentifier);
+    const out: GetBlockResponse = {
+      accepted_time: 1599098983,
+      block_hash:
+        "0x0000000000000000000000000000000000000000000000000000000000000000",
+      block_number: 1,
+      gas_price: "0x1",
+      new_root:
+        "0x0000000000000000000000000000000000000000000000000000000000000000",
+      parent_hash:
+        "0x0000000000000000000000000000000000000000000000000000000000000000",
+      sequencer:
+        "0x0000000000000000000000000000000000000000000000000000000000000000",
+      status: "REJECTED",
       transactions: [],
     };
-    return response;
-  }
-
-  public async getClassAt(
-    _: string,
-    __: BlockIdentifier = "pending"
-  ): Promise<ContractClass> {
+    return Promise.resolve(out);
+  },
+  getClassAt: async (contractAddress, blockIdentifier) => {
+    console.log("contractAddress", contractAddress);
+    console.log("blockIdentifier", blockIdentifier);
     const response: ContractClass = {
       program: "0x0",
       entry_points_by_type: {},
     };
-    return response;
-  }
-
-  public async getEstimateFee(
-    _: Invocation,
-    __: BlockIdentifier = "pending",
-    ___: InvocationsDetails = {}
-  ): Promise<EstimateFeeResponse> {
+    return Promise.resolve(response);
+  },
+  getEstimateFee: async (invocation, blockIdentifier, details) => {
+    console.log("invocation", invocation);
+    console.log("blockIdentifier", blockIdentifier);
+    console.log("details", details);
     const response: EstimateFeeResponse = {
       overall_fee: toBN(0),
       gas_consumed: toBN(0),
       gas_price: toBN(0),
     };
-    return response;
-  }
-
-  public async getStorageAt(
-    _: string,
-    key: BigNumberish,
-    __: BlockTag | BigNumberish = "pending"
-  ): Promise<BigNumberish> {
+    return Promise.resolve(response);
+  },
+  getStorageAt: async (contractAddress, key, blockIdentifier) => {
+    console.log("contractAddress", contractAddress);
+    console.log("key", key);
+    console.log("blockIdentifier", blockIdentifier);
     const response: BigNumberish = key;
-    return response;
-  }
-
-  public async getTransaction(
-    _: BigNumberish
-  ): Promise<GetTransactionResponse> {
+    return Promise.resolve(response);
+  },
+  getTransaction: async (transactionHash) => {
+    console.log("transactionHash", transactionHash);
     const response: GetTransactionResponse = {
       calldata: [],
     };
-    return response;
-  }
-
-  public async getTransactionReceipt(
-    _: BigNumberish
-  ): Promise<GetTransactionReceiptResponse> {
+    return Promise.resolve(response);
+  },
+  getTransactionReceipt: async (transactionHash) => {
+    console.log("transactionHash", transactionHash);
     const response: InvokeTransactionReceiptResponse = {
       messages_sent: [],
-      status: "PENDING",
       transaction_hash: "0x0",
       events: [],
+      status: "REJECTED",
     };
-    return response;
-  }
-
-  public async callContract(
-    _: Call,
-    __: BlockIdentifier = "pending"
-  ): Promise<CallContractResponse> {
-    const response: CallContractResponse = {
-      result: [],
-    };
-    return response;
-  }
-
-  public async invokeFunction(
-    _: Invocation,
-    __: InvocationsDetails
-  ): Promise<InvokeFunctionResponse> {
+    return Promise.resolve(response);
+  },
+  callContract,
+  invokeFunction: async (invocation, details) => {
+    console.log("invocation", invocation);
+    console.log("details", details);
     const response: InvokeFunctionResponse = {
       transaction_hash: "0x0",
     };
-    return response;
-  }
-
-  public async deployContract(
-    _: DeployContractPayload
-  ): Promise<DeployContractResponse> {
+    return Promise.resolve(response);
+  },
+  deployContract: async (payload) => {
+    console.log("payload", payload);
     const response: DeployContractResponse = {
       transaction_hash: "0x0",
       contract_address: "0x0",
     };
-    return response;
-  }
-
-  public async declareContract(
-    _: DeclareContractPayload
-  ): Promise<DeclareContractResponse> {
+    return Promise.resolve(response);
+  },
+  declareContract: async (payload) => {
+    console.log("payload", payload);
     const response: DeclareContractResponse = {
       transaction_hash: "0x0",
       class_hash: "0x0",
     };
-    return response;
-  }
-
-  public async getCode(
-    _: string,
-    __?: BlockIdentifier
-  ): Promise<GetCodeResponse> {
+    return Promise.resolve(response);
+  },
+  getCode: async (contractAddress, blockIdentifier) => {
+    console.log("contractAddress", contractAddress);
+    console.log("blockIdentifier", blockIdentifier);
     const response: GetCodeResponse = { bytecode: ["000"] };
-    return response;
-  }
-
-  public async waitForTransaction(_: BigNumberish, __?: number): Promise<void> {
-    return;
-  }
-}
+    return Promise.resolve(response);
+  },
+  waitForTransaction: async (txHash, retryInterval) => {
+    console.log("txHash", txHash);
+    console.log("retryInterval", retryInterval);
+    return Promise.resolve();
+  },
+};

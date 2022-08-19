@@ -1,25 +1,18 @@
 import { SignerInterface } from "starknet/signer/interface";
 
-import { InvocationsSignerDetails } from "starknet/types/signer";
-
-import { Abi, Invocation, Signature } from "starknet/types/lib";
-
-import { TypedData } from "starknet/utils/typedData/types";
-
-export class Signer implements SignerInterface {
-  public async getPubKey(): Promise<string> {
-    return "0x0";
-  }
-
-  public async signTransaction(
-    _: Invocation[],
-    __: InvocationsSignerDetails,
-    ___?: Abi[]
-  ): Promise<Signature> {
-    return ["0x0"];
-  }
-
-  public async signMessage(_: TypedData, __: string): Promise<Signature> {
-    return ["0x0"];
-  }
-}
+export const signer: SignerInterface = {
+  getPubKey: async () => {
+    return "0x";
+  },
+  signTransaction: async (transactions, transactionsDetail, abis) => {
+    console.log("transactions", transactions);
+    console.log("transactionsDetail", transactionsDetail);
+    console.log("abis", abis);
+    return Promise.resolve(["0x0"]);
+  },
+  signMessage: async (typedData, accountAddress) => {
+    console.log("typedData", typedData);
+    console.log("accountAddress", accountAddress);
+    return Promise.resolve(["0x0"]);
+  },
+};
