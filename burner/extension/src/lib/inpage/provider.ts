@@ -155,3 +155,5 @@ export class Provider implements ProviderInterface {
     return;
   }
 }
+
+export const provider = new Provider();
