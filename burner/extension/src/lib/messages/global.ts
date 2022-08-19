@@ -2,19 +2,19 @@ import { uuid } from "./index";
 
 export type GlobalMessage =
   | {
-      type: "PING";
+      type: "keyring_Ping";
       data: string;
     }
   | {
-      type: "PONG";
+      type: "keyring_Pong";
       data: string;
     }
   | {
-      type: "OPEN_MODAL";
+      type: "keyring_OpenModal";
       data?: string;
     }
   | {
-      type: "CLOSE_MODAL";
+      type: "keyring_CloseModal";
       data?: string;
     };
 
@@ -23,20 +23,18 @@ export const extensionEventHandler = (event: MessageEvent) => {
     return;
   }
   const { type, data } = event.data;
+  console.log("in:extension", type, data);
   switch (type) {
-    case "PONG":
-      console.log("in:extension", type, data);
+    case "keyring_Pong":
       break;
-    case "OPEN_MODAL":
-      console.log("in:extension", type, data);
+    case "keyring_OpenModal":
       break;
-    case "CLOSE_MODAL":
-      console.log("in:extension", type, data);
+    case "keyring_CloseModal":
       break;
-    case "CALL_CONTRACT_RES":
+    case "provider_CallContractResponse":
       break;
     default:
-      console.log("in:extension", "unexpected event type", type);
+      console.log("in:extension", "unknown event", type);
       break;
   }
 };

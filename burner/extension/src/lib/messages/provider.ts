@@ -12,19 +12,19 @@ export interface CallContractRequest {
 
 export type ProviderMessage =
   | {
-      type: "CALL_CONTRACT";
+      type: "provider_CallContract";
       data: CallContractRequest;
     }
   | {
-      type: "CALL_CONTRACT_RES";
+      type: "provider_CallContractResponse";
       data: CallContractResponse;
     }
   | {
-      type: "GET_BLOCK";
+      type: "provider_GetBlock";
       data: BlockIdentifier;
     }
   | {
-      type: "GET_BLOCK_RES";
+      type: "provider_GetBlockResponse";
       data: GetBlockResponse;
     };
 
@@ -33,23 +33,23 @@ export const callContract = async (
   blockIdentifier: BlockIdentifier = "pending"
 ): Promise<CallContractResponse> => {
   sendMessage({
-    type: "CALL_CONTRACT",
+    type: "provider_CallContract",
     data: {
       transactions: call,
       blockIdentifier,
     },
   });
-  return await waitForMessage("CALL_CONTRACT_RES");
+  return await waitForMessage("provider_CallContractResponse");
 };
 
 export const getBlock = async (
   blockIdentifier: BlockIdentifier = "pending"
 ): Promise<GetBlockResponse> => {
   sendMessage({
-    type: "GET_BLOCK",
+    type: "provider_GetBlock",
     data: {
       blockIdentifier,
     },
   });
-  return await waitForMessage("GET_BLOCK_RES");
+  return await waitForMessage("provider_GetBlockResponse");
 };
