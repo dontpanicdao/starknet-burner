@@ -17,31 +17,40 @@ export const eventHandler = async (event) => {
   const { type, data } = event.data;
   console.log("in:keyring", type, data);
   switch (type) {
-    case "ping":
-      notify({ type: "pong", data });
+    case "PING":
+      notify({ type: "PONG", data });
       break;
-    case "display":
-      callBacks.setDisplay(data === "on" ? true : false);
-      notify({ type: "display", data: "ack" });
+    case "OPEN_MODAL":
+      callBacks.setDisplay(true);
+      notify({ type: "OPEN_MODAL", data: "ack" });
       break;
-    case "call":
-      const { call, blockIdentifier } = data;
-      const { contractAddress, entrypoint, calldata } = call;
+    case "CLOSE_MODAL":
+      callBacks.setDisplay(false);
+      notify({ type: "CLOSE_MODAL", data: "ack" });
+      break;
+    case "CALL_CONTRACT":
+      const { transactions, blockIdentifier } = data;
+      const { contractAddress, entrypoint, calldata } = transactions;
       const newCall = {
         contractAddress,
         entrypoint,
         calldata: [...calldata.map((v) => toBN(v).toString(10))],
       };
+      console.log(newCall);
       const output = await provider.callContract(newCall, blockIdentifier);
-      notify({ type: "call", data: output });
+      notify({ type: "CALL_CONTRACT_RES", data: output });
       break;
     default:
       break;
   }
 };
+
 const callBacks = {
-  setDisplay: () => {},
+  setDisplay: () => {
+    console.log("setDisplay is not already set");
+  },
 };
+
 export const injectSetDisplay = (fn) => {
   callBacks.setDisplay = fn;
 };

@@ -1,6 +1,6 @@
 import { walletSVG, closeSVG } from "./svg";
 import { burnerButtonStyle, iFrameButtonStyle } from "../lib/ui/styles";
-import { burnerMessage, messageType, request } from "../lib/inpage/message";
+import { sendMessage } from "../lib/messages";
 
 export const injectButton = (): any => {
   const button = document.querySelector<HTMLButtonElement>("#button-burner");
@@ -16,10 +16,9 @@ export const injectButton = (): any => {
   let clicked = false;
   const handleButtonClick = () => {
     const iFramePosition = iFrame.getBoundingClientRect();
-    request({
-      type: messageType.display,
-      data: clicked ? "off" : "on",
-    } as burnerMessage);
+    sendMessage({
+      type: clicked ? "CLOSE_MODAL" : "OPEN_MODAL",
+    });
     const { top, left, width, height } = iFramePosition;
     const iFrameTop = top + height * 0.025;
     const iFrameLeft = left + width * 0.025;
