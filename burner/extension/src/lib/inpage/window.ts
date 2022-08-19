@@ -1,10 +1,10 @@
 import { version } from "../version";
-import { sendMessage, callContract, extensionEventHandler } from "../messages";
+import { sendMessage, extensionEventHandler } from "../messages";
 import { IStarknetWindowObject } from "./interface";
 import { account } from "./account";
 import { WatchAssetParameters } from "../messages";
 import { uuid } from "../messages";
-
+import { provider } from "./provider";
 export type EventType = "accountsChanged" | "networkChanged";
 export type EventHandler = (data: any) => void;
 
@@ -43,13 +43,12 @@ export const registerWindow = () => {
   }
 };
 
-export const exposeRequest = (debug: boolean) => {
+export const exposeRequest = () => {
   if (window) {
     Object.defineProperty(window, "burner-request", {
       value: {
         sendMessage,
-        callContract,
-        debug,
+        provider,
       },
       writable: false,
     });
