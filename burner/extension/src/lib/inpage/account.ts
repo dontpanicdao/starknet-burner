@@ -14,7 +14,7 @@ import {
 
 import { signer } from "./signer";
 import { StarknetChainId } from "starknet/constants";
-import { CallContractResponse } from "starknet";
+import { callContract } from "../messages/provider";
 
 export const account: AccountInterface = {
   signer,
@@ -60,14 +60,7 @@ export const account: AccountInterface = {
     console.log("signature", signature);
     return Promise.resolve(true);
   },
-  callContract: async (call, blockIdentifier) => {
-    console.log("call", call);
-    console.log("blockIdentifier", blockIdentifier);
-    const response: CallContractResponse = {
-      result: ["0x0"],
-    };
-    return Promise.resolve(response);
-  },
+  callContract,
   getCode: async (address, blockIdentifier) => {
     console.log("address", address);
     console.log("blockIdentifier", blockIdentifier);
