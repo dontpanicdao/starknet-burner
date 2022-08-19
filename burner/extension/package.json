@@ -25,7 +25,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "prebuild": "node ./scripts/prepublish.js"
+    "prebuild": "node ./scripts/prebuild.js",
+    "postbuild": "node ./scripts/postbuild.js"
   },
   "devDependencies": {
     "starknet": "^4.3.0",

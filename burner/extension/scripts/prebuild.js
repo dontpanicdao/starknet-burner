@@ -6,6 +6,7 @@ fs.readFile("package.json", "utf8", (err, data) => {
     return;
   }
   const version = JSON.parse(data)?.version || "dev";
-  fs.writeFileSync("src/lib/version.ts", `export const version = "${version}";`);
+  fs.writeFileSync("src/lib/version.ts", `export const version = "${version}";
+`);
   console.log("preprocessing version", version, "before publishing...");
 });
