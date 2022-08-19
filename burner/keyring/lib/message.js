@@ -1,7 +1,6 @@
-import { provider } from "./starknet";
-import { toBN } from "starknet/utils/number";
 import { accountEventHandler } from "./handlers/account";
 import { keyringEventHandler } from "./handlers/keyring";
+import { providerEventHandler } from "./handlers/provider";
 
 const uuid = "589c80c1eb85413d";
 
@@ -32,31 +31,8 @@ export const eventHandler = async (event) => {
       return await accountEventHandler(type, data);
     case "keyring":
       return await keyringEventHandler(type, data);
-    default:
-      break;
-  }
-  switch (type) {
-    case "CALL_CONTRACT":
-      {
-        const { transactions, blockIdentifier } = data;
-        const { contractAddress, entrypoint, calldata } = transactions;
-        const newCall = {
-          contractAddress,
-          entrypoint,
-          calldata: [...calldata.map((v) => toBN(v).toString(10))],
-        };
-        console.log(newCall);
-        const output = await provider.callContract(newCall, blockIdentifier);
-        notify({ type: "CALL_CONTRACT_RES", data: output });
-      }
-      break;
-    case "GET_BLOCK":
-      {
-        const { blockIdentifier } = data;
-        const output = await provider.getBlock(blockIdentifier);
-        notify({ type: "GET_BLOCK_RES", data: output });
-      }
-      break;
+    case "provider":
+      return await providerEventHandler(type, data);
     default:
       break;
   }

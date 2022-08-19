@@ -29,12 +29,12 @@ export const extensionEventHandler = (event: MessageEvent) => {
       break;
     case "keyring_OpenModal":
       break;
-    case "CLOSE_MODAL":
+    case "keyring_CloseModal":
       break;
-    case "CALL_CONTRACT_RES":
+    case "provider_CallContractResponse":
       break;
     default:
-      console.log("in:extension", "umknown event", type);
+      console.log("in:extension", "unknown event", type);
       break;
   }
 };
