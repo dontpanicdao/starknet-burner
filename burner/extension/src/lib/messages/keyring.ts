@@ -1,6 +1,8 @@
-import { uuid } from "./index";
+import { defaultTimeoutMilliseconds, sendMessage, uuid } from "./default";
+import type { WindowMessageType } from "./default";
 
-export type GlobalMessage =
+// KeyringMessage are the management messages to interact with the key ring.
+export type KeyringMessage =
   | {
       type: "keyring_Ping";
       data: string;
@@ -18,13 +20,108 @@ export type GlobalMessage =
       data?: string;
     }
   | {
+      type: "keyring_CloseModalRequested";
+      data?: string;
+    }
+  | {
       type: "keyring_NetworkChanged";
       data?: string;
     }
   | {
       type: "keyring_AccountsChanged";
       data?: string[];
+    }
+  | {
+      type: "keyring_Debug";
+      data: boolean;
+    }
+  | {
+      type: "keyring_SetDebug";
+    }
+  | {
+      type: "keyring_ClearDebug";
+    }
+  | {
+      type: "keyring_ResetSessionKey";
+    }
+  | {
+      type: "keyring_Disconnect";
     };
+
+export const waitForMessage = async <
+  K extends KeyringMessage["type"],
+  T extends { type: K } & KeyringMessage
+>(
+  type: K,
+  predicate: (x: T) => boolean = () => true
+): Promise<T extends { data: infer S } ? S : undefined> => {
+  return new Promise((resolve, reject) => {
+    const pid = setTimeout(
+      () => reject(new Error("Timeout")),
+      defaultTimeoutMilliseconds
+    );
+    const handler = (event: MessageEvent<WindowMessageType>) => {
+      if (
+        event.data.type === type &&
+        event.data.uuid === uuid &&
+        predicate(event.data as any)
+      ) {
+        clearTimeout(pid);
+        window.removeEventListener("message", handler);
+        return resolve(
+          ("data" in event.data ? event.data.data : undefined) as any
+        );
+      }
+    };
+    window.addEventListener("message", handler);
+  });
+};
+
+export const request = async <
+  K extends KeyringMessage["type"],
+  T extends KeyringMessage
+>(
+  type: K
+): Promise<T extends { data: infer S } ? S : undefined> => {
+  switch (type) {
+    case "keyring_Ping": {
+      sendMessage({ type, data: "ping" });
+      const msg = await waitForMessage("keyring_Pong");
+      return new Promise(() => msg);
+    }
+    case "keyring_SetDebug": {
+      sendMessage({ type });
+      const msg = await waitForMessage("keyring_Debug");
+      return new Promise(() => msg);
+    }
+    case "keyring_ClearDebug": {
+      sendMessage({ type });
+      const msg = await waitForMessage("keyring_Debug");
+      return new Promise(() => msg);
+    }
+    case "keyring_ResetSessionKey": {
+      sendMessage({ type });
+      await waitForMessage("keyring_AccountsChanged");
+      return new Promise(() => true);
+    }
+    case "keyring_Disconnect": {
+      sendMessage({ type });
+      await waitForMessage("keyring_AccountsChanged");
+      return new Promise(() => true);
+    }
+    case "keyring_OpenModal": {
+      sendMessage({ type });
+      return new Promise(() => true);
+    }
+    case "keyring_CloseModal": {
+      sendMessage({ type });
+      return new Promise(() => true);
+    }
+  }
+  return new Promise(() => undefined);
+};
+
+export const enable = async () => Promise.resolve([]);
 
 export type AccountsChangeEventHandler = (accounts: string[]) => void;
 

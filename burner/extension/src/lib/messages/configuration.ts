@@ -1,5 +1,5 @@
 import { StarknetChainId } from "starknet/constants";
-import { sendMessage, waitForMessage } from "./index";
+import { sendMessage, waitForMessage } from "./default";
 
 export type WatchAssetParameterOptions = {
   address: string;
@@ -106,24 +106,4 @@ export const addStarknetChain = async (
     },
   });
   return await waitForMessage("wallet_addStarknetChainResponse");
-};
-
-request:;
-
-export const request = <
-  K extends ConfigMessage["type"],
-  T extends ConfigMessage
->(
-  type: K
-): Promise<T extends { data: infer S } ? S : undefined> => {
-  if (type === "wallet_watchAsset") {
-    const out: WatchAssetParameters = {
-      type: "ERC20",
-      options: {
-        address: "0x0000000000000000000000000000000000000000",
-      },
-    };
-    return new Promise(() => out);
-  }
-  return new Promise(() => undefined);
 };

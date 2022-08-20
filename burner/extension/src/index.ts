@@ -1,7 +1,7 @@
 import { injectButton } from "./components/button";
 import { injectModal } from "./components/modal";
 import { injectIFrame } from "./components/iframe";
-import { registerWindow, exposeRequest } from "./lib/inpage/window";
+import { registerWindow } from "./lib/inpage/window";
 import { containerStyleClicked } from "./lib/ui/styles";
 
 export const keyManager = () => {
@@ -29,5 +29,4 @@ export const keyManager = () => {
   injectIFrame();
   injectButton();
   injectModal();
-  exposeRequest();
 };
