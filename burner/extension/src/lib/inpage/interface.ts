@@ -1,4 +1,4 @@
-import { ConfigMessage } from "../messages";
+import { KeyringMessage } from "../messages";
 
 import { ProviderInterface } from "starknet/provider/interface";
 import { AccountInterface } from "starknet/account/interface";
@@ -17,7 +17,7 @@ export interface IStarknetWindowObject {
   provider?: ProviderInterface;
   account?: AccountInterface;
 
-  request: <K extends ConfigMessage["type"], T extends ConfigMessage>(
+  request: <K extends KeyringMessage["type"], T extends KeyringMessage>(
     type: K
   ) => Promise<T extends { data: infer S } ? S : undefined>;
   enable: (options?: { showModal?: boolean }) => Promise<string[]>;

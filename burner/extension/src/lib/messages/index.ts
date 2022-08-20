@@ -1,7 +1,13 @@
 import { TransactionMessage } from "./transaction";
 import { ProviderMessage, callContract } from "./provider";
-import { extensionEventHandler, GlobalMessage, on, off } from "./keyring";
-import { ConfigMessage, WatchAssetParameters, request } from "./configuration";
+import {
+  extensionEventHandler,
+  KeyringMessage,
+  request,
+  on,
+  off,
+} from "./keyring";
+import { ConfigMessage } from "./configuration";
 import {
   AccountMessage,
   estimateFee,
@@ -14,12 +20,12 @@ import {
 } from "./account";
 
 export const uuid = "589c80c1eb85413d";
-const defaultTimeoutMilliseconds = 5000;
+export const defaultTimeoutMilliseconds = 5000;
 
 export type MessageType =
   | TransactionMessage
   | ProviderMessage
-  | GlobalMessage
+  | KeyringMessage
   | ConfigMessage
   | AccountMessage;
 
@@ -63,7 +69,7 @@ export const waitForMessage = async <
   });
 };
 
-export type { ConfigMessage, WatchAssetParameters };
+export type { KeyringMessage };
 export {
   callContract,
   extensionEventHandler,
