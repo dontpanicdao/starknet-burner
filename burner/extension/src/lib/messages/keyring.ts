@@ -1,7 +1,20 @@
 import { defaultTimeoutMilliseconds, sendMessage, uuid } from "./default";
 import type { WindowMessageType } from "./default";
-import { hideModal } from "../../components/modal";
-import { hideIFrame } from "../../components/iframe";
+import { displayModal, hideModal } from "../../components/modal";
+import { displayIFrame, hideIFrame } from "../../components/iframe";
+import { StarknetChainId } from "starknet/constants";
+import {
+  connectWindow,
+  disconnectWindow,
+  setDebug,
+  log,
+} from "../inpage/window";
+import { executeNetworkHandler, executeAccountsHandler } from "./events";
+export type StatusResponse = {
+  connected: boolean;
+  network?: StarknetChainId;
+  addresses?: string[];
+};
 
 // KeyringMessage are the management messages to interact with the key ring.
 export type KeyringMessage =
@@ -48,6 +61,13 @@ export type KeyringMessage =
     }
   | {
       type: "keyring_Disconnect";
+    }
+  | {
+      type: "keyring_CheckStatus";
+    }
+  | {
+      type: "keyring_CheckStatusResponse";
+      data: StatusResponse | undefined;
     };
 
 export const waitForMessage = async <
@@ -92,23 +112,20 @@ export const request = async <
       return new Promise(() => msg);
     }
     case "keyring_SetDebug": {
+      setDebug(true);
       sendMessage({ type });
       const msg = await waitForMessage("keyring_Debug");
       return new Promise(() => msg);
     }
     case "keyring_ClearDebug": {
+      setDebug(false);
       sendMessage({ type });
       const msg = await waitForMessage("keyring_Debug");
       return new Promise(() => msg);
     }
-    case "keyring_ResetSessionKey": {
-      sendMessage({ type });
-      await waitForMessage("keyring_AccountsChanged");
-      return new Promise(() => true);
-    }
     case "keyring_Disconnect": {
       sendMessage({ type });
-      await waitForMessage("keyring_AccountsChanged");
+      disconnectWindow();
       return new Promise(() => true);
     }
     case "keyring_OpenModal": {
@@ -119,70 +136,52 @@ export const request = async <
       sendMessage({ type, data: "request" });
       return new Promise(() => true);
     }
-  }
-  return new Promise(() => undefined);
-};
-
-export const enable = async () => Promise.resolve([]);
-
-export type AccountsChangeEventHandler = (accounts: string[]) => void;
-
-export type NetworkChangeEventHandler = (network?: string) => void;
-
-export type WalletEventHandlers =
-  | AccountsChangeEventHandler
-  | NetworkChangeEventHandler;
-
-export type WalletEvents =
-  | {
-      type: "accountsChanged";
-      handler: AccountsChangeEventHandler;
+    case "keyring_CheckStatus": {
+      sendMessage({ type });
+      const status = await waitForMessage("keyring_CheckStatusResponse");
+      log(status);
+      return new Promise(() => status);
     }
-  | {
-      type: "networkChanged";
-      handler: NetworkChangeEventHandler;
-    };
-
-type eventManager = {
-  networkChange: NetworkChangeEventHandler[];
-  accountsChange: AccountsChangeEventHandler[];
-};
-
-const events: eventManager = {
-  networkChange: [],
-  accountsChange: [],
-};
-
-export const on = (event: string, handler: WalletEventHandlers) => {
-  if (event === "networkChanged") {
-    const networkHandler = handler as NetworkChangeEventHandler;
-    if (events.networkChange.indexOf(networkHandler) === -1) {
-      events.networkChange.push(networkHandler);
+    case "keyring_ResetSessionKey": {
+      sendMessage({ type });
+      console.log("send keyring_ResetSessionKey");
+      const status = await waitForMessage("keyring_CheckStatusResponse");
+      console.log("wait for keyring_AccountsChanged");
+      log("status", status);
+      if (!status?.connected) {
+        disconnectWindow();
+        displayModal();
+        displayIFrame();
+        await request("keyring_OpenModal");
+        return new Promise(() => status);
+      }
+      return new Promise(() => status);
     }
-  }
-  if (event === "accountsChanged") {
-    const accountsHandler = handler as AccountsChangeEventHandler;
-    if (events.accountsChange.indexOf(accountsHandler) === -1) {
-      events.accountsChange.push(accountsHandler);
-    }
+    default:
+      return new Promise(() => false);
   }
 };
 
-export const off = (event: string, handler: WalletEventHandlers) => {
-  if (event === "networkChanged") {
-    const networkHandler = handler as NetworkChangeEventHandler;
-    const key = events.networkChange.indexOf(networkHandler);
-    if (key !== -1) {
-      delete events.networkChange[key];
-    }
+export const enable = async () => {
+  sendMessage({ type: "keyring_CheckStatus" });
+  const status = await waitForMessage("keyring_CheckStatusResponse");
+  if (!status?.connected) {
+    disconnectWindow();
+    displayModal();
+    displayIFrame();
+    await request("keyring_OpenModal");
+    return Promise.resolve([]);
   }
-  if (event === "accountsChanged") {
-    const accountsHandler = handler as AccountsChangeEventHandler;
-    const key = events.accountsChange.indexOf(accountsHandler);
-    if (key !== -1) {
-      delete events.accountsChange[key];
-    }
+  const { connected, network, addresses } = status;
+  if (!connected || !addresses?.length || addresses?.length === 0 || !network) {
+    disconnectWindow();
+    displayModal();
+    displayIFrame();
+    await request("keyring_OpenModal");
+    return Promise.resolve([]);
   }
+  connectWindow(network, addresses[0]);
+  return Promise.resolve(addresses);
 };
 
 export const extensionEventHandler = async (event: MessageEvent) => {
@@ -190,7 +189,7 @@ export const extensionEventHandler = async (event: MessageEvent) => {
     return;
   }
   const { type, data } = event.data;
-  console.log("in:extension", type, data);
+  log("in:extension", type, data);
   switch (type) {
     case "keyring_Pong":
       break;
@@ -199,18 +198,22 @@ export const extensionEventHandler = async (event: MessageEvent) => {
     case "keyring_CloseModal":
       break;
     case "keyring_NetworkChanged":
-      events.networkChange.forEach((handler) => handler(data));
+      executeNetworkHandler(data);
       break;
     case "keyring_AccountsChanged":
-      events.accountsChange.forEach((handler) => handler(data));
+      executeAccountsHandler(data);
       break;
     case "keyring_CloseModalRequested":
       hideModal();
       hideIFrame();
       await request("keyring_CloseModal");
       break;
+    case "keyring_Debug":
+      break;
+    case "keyring_CheckStatusResponse":
+      break;
     default:
-      console.log("in:extension", "unknown event", type);
+      log("in:extension", "unknown", type);
       break;
   }
 };

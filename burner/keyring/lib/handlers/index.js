@@ -1,6 +1,7 @@
-import { accountEventHandler } from "./handlers/account";
-import { keyringEventHandler } from "./handlers/keyring";
-import { providerEventHandler } from "./handlers/provider";
+import { accountEventHandler } from "./account";
+import { keyringEventHandler } from "./keyring";
+import { providerEventHandler } from "./provider";
+import { log } from "./keyring";
 
 const uuid = "589c80c1eb85413d";
 
@@ -13,7 +14,7 @@ export const notify = (msg) => {
 
 export const callBacks = {
   setDisplay: () => {
-    console.log("setDisplay is not already set");
+    log("setDisplay is not already set");
   },
 };
 
@@ -25,7 +26,7 @@ export const eventHandler = async (event) => {
   if (typeof type !== "string") {
     return;
   }
-  console.log("in:keyring", type, data);
+  log("in:keyring", type, data);
   switch (type.split("_")[0]) {
     case "account":
       return await accountEventHandler(type, data);

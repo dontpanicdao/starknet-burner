@@ -13,8 +13,8 @@ import {
 } from "lib/handleLocalStorage";
 import { generateKey } from "lib/handleKey";
 import Loader from "components/Loader";
-import { eventHandler, injectSetDisplay } from "lib/message";
-import { notify } from "../lib/message";
+import { eventHandler, injectSetDisplay } from "lib/handlers";
+import { log } from "../lib/handlers/keyring";
 
 import Layout from "components/Layout";
 import AskForDrone from "components/AskForDrone";
@@ -46,7 +46,7 @@ export default function Home() {
   useEffect(() => {
     if (!sessionToken && displayed) {
       const interval = setInterval(async () => {
-        await getDroneData().catch(console.error);
+        await getDroneData().catch(log);
       }, 4000);
       return () => clearInterval(interval);
     }

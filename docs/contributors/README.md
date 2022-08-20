@@ -1,4 +1,4 @@
-## Getting started
+## Getting Started
 
 The burner wallet is a Javascript Wallet that works on a browser, including on
 your mobile phone. It relies on an upgraded argent-x account that supports
