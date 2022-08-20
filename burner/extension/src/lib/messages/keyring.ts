@@ -121,6 +121,8 @@ export const request = async <
   return new Promise(() => undefined);
 };
 
+export const enable = async () => Promise.resolve([]);
+
 export type AccountsChangeEventHandler = (accounts: string[]) => void;
 
 export type NetworkChangeEventHandler = (network?: string) => void;

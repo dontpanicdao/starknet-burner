@@ -1,5 +1,12 @@
 import { version } from "../version";
-import { extensionEventHandler, on, off, request, uuid } from "../messages";
+import {
+  extensionEventHandler,
+  on,
+  off,
+  request,
+  enable,
+  uuid,
+} from "../messages";
 import { IStarknetWindowObject } from "./interface";
 import { account } from "./account";
 import { provider } from "./provider";
@@ -11,8 +18,8 @@ export const starketWindow: IStarknetWindowObject = {
   version: version,
   isConnected: false,
   request,
-  isPreauthorized: () => Promise.resolve(true),
-  enable: () => Promise.resolve([]),
+  isPreauthorized: () => Promise.resolve(starketWindow.isConnected),
+  enable,
   on,
   off,
   account,
