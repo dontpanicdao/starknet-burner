@@ -13,7 +13,7 @@ import { provider } from "./provider";
 
 export const starketWindow: IStarknetWindowObject = {
   name: "burner",
-  icon: "https://burnerfactory.com/assets/images/burner-logo.png",
+  icon: "https://starknet-burner.vercel.app/fire.64.png",
   id: uuid,
   version: version,
   isConnected: false,
