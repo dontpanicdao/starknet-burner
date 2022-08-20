@@ -1,3 +1,10 @@
+.closeButton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0.5rem;
+}
+
 .main {
   width: 100%;
   display: flex;
