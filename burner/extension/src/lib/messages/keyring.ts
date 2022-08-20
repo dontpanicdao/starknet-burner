@@ -1,6 +1,7 @@
-import { uuid, defaultTimeoutMilliseconds, sendMessage } from "./index";
-import type { WindowMessageType } from "./index";
+import { defaultTimeoutMilliseconds, sendMessage, uuid } from "./default";
+import type { WindowMessageType } from "./default";
 
+// KeyringMessage are the management messages to interact with the key ring.
 export type KeyringMessage =
   | {
       type: "keyring_Ping";
