@@ -19,6 +19,10 @@ export type KeyringMessage =
       data?: string;
     }
   | {
+      type: "keyring_CloseModalRequested";
+      data?: string;
+    }
+  | {
       type: "keyring_NetworkChanged";
       data?: string;
     }
@@ -38,6 +42,9 @@ export type KeyringMessage =
     }
   | {
       type: "keyring_ResetSessionKey";
+    }
+  | {
+      type: "keyring_Disconnect";
     };
 
 export const waitForMessage = async <
@@ -75,24 +82,40 @@ export const request = async <
 >(
   type: K
 ): Promise<T extends { data: infer S } ? S : undefined> => {
-  if (type === "keyring_Ping") {
-    sendMessage({ type, data: "ping" });
-    const msg = await waitForMessage("keyring_Pong");
-    return new Promise(() => msg);
-  }
-  if (type === "keyring_SetDebug") {
-    sendMessage({ type });
-    const msg = await waitForMessage("keyring_Debug");
-    return new Promise(() => msg);
-  }
-  if (type === "keyring_ClearDebug") {
-    sendMessage({ type });
-    const msg = await waitForMessage("keyring_Debug");
-    return new Promise(() => msg);
-  }
-  if (type === "keyring_ResetSessionKey") {
-    const msg = await waitForMessage("keyring_Debug");
-    return new Promise(() => msg);
+  switch (type) {
+    case "keyring_Ping": {
+      sendMessage({ type, data: "ping" });
+      const msg = await waitForMessage("keyring_Pong");
+      return new Promise(() => msg);
+    }
+    case "keyring_SetDebug": {
+      sendMessage({ type });
+      const msg = await waitForMessage("keyring_Debug");
+      return new Promise(() => msg);
+    }
+    case "keyring_ClearDebug": {
+      sendMessage({ type });
+      const msg = await waitForMessage("keyring_Debug");
+      return new Promise(() => msg);
+    }
+    case "keyring_ResetSessionKey": {
+      sendMessage({ type });
+      await waitForMessage("keyring_AccountsChanged");
+      return new Promise(() => true);
+    }
+    case "keyring_Disconnect": {
+      sendMessage({ type });
+      await waitForMessage("keyring_AccountsChanged");
+      return new Promise(() => true);
+    }
+    case "keyring_OpenModal": {
+      sendMessage({ type });
+      return new Promise(() => true);
+    }
+    case "keyring_CloseModal": {
+      sendMessage({ type });
+      return new Promise(() => true);
+    }
   }
   return new Promise(() => undefined);
 };
