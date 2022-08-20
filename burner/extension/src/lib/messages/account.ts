@@ -11,7 +11,7 @@ import type {
 } from "starknet";
 import { BigNumberish } from "starknet/utils/number";
 
-import { sendMessage, waitForMessage } from "./index";
+import { sendMessage, waitForMessage } from "./default";
 import { TypedData } from "starknet/utils/typedData";
 
 type EstimateFeeRequest = {

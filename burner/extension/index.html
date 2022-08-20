@@ -3,9 +3,44 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="/global.css" rel="stylesheet" />
     <title>Example App</title>
   </head>
   <body>
+    <button id="button-burner" class="button-burner">
+      Connect
+      <svg
+        style="margin-left: 0.5rem"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        width="16px"
+        height="16px"
+        viewBox="0 0 16 16"
+        version="1.1"
+      >
+        <g id="surface1">
+          <path
+            style="
+              stroke: none;
+              fill-rule: nonzero;
+              fill: rgb(0%, 0%, 0%);
+              fill-opacity: 1;
+            "
+            d="M 16 6.78125 C 16 6.34375 15.648438 5.992188 15.210938 5.992188 L 10.691406 5.992188 C 10.253906 5.992188 9.902344 6.34375 9.902344 6.78125 L 9.902344 9.148438 C 9.902344 9.582031 10.253906 9.9375 10.691406 9.9375 L 15.210938 9.9375 C 15.648438 9.9375 16 9.582031 16 9.148438 Z M 12.164062 8.894531 C 11.65625 8.894531 11.242188 8.484375 11.242188 7.972656 C 11.242188 7.464844 11.65625 7.054688 12.164062 7.054688 C 12.671875 7.054688 13.082031 7.464844 13.082031 7.972656 C 13.082031 8.484375 12.671875 8.894531 12.164062 8.894531 Z M 12.164062 8.894531 "
+          />
+          <path
+            style="
+              stroke: none;
+              fill-rule: nonzero;
+              fill: rgb(0%, 0%, 0%);
+              fill-opacity: 1;
+            "
+            d="M 8.863281 4.914062 L 14.707031 4.914062 L 14.707031 2.546875 C 14.707031 1.953125 14.25 1.472656 13.65625 1.472656 L 1.101562 1.472656 C 0.507812 1.472656 0 1.953125 0 2.546875 L 0 13.453125 C 0 14.046875 0.507812 14.527344 1.101562 14.527344 L 13.65625 14.527344 C 14.25 14.527344 14.707031 14.046875 14.707031 13.453125 L 14.707031 11.011719 L 8.871094 11.011719 Z M 8.863281 4.914062 "
+          />
+        </g>
+      </svg>
+    </button>
+    <script type="module" src="./src/button.ts"></script>
     <div id="starknetburner"></div>
     <script type="module" src="./src/main.ts"></script>
   </body>

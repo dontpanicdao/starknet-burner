@@ -1,5 +1,7 @@
 import { defaultTimeoutMilliseconds, sendMessage, uuid } from "./default";
 import type { WindowMessageType } from "./default";
+import { hideModal } from "../../components/modal";
+import { hideIFrame } from "../../components/iframe";
 
 // KeyringMessage are the management messages to interact with the key ring.
 export type KeyringMessage =
@@ -114,7 +116,7 @@ export const request = async <
       return new Promise(() => true);
     }
     case "keyring_CloseModal": {
-      sendMessage({ type });
+      sendMessage({ type, data: "request" });
       return new Promise(() => true);
     }
   }
@@ -183,7 +185,7 @@ export const off = (event: string, handler: WalletEventHandlers) => {
   }
 };
 
-export const extensionEventHandler = (event: MessageEvent) => {
+export const extensionEventHandler = async (event: MessageEvent) => {
   if (event?.data?.uuid !== uuid) {
     return;
   }
@@ -201,6 +203,11 @@ export const extensionEventHandler = (event: MessageEvent) => {
       break;
     case "keyring_AccountsChanged":
       events.accountsChange.forEach((handler) => handler(data));
+      break;
+    case "keyring_CloseModalRequested":
+      hideModal();
+      hideIFrame();
+      await request("keyring_CloseModal");
       break;
     default:
       console.log("in:extension", "unknown event", type);

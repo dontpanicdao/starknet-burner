@@ -14,10 +14,12 @@ import {
 import { generateKey } from "lib/handleKey";
 import Loader from "components/Loader";
 import { eventHandler, injectSetDisplay } from "lib/message";
+import { notify } from "../lib/message";
 
 import Layout from "components/Layout";
 import AskForDrone from "components/AskForDrone";
 import Connected from "components/Connected";
+import CloseButton from "components/CloseButton";
 
 export default function Home() {
   const [state, setState, key, setKey] = useStateContext();
@@ -84,6 +86,7 @@ export default function Home() {
 
   return (
     <Layout>
+      <CloseButton />
       <main className={styles.main}>
         {state === UNINITIALIZED && <Loader />}
         {state === INITIALIZED && (
