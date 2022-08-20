@@ -1,7 +1,7 @@
 import { TransactionMessage } from "./transaction";
 import { ProviderMessage, callContract } from "./provider";
-import { extensionEventHandler, GlobalMessage } from "./global";
-import { ConfigMessage, WatchAssetParameters } from "./configuration";
+import { extensionEventHandler, GlobalMessage, on, off } from "./keyring";
+import { ConfigMessage, WatchAssetParameters, request } from "./configuration";
 import {
   AccountMessage,
   estimateFee,
@@ -74,4 +74,7 @@ export {
   verifyMessage,
   verifyMessageHash,
   getNonce,
+  on,
+  off,
+  request,
 };
