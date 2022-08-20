@@ -2,7 +2,7 @@ import { BlockIdentifier } from "starknet/provider/utils";
 import { CallContractResponse, GetBlockResponse } from "starknet/types";
 
 import type { Abi, Call } from "starknet";
-import { sendMessage, waitForMessage } from "./index";
+import { sendMessage, waitForMessage } from "./default";
 
 export interface CallContractRequest {
   transactions: Call | Call[];
