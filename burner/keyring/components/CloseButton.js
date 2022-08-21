@@ -1,5 +1,4 @@
 import styles from "styles/CloseButton.module.css";
-import Image from "next/image";
 import { notify } from "../lib/handlers";
 
 const CloseButton = () => {
@@ -8,9 +7,9 @@ const CloseButton = () => {
   };
 
   return (
-    <button className={styles.closeButton} onClick={close}>
-      <Image src="/close.svg" width={16} height={16} />
-    </button>
+    <div className={styles.round_container} onClick={close}>
+      <div className={styles.round_content}>X</div>
+    </div>
   );
 };
 
