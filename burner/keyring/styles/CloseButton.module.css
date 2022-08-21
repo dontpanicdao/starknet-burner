@@ -1,0 +1,11 @@
+.closeButton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0.5rem;
+  background-color: Transparent;
+  background-repeat:no-repeat;
+  border: none;
+  cursor:pointer;
+  overflow: hidden;        
+}

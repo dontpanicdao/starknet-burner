@@ -1,6 +1,7 @@
 import { Provider } from "starknet/provider";
 import { toBN } from "starknet/utils/number";
-import { notify } from "../message";
+import { notify } from ".";
+import { log } from "./keyring";
 
 export const provider = new Provider({
   sequencer: { network: "goerli-alpha" },
@@ -17,7 +18,7 @@ export const providerEventHandler = async (type, data) => {
           entrypoint,
           calldata: [...calldata.map((v) => toBN(v).toString(10))],
         };
-        console.log(newCall);
+        log(newCall);
         const output = await provider.callContract(newCall, blockIdentifier);
         notify({ type: "provider_CallContractResponse", data: output });
       }

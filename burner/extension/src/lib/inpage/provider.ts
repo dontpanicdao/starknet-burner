@@ -14,6 +14,7 @@ import {
   waitForTransaction,
 } from "../messages/provider";
 import { ProviderInterface } from "starknet/provider/interface";
+import { log } from "./window";
 
 export const provider: ProviderInterface = {
   chainId: StarknetChainId.TESTNET,

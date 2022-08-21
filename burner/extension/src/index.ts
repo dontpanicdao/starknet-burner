@@ -1,8 +1,6 @@
-import { injectButton } from "./components/button";
-import { injectModal } from "./components/modal";
-import { injectIFrame } from "./components/iframe";
+import { hideIFrame } from "./components/iframe";
+import { hideModal } from "./components/modal";
 import { registerWindow } from "./lib/inpage/window";
-import { containerStyleClicked } from "./lib/ui/styles";
 
 export const keyManager = () => {
   registerWindow();
@@ -11,22 +9,15 @@ export const keyManager = () => {
     throw new Error("Could not query starknetburner");
   }
   element.innerHTML = `
-    <div id="button-burner">connect</div>
     <div id="modal-wrapper"></div>
-    <iframe id="iframe" allow="clipboard-write"/>
+    <iframe id="iframe" 
+	  src="${
+      import.meta.env.DEV
+        ? "http://localhost:3000"
+        : "https://starknet-burner.vercel.app/"
+    }"
+       allow="clipboard-write"/>
 `;
-  const button = element.querySelector<HTMLButtonElement>("#button-burner");
-  if (!button) {
-    throw new Error("Error on button display");
-  }
-
-  let clicked = false;
-  const handleContainerStyle = () => {
-    element.style.cssText = clicked ? "" : containerStyleClicked;
-    clicked = clicked ? false : true;
-  };
-  button.addEventListener("click", handleContainerStyle);
-  injectIFrame();
-  injectButton();
-  injectModal();
+  hideIFrame();
+  hideModal();
 };

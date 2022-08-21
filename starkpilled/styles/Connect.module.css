@@ -1,0 +1,21 @@
+.button {
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	font-family:monospace;
+	border:none;
+	outline:none;
+	padding:1rem 2rem;
+	border-radius:1rem;
+	letter-spacing:0.1rem;
+	background-color:#5086bd;
+	color:#fff;
+	font-size:1rem;
+	cursor:pointer;
+	box-shadow:1rem 0.6rem 2rem 0.2rem rgba(0,0,0,0.5);
+}
+
+.button:hover {
+	transform: scale(1.05);
+}
+

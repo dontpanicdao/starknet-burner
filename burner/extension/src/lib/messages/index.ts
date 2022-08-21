@@ -1,6 +1,11 @@
 import { callContract } from "./provider";
-import { enable, extensionEventHandler, request, on, off } from "./keyring";
-import { KeyringMessage } from "./keyring";
+import {
+  enable,
+  extensionEventHandler,
+  request,
+  KeyringMessage,
+} from "./keyring";
+import { on, off } from "./events";
 import { uuid } from "./default";
 import type { MessageType } from "./default";
 import {

@@ -1,15 +1,17 @@
-import { HiddenStyle, modalStyle } from "../lib/ui/styles";
+import { hiddenStyle, modalStyle } from "../lib/ui/styles";
 
-export const injectModal = (): void => {
-  const button = document.querySelector<HTMLButtonElement>("#button-burner");
+export const displayModal = () => {
   const modal = document.querySelector<HTMLDivElement>("#modal-wrapper");
-  if (!button || !modal) {
+  if (!modal) {
     throw new Error("Error on modal display");
   }
-  let clicked = false;
-  const handleModalStyle = () => {
-    modal.style.cssText = clicked ? HiddenStyle : modalStyle;
-    clicked = clicked ? false : true;
-  };
-  button.addEventListener("click", handleModalStyle);
+  modal.style.cssText = modalStyle;
+};
+
+export const hideModal = () => {
+  const modal = document.querySelector<HTMLDivElement>("#modal-wrapper");
+  if (!modal) {
+    throw new Error("Error on modal display");
+  }
+  modal.style.cssText = hiddenStyle;
 };

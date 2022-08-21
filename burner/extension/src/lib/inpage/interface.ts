@@ -2,6 +2,7 @@ import { KeyringMessage } from "../messages";
 
 import { ProviderInterface } from "starknet/provider/interface";
 import { AccountInterface } from "starknet/account/interface";
+import { StarknetChainId } from "starknet/constants";
 
 export type EventType = "accountsChanged" | "networkChanged";
 export type EventHandler = (data: any) => void;
@@ -13,6 +14,7 @@ export interface IStarknetWindowObject {
   icon: string;
   isConnected: boolean;
   selectedAddress?: string;
+  chainId?: StarknetChainId;
 
   provider?: ProviderInterface;
   account?: AccountInterface;
