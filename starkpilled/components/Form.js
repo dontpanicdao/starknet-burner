@@ -35,24 +35,36 @@ const Form = () => {
     });
   };
 
-  const send = ({ args, metadata }) => {
-    if (args.address === "" || args.amount < 1) {
+  const operate = async (starknet) => {
+    const nonce = await starknet.account.getNonce();
+    return nonce;
+  };
+
+  const send = async ({ address, amount }) => {
+    if (address === "" || amount < 1) {
       setIsLoading(false);
       setModalMessage({ level: 2, text: "Set the address and amount" });
       return;
     }
     const starknet = window["starknet-burner"];
-    if (!starknet || !starknet?.isConnected) {
+    if (!starknet || !starknet?.isConnected || !starknet?.account) {
       setIsLoading(false);
       setModalMessage({ level: 2, text: "No StarkNet connection" });
       return;
     }
     setIsLoading(true);
-    const timer = setTimeout(() => {
+    try {
+      const nonce = await operate(starknet);
       setIsLoading(false);
-      setModalMessage({ level: 1, text: "Transaction succeeded!" });
-    }, 5000);
-    return () => clearTimeout(timer);
+      setModalMessage({ level: 1, text: `the nonce is ${nonce}` });
+      return;
+    } catch (e) {
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+        setModalMessage({ level: 1, text: "Transaction succeeded!" });
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
   };
 
   return (
@@ -89,13 +101,7 @@ const Form = () => {
               className={styles.button}
               value="Send Pills"
               onClick={() => {
-                send({
-                  args: { ...formData },
-                  metadata: {
-                    method: "Transfer",
-                    message: "Sending Starkpills...",
-                  },
-                });
+                send({ ...formData });
               }}
             >
               Send

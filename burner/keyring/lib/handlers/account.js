@@ -87,7 +87,7 @@ export const accountEventHandler = async (type, data) => {
     case "account_SignMessage":
       {
         const typedData = data;
-        const signMessageResponse = await account.SignMessage(typedData);
+        const signMessageResponse = await account.signMessage(typedData);
         notify({
           type: "account_SignMessageResponse",
           data: signMessageResponse,
@@ -97,7 +97,7 @@ export const accountEventHandler = async (type, data) => {
     case "account_HashMessage":
       {
         const typedData = data;
-        const hashMessageResponse = await account.HashMessage(typedData);
+        const hashMessageResponse = await account.hashMessage(typedData);
         notify({
           type: "account_HashMessageResponse",
           data: hashMessageResponse,
@@ -107,7 +107,7 @@ export const accountEventHandler = async (type, data) => {
     case "account_VerifyMessage":
       {
         const { typedData, signature } = data;
-        const verifyMessageResponse = await account.VerifyMessage(
+        const verifyMessageResponse = await account.verifyMessage(
           typedData,
           signature
         );
@@ -120,7 +120,7 @@ export const accountEventHandler = async (type, data) => {
     case "account_VerifyMessageHash":
       {
         const { hash, signature } = data;
-        const verifyMessageHashResponse = await account.VerifyMessageHash(
+        const verifyMessageHashResponse = await account.verifyMessageHash(
           hash,
           signature
         );
@@ -132,7 +132,7 @@ export const accountEventHandler = async (type, data) => {
       break;
     case "account_GetNonce":
       {
-        const getNonceResponse = await account.GetNonce();
+        const getNonceResponse = await account.getNonce();
         notify({
           type: "account_GetNonceResponse",
           data: getNonceResponse,
