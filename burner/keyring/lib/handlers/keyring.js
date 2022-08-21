@@ -1,6 +1,6 @@
 import { getLocalStorage, removeLocalStorage } from "lib/handleLocalStorage";
 import { StarknetChainId } from "starknet/constants";
-import { notify, callBacks } from ".";
+import { notify, callbacks } from ".";
 
 let debug = false;
 
@@ -16,11 +16,11 @@ export const keyringEventHandler = async (type, data) => {
       notify({ type: "keyring_Pong", data });
       break;
     case "keyring_OpenModal":
-      callBacks.setDisplay(true);
+      callbacks.setDisplayed(true);
       notify({ type: "keyring_OpenModal", data: "ack" });
       break;
     case "keyring_CloseModal":
-      callBacks.setDisplay(false);
+      callbacks.setDisplayed(false);
       notify({ type: "keyring_CloseModal", data: "ack" });
       break;
     case "keyring_SetDebug":
@@ -56,6 +56,7 @@ export const keyringEventHandler = async (type, data) => {
     case "keyring_ResetSessionKey":
       removeLocalStorage("bwsessionkey");
       removeLocalStorage("bwsessiontoken");
+      callbacks.resetSessionKey();
       notify({
         type: "keyring_CheckStatusResponse",
         data: { connected: false },

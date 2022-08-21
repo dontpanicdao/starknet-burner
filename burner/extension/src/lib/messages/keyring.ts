@@ -124,35 +124,49 @@ export const request = async <
       return new Promise(() => msg);
     }
     case "keyring_Disconnect": {
-      sendMessage({ type });
       disconnectWindow();
       return new Promise(() => true);
     }
     case "keyring_OpenModal": {
+      displayModal();
+      displayIFrame();
       sendMessage({ type });
+      await waitForMessage("keyring_OpenModal");
       return new Promise(() => true);
     }
     case "keyring_CloseModal": {
+      hideIFrame();
+      hideModal();
       sendMessage({ type, data: "request" });
+      await waitForMessage("keyring_CloseModal");
+      await request("keyring_CheckStatus");
       return new Promise(() => true);
     }
     case "keyring_CheckStatus": {
       sendMessage({ type });
       const status = await waitForMessage("keyring_CheckStatusResponse");
-      log(status);
+      if (!status || !status.connected) {
+        disconnectWindow();
+        return new Promise(() => undefined);
+      }
+      const { connected, network, addresses } = status;
+      if (
+        !connected ||
+        !addresses?.length ||
+        addresses?.length === 0 ||
+        !network
+      ) {
+        disconnectWindow();
+        return new Promise(() => undefined);
+      }
+      connectWindow(network, addresses[0]);
       return new Promise(() => status);
     }
     case "keyring_ResetSessionKey": {
       sendMessage({ type });
-      console.log("send keyring_ResetSessionKey");
       const status = await waitForMessage("keyring_CheckStatusResponse");
-      console.log("wait for keyring_AccountsChanged");
-      log("status", status);
       if (!status?.connected) {
         disconnectWindow();
-        displayModal();
-        displayIFrame();
-        await request("keyring_OpenModal");
         return new Promise(() => status);
       }
       return new Promise(() => status);
@@ -162,26 +176,28 @@ export const request = async <
   }
 };
 
-export const enable = async () => {
+export const enable = async (options?: {
+  showModal?: boolean;
+}): Promise<string[]> => {
+  if (options?.showModal) {
+    request("keyring_OpenModal");
+    return new Promise(() => []);
+  }
   sendMessage({ type: "keyring_CheckStatus" });
   const status = await waitForMessage("keyring_CheckStatusResponse");
-  if (!status?.connected) {
+  if (!status || !status.connected) {
     disconnectWindow();
-    displayModal();
-    displayIFrame();
-    await request("keyring_OpenModal");
-    return Promise.resolve([]);
+    request("keyring_OpenModal");
+    return new Promise(() => []);
   }
   const { connected, network, addresses } = status;
   if (!connected || !addresses?.length || addresses?.length === 0 || !network) {
     disconnectWindow();
-    displayModal();
-    displayIFrame();
-    await request("keyring_OpenModal");
-    return Promise.resolve([]);
+    request("keyring_OpenModal");
+    return new Promise(() => []);
   }
   connectWindow(network, addresses[0]);
-  return Promise.resolve(addresses);
+  return new Promise(() => [addresses[0]]);
 };
 
 export const extensionEventHandler = async (event: MessageEvent) => {
@@ -196,6 +212,8 @@ export const extensionEventHandler = async (event: MessageEvent) => {
     case "keyring_OpenModal":
       break;
     case "keyring_CloseModal":
+      hideModal();
+      hideIFrame();
       break;
     case "keyring_NetworkChanged":
       executeNetworkHandler(data);
@@ -204,8 +222,6 @@ export const extensionEventHandler = async (event: MessageEvent) => {
       executeAccountsHandler(data);
       break;
     case "keyring_CloseModalRequested":
-      hideModal();
-      hideIFrame();
       await request("keyring_CloseModal");
       break;
     case "keyring_Debug":

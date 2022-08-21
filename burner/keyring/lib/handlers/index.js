@@ -12,9 +12,12 @@ export const notify = (msg) => {
   return window?.parent?.postMessage({ ...msg, uuid }, "*");
 };
 
-export const callBacks = {
-  setDisplay: () => {
-    log("setDisplay is not already set");
+export const callbacks = {
+  setDisplayed: () => {
+    log("setDisplayed is not already set");
+  },
+  resetSessionKey: () => {
+    log("resetSessionKey is not already set");
   },
 };
 
@@ -39,6 +42,7 @@ export const eventHandler = async (event) => {
   }
 };
 
-export const injectSetDisplay = (fn) => {
-  callBacks.setDisplay = fn;
+export const injectSets = ({ setDisplayed, resetSessionKey }) => {
+  callbacks.setDisplayed = setDisplayed;
+  callbacks.resetSessionKey = resetSessionKey;
 };
