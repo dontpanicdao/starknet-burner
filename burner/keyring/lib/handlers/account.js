@@ -1,5 +1,55 @@
 import { Account, Signer, Provider, ec } from "starknet";
 import { notify } from ".";
+import { toBN } from "starknet/utils/number";
+import { getLocalStorage } from "lib/handleLocalStorage";
+
+// TODO: make the plugin configurable; it should include:
+// - the plugin hash
+// - addition parameters that might come between the exire and the token
+//   and should be loaded from a URL.
+const pluginHash =
+  "0x377e145923e881f59d62269a46057d8dac67e27d68a12679b198d4224a0966b";
+
+const patchTransaction = (calls) => {
+  if (!calls) {
+    throw new Error("no calls provided");
+  }
+  const storedSessionToken = getLocalStorage("bwsessiontoken");
+  if (!storedSessionToken) {
+    throw new Error("no session token found");
+  }
+  const sessionToken = JSON.parse(storedSessionToken);
+  if (!sessionToken) {
+    throw new Error("error parsing session token");
+  }
+  const { account, expires, sessionPublicKey, token } = sessionToken;
+  if (
+    !(token instanceof Array) ||
+    token.length !== 2 ||
+    !account ||
+    !expires ||
+    !sessionPublicKey
+  ) {
+    throw new Error("error parsing session token");
+  }
+  const pluginCall = {
+    contractAddress: toBN(account).toString(10),
+    entrypoint: toBN(
+      "0x27ad8765fc3b8f3afef2481081767daadd0abafbd10a7face32534f2e4730e2"
+    ).toString(10), // use_plugin
+    callData: [
+      toBN(pluginHash).toString(10),
+      toBN(sessionPublicKey).toString(10),
+      toBN(expires).toString(10),
+      toBN(token[0]).toString(10),
+      toBN(token[1]).toString(10),
+    ],
+  };
+  if (calls instanceof Array) {
+    return [pluginCall, ...calls];
+  }
+  return [pluginCall, calls];
+};
 
 export const accountEventHandler = async (type, data) => {
   const sessionKey = getLocalStorage("bwsessionkey");
@@ -14,7 +64,7 @@ export const accountEventHandler = async (type, data) => {
       {
         const { calls, estimateFeeDetails } = data;
         const estimateFeeResponse = await account.estimateFee(
-          calls,
+          patchTransaction(calls),
           estimateFeeDetails
         );
         notify({
@@ -26,9 +76,8 @@ export const accountEventHandler = async (type, data) => {
     case "account_Execute":
       {
         const { transactions, abis, transactionsDetail } = data;
-        // TODO: rewrite the transaction to rely on the plugin
         const executeResponse = await account.execute(
-          transactions,
+          patchTransaction(transactions),
           abis,
           transactionsDetail
         );
