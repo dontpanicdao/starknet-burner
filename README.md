@@ -27,25 +27,25 @@ have been authorized by the signer offline.
 
 ## Why use the Starknet Burner?
 
-See the Starknet Burner as a way to create a use some temporary/limited keys
-that would be validated by your personal wallet like Argent-X for some specific purposes. What could you do with it?
+See the Starknet Burner as a way to create and some temporary/limited keys
+that could be validated by your personal wallet like Argent-X for some specific
+purposes. What could you do with it?
 
 - You could use that key for a limited time to interact in an "auto-validating"
-  scenario to interact with a video game or some social engaging activities but
-  would be limited in amount
-- You could safely provide the key to a third party, including friends, children
-  or a service to use it with a for a very specific case
-- You could use it in multi-party interaction with an added value service that
-  could/would only approve a subset of conditions.
-- You would use an account managed by a third party for some specific operations.
+  scenario with a video game or some social engaging activities. This could
+  only position at risk a small part of your assets.
+- You could provide the key to a third party, including friends, relatives
+  or managed services to use it with a for a very specific case.
+- You could use it as part of a multi-party interaction with an service that
+  could/would only approve a subset of conditions. For instance you could wire
+  a monthly amount to a specific account
+- You would use it to access an account managed by a third party for some
+  specific operations. 
 
 Ultimately, Starknet Burner is a project that would help people to experience
-the power of Starknet with the ease of regular web application.
-
-Starknet for a limited period of time and for a limited number of assets from
-mobile and web applications. Ideal to work with blockchain games or social
-activities, the burner has been built to improve user experience and also to
-help developers to participate with Hackathons. :
+the power of Starknet with the ease of regular web and mobile applications.
+Ideal to develop new experiences, the starknet burner has been built to improve
+user experience and help developers to participate with hackathons.
 
 To use the burner wallet, check the [Getting Started](./docs/getting-started.md) 
 guide.
