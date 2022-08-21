@@ -1,16 +1,13 @@
-import {
+import type {
   EstimateFeeResponse,
   InvokeFunctionResponse,
   Signature,
-} from "starknet";
-import type {
   Call,
   EstimateFeeDetails,
   Abi,
   InvocationsDetails,
 } from "starknet";
 import { BigNumberish } from "starknet/utils/number";
-
 import { sendMessage, waitForMessage } from "./default";
 import { TypedData } from "starknet/utils/typedData";
 
