@@ -13,8 +13,8 @@ import {
 } from "lib/handleLocalStorage";
 import { generateKey } from "lib/handleKey";
 import Loader from "components/Loader";
-import { eventHandler, injectSetDisplay } from "lib/message";
-import { notify } from "../lib/message";
+import { eventHandler, injectSets } from "lib/handlers";
+import { log } from "../lib/handlers/keyring";
 
 import Layout from "components/Layout";
 import AskForDrone from "components/AskForDrone";
@@ -26,6 +26,15 @@ export default function Home() {
   const [sessionToken, setSessionToken] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [displayed, setDisplayed] = useState(false);
+
+  const resetSessionKey = () => {
+    removeLocalStorage("bwsessiontoken");
+    const sessionKey = generateKey();
+    saveLocalStorage("bwsessionkey", sessionKey);
+    setSessionToken(null);
+    setKey(sessionKey);
+    setState(INITIALIZED);
+  };
 
   const getDroneData = async () => {
     setLoading(true);
@@ -46,14 +55,14 @@ export default function Home() {
   useEffect(() => {
     if (!sessionToken && displayed) {
       const interval = setInterval(async () => {
-        await getDroneData().catch(console.error);
+        await getDroneData().catch(log);
       }, 4000);
       return () => clearInterval(interval);
     }
   }, [key, sessionToken, displayed]);
 
   useEffect(() => {
-    injectSetDisplay(setDisplayed);
+    injectSets({ setDisplayed, resetSessionKey });
     window.addEventListener("message", eventHandler);
   }, []);
 
@@ -63,10 +72,7 @@ export default function Home() {
       if (!sessionKey) {
         removeLocalStorage();
         const timer = setTimeout(() => {
-          sessionKey = generateKey();
-          saveLocalStorage("bwsessionkey", sessionKey);
-          setKey(sessionKey);
-          setState(INITIALIZED);
+          resetSessionKey();
         }, 1000);
         return () => clearTimeout(timer);
       }

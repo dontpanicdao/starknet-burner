@@ -1,6 +1,6 @@
 import styles from "styles/CloseButton.module.css";
 import Image from "next/image";
-import { notify } from "../lib/message";
+import { notify } from "../lib/handlers";
 
 const CloseButton = () => {
   const close = () => {

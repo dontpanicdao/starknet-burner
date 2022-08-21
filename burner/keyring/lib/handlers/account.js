@@ -1,5 +1,5 @@
 import { Account, Signer, Provider, ec } from "starknet";
-import { notify } from "../message";
+import { notify } from ".";
 
 export const accountEventHandler = async (type, data) => {
   const sessionKey = getLocalStorage("bwsessionkey");

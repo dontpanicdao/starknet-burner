@@ -1,3 +1,4 @@
+import { log } from "../lib/handlers/keyring";
 const sessionData = {};
 
 const getLocalStorage = (keyName) => {
@@ -12,7 +13,7 @@ const saveLocalStorage = (keyName, value) => {
   try {
     return sessionStorage.setItem(keyName, value);
   } catch (e) {
-    console.log("sessionStorage unavailable, working with variable");
+    log("sessionStorage unavailable, working with variable");
     sessionData[keyName] = value;
     return;
   }
