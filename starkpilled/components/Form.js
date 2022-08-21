@@ -5,7 +5,7 @@ import Modal from "./Modal";
 
 const Form = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isModal, setIsModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState({ level: 0, text: "" });
 
   const [formData, setFormData] = useState({
     address: "",
@@ -13,12 +13,13 @@ const Form = () => {
   });
 
   useEffect(() => {
-    if (isModal === false)
+    if (!modalMessage?.text || !modalMessage.text.length === 0) {
       setFormData({
         address: "",
-        amount: "",
+        amount: 0,
       });
-  }, [isModal]);
+    }
+  }, [modalMessage]);
 
   const cancel = () => {
     setFormData({
@@ -35,15 +36,22 @@ const Form = () => {
   };
 
   const send = ({ args, metadata }) => {
-    if (args.address === "" || args.amount <= 1) {
-      return console.log("invalid address or amount");
+    if (args.address === "" || args.amount < 1) {
+      setIsLoading(false);
+      setModalMessage({ level: 2, text: "Set the address and amount" });
+      return;
+    }
+    const starknet = window["starknet-burner"];
+    if (!starknet || !starknet?.isConnected) {
+      setIsLoading(false);
+      setModalMessage({ level: 2, text: "No StarkNet connection" });
+      return;
     }
     setIsLoading(true);
-    console.log(`executing ${metadata?.method}, message: ${metadata?.message}`);
     const timer = setTimeout(() => {
       setIsLoading(false);
-      setIsModal(!isModal);
-    }, 10000);
+      setModalMessage({ level: 1, text: "Transaction succeeded!" });
+    }, 5000);
     return () => clearTimeout(timer);
   };
 
@@ -64,7 +72,7 @@ const Form = () => {
         className={styles.input}
         type="number"
         name="amount"
-        min="1"
+        min="0"
         max="10"
         value={formData.amount}
         onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
@@ -72,34 +80,37 @@ const Form = () => {
       />
 
       <div className={styles.buttonsContainer}>
-        <div className={styles.button} onClick={cancel}>
-          Cancel
-        </div>
         {!isLoading ? (
-          <div
-            className={styles.button}
-            value="Send Pills"
-            onClick={() => {
-              send({
-                args: [formData.address, formData.amount],
-                metadata: {
-                  method: "Transfer",
-                  message: "Sending Starkpills...",
-                },
-              });
-            }}
-          >
-            Send
-          </div>
+          <>
+            <div className={styles.button} onClick={cancel}>
+              Cancel
+            </div>
+            <div
+              className={styles.button}
+              value="Send Pills"
+              onClick={() => {
+                send({
+                  args: { ...formData },
+                  metadata: {
+                    method: "Transfer",
+                    message: "Sending Starkpills...",
+                  },
+                });
+              }}
+            >
+              Send
+            </div>
+            <div className={styles.button} onClick={faucet}>
+              Faucet
+            </div>
+          </>
         ) : (
           <Loader />
         )}
-
-        <div className={styles.button} onClick={faucet}>
-          Faucet
-        </div>
       </div>
-      {isModal && <Modal isModal={isModal} setIsModal={setIsModal} />}
+      {modalMessage.level === 0 || (
+        <Modal modalMessage={modalMessage} setModalMessage={setModalMessage} />
+      )}
     </form>
   );
 };

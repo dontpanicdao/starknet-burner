@@ -1,25 +1,26 @@
 import styles from "../styles/Modal.module.css";
 import { useEffect } from "react";
 
-const Modal = ({ isModal, setIsModal }) => {
-  console.log("isModal :", isModal);
-
+const Modal = ({ modalMessage, setModalMessage }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsModal(!isModal);
+      setModalMessage({ level: 0, text: "" });
     }, 3000);
     return () => clearTimeout(timer);
   });
 
-  return isModal ? (
-    <div className={styles.modal}>
-      Transaction success !
-      <span className={styles.modalCross} onClick={() => setIsModal(!isModal)}>
+  return modalMessage.level !== 0 ? (
+    <div className={modalMessage.level === 1 ? styles.modal : styles.red}>
+      {modalMessage.text}
+      <span
+        className={styles.modalCross}
+        onClick={() => setModalMessage({ level: 0, text: "" })}
+      >
         X
       </span>
     </div>
   ) : (
-    <div>No Modal</div>
+    <div />
   );
 };
 
