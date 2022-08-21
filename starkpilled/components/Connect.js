@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { keyManager } from "@starknet/burner";
 import Image from "next/image";
 
-const KeyManager = () => {
+const Connect = () => {
   useEffect(() => {
     if (window) {
       keyManager();
@@ -28,4 +28,4 @@ const KeyManager = () => {
   );
 };
 
-export default KeyManager;
+export default Connect;
