@@ -1,7 +1,7 @@
 {
   "name": "starkpilled",
-  "version": "0.2.104",
-  "private": true,
+  "version": "0.3.0",
+  "private": false,
   "scripts": {
     "dev": "next dev --port 3001",
     "prebuild": "node ./scripts/prebuild.js",
@@ -16,7 +16,7 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@starknet/burner": "^0.2.104",
+    "@starknet/burner": "^0.3.0",
     "eslint": "8.21.0",
     "eslint-config-next": "12.2.3",
     "starknet": "^4.3.0"
