@@ -50,7 +50,7 @@ data "aws_iam_policy_document" "sessionkey" {
 
 resource "aws_iam_policy" "dynamodb_policy" {
   name        = "${terraform.workspace}BurnerSessionPolicy"
-  description = "The policy to access the Burner Wallet Session Token"
+  description = "The policy to access the starknet burner Session Token"
   policy      = data.aws_iam_policy_document.sessionkey.json
 }
 

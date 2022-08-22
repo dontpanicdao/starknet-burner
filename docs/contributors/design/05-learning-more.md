@@ -1,7 +1,7 @@
 ## To learn more...
 
 First and foremost, it is important to understand Abstract Account in order to
-develop a wallet. The following links are must read in order to fully
+develop a signer. The following links are must read in order to fully
 understand what we are talking about:
 
 - [StarkNet Account Abstraction Model - Part 1](https://community.starknet.io/t/starknet-account-abstraction-model-part-1/781).
@@ -33,3 +33,25 @@ will want to check the following code:
 - [the OpenZeppelin Account documentation](https://github.com/OpenZeppelin/cairo-contracts/blob/main/docs/Account.md)
 - [The EIP-712 like code to verify the token](https://github.com/argentlabs/argent-contracts-starknet/blob/develop/contracts/test/StructHash.cairo)
 - [A token gated account](https://github.com/udayj/token_gated_account)
+
+## To learn more about security and payment systems
+
+- [Integration security guide](https://stripe.com/docs/security/guide)
+- [web3auth documentation](https://docs.tor.us/key-infrastructure/technical-architecture)
+- [1password](https://1password.com/)
+
+## blogs and conversations
+
+- [Way to encrypt/decrypt data with Google-managed secrets?](https://stackoverflow.com/questions/41939884/server-side-google-sign-in-way-to-encrypt-decrypt-data-with-google-managed-secr)
+- [How can you encrypt users' data server-side without ruining the experience?](https://stackoverflow.com/questions/3339814/how-can-you-encrypt-users-data-server-side-without-ruining-the-experience?rq=1
+)
+- [Storing Keys in the Secure Enclave](https://developer.apple.com/documentation/security/certificate_key_and_trust_services/keys/storing_keys_in_the_secure_enclave)
+- [iOS Keychain: using Secure Enclave-stored keys](https://medium.com/@alx.gridnev/ios-keychain-using-secure-enclave-stored-keys-8f7c81227f4)
+- Checkout [Web3Auth/sign-in-with-starkware](https://github.com/Web3Auth/sign-in-with-starkware)
+  to see if that can somehow be leverage
+- Checkout [abdelhamidbakhta/starkvest](https://github.com/abdelhamidbakhta/starkvest)
+  to see if it can make sense to use it for the project.
+- Checkout [Random thoughts on Account Abstraction](https://hackmd.io/@s0lness/BJUb16Yo9)
+  as another source of inspiration.
+- Checkout [An implementation of sessionkey](https://github.com/rvorias/starkdew-valley)
+  by the people at Briq.

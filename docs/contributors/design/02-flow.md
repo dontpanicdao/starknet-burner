@@ -1,6 +1,6 @@
 ## Session Key Flow
 
-Starknet Burner is a Javascript Wallet that relies on a Argent-X plugin to
+Starknet Burner is a Javascript key manager that relies on a Argent-X plugin to
 provide seemless integration of your web and mobile application. Under the
 hood, the plugin relies on a session key and session token to authenticate
 user transaction. This section describes how it works.

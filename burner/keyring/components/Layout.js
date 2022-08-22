@@ -6,8 +6,8 @@ const Layout = ({ children }) => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Wallet</title>
-        <meta name="description" content="wallet view" />
+        <title>Key ring</title>
+        <meta name="description" content="key ring view" />
       </Head>
       {children}
       <footer className={styles.footer}>version {version} 🥰</footer>

@@ -1,32 +1,37 @@
-The Starknet Burner helps builders to build dapps on mobile applications during
-hackathons without having to deal with all the abstract account interactions.
+The Starknet burner helps builders to build dapps on mobile applications 
+without having to deal with all the abstract account interactions.
 
-## Content (Sofar...)
+## Content (sofar...)
 
-The project contains a set of hardcoded methods that allow to
-transfer an ERC20 named Stark Pills from the mobile application.
+### Milestone v0.3.0 - 🐾 it works!
 
-## Milestone v0.2.0
+The project is now a working extension that relies on Argent-X plugins to
+pre-authorize a limited access to an account. It includes:
+- the extension available from npmjs as @starknet/burner
+- a tool called drone to generate session token with Argent-X and also to
+  upgrade the account and deploy a plugin
+- a simple UI embedded in the extension and running in an iFrame supported
+  by a third-party website
+- a demo application named starkpilled
 
-For now the project contains a working burner wallet and as well as its
-working drone. To make it work, we had to provide a new compliant account
-contract to the argent-x repository as well as a custom plugin that
-implements an EIP-712 like signature for the wallet. To make the example
-fully work, you might need some Starkpills. Do not hesitate to contact us
-if you need more details.
+### Milestone v0.2.0 - 🐈‍⬛ not yet a tiger
+
+This release was the first real release after the hackathon. It was a
+usable proof of concept.
 
 ## What to do next?
 
-There is a number of things we can added to the project to make it better:
+There is a number of things we still need to add to the project to make it
+better:
 
-1. make the burner a library that can be embedded in other projects (target
-   v0.3.0)
-2. make the contract upgradable from drone (target v0.4.0) as for now, the
-   procedure requires you interact with your argent-x wallet on voyager.
-3. develop offchain collaborations that could be sealed with a set of
-   signatures. It could be a fraud detection system, a 2FA service or even
-   some third party authentication. The goal would be to rely on 3rd parties
-   to prevents fraud. (target v0.5.0)
+1. proper deployment management so that the extension/keyring remain in
+   sync and we do not break things with upgrade
+2. better documentation and diagnostic tools. In particular, the extension
+   should control the token and the account
+3. an extensible drone. For now, only one plugin is supportedm we should
+   generate plugins specifics to dapps
+4. a social backed wallet that would rely on the OZ account and provide the
+   extensibility of the burner out of the box (target v0.5.0)
 
 ## Expected technical evolution
 
@@ -88,24 +93,16 @@ schemes than [sn_keccak and pederson](https://docs.starknet.io/docs/Hashing/hash
 For instance, you can find these resources:
 - [A cairo implementation of NIST P-256, aka secp256r1](https://github.com/spartucus/nistp256-cairo) 
 - [Cairo examples, including Ethereum secp256k1](https://github.com/starkware-libs/cairo-examples/tree/master/secp)
-
-This area has still to be research, both to change the validation scheme in Cairo and to
-rely on the secure enclave, including with webauthn. the following documentations might
-be interesting to read in detail:
-
-- [Storing Keys in the Secure Enclave](https://developer.apple.com/documentation/security/certificate_key_and_trust_services/keys/storing_keys_in_the_secure_enclave)
-- [iOS Keychain: using Secure Enclave-stored keys](https://medium.com/@alx.gridnev/ios-keychain-using-secure-enclave-stored-keys-8f7c81227f4)
+- [A set of contracts that embed secp256r1 signature](https://github.com/cartridge-gg/contracts)
 
 ### Even more resources
 
 Then there are a number of additional features that we could target. The list
 below is provided without any specific order or priority:
 
-- Building demos to help people boostrap their projects.
+- building demos to help people boostrap their projects with major frameworks
 - enrich the interface to make the wallet perform more actions, like minting
   token or claiming a reward.
-- providing an interface that is close to the one from the other wallets so
-  that we can use starknet.js or a subset of it
 - addition a sign/autosign feature so that the user does not even see he is
   minting tokens.
 - Have `drone` hosted or running on-demand to make it easier to use with
@@ -129,11 +126,3 @@ below is provided without any specific order or priority:
   - ... other ideas are welcome... open an issue if you have any.
 - It can be used to automate tests on the Goerli network without risking to
   loose the funds by requesting a token based on an NFT or something else.
-- Checkout [Web3Auth/sign-in-with-starkware](https://github.com/Web3Auth/sign-in-with-starkware)
-  to see if that can somehow be leverage
-- Checkout [abdelhamidbakhta/starkvest](https://github.com/abdelhamidbakhta/starkvest)
-  to see if it can make sense to use it for the project.
-- Checkout [Random thoughts on Account Abstraction](https://hackmd.io/@s0lness/BJUb16Yo9)
-  as another source of inspiration.
-- Checkout [An implementation of sessionkey](https://github.com/rvorias/starkdew-valley)
-  by the people at Briq.

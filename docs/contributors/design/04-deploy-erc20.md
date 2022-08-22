@@ -1,6 +1,6 @@
 ## Deploy an ERC20 token
 
-In order to demonstrate the burner wallet, we have created a demo project
+In order to demonstrate the starknet burner, we have created a demo project
 called Starkpiller. It is a simple project that uses an ERC20 token called
 STRK. The following sessions explain how to deploy the token and how to
 use it. 
@@ -79,9 +79,9 @@ After a while, the output should look like below:
 ```
 
 We are almost ready to use the contract. Before we continue, we will send 5 tokens
-to the account that we will use with the burner wallet. 
+to the account that we will use with the starknet burner. 
 
-### Send 5 tokens to the burner wallet
+### Send 5 tokens to the starknet burner
 
 Connect to
 [goerli voyager](https://goerli.voyager.online/contract/0x07a1a9784591aad3cc294ed3d89fa45add74e96e8c20e46a21153a6aa979a9cb#writeContract)
