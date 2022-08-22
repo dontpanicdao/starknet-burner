@@ -1,9 +1,8 @@
-
 The Starknet Burner is a Javascript Wallet that works on a browser, including
 on your mobile phone. It relies on an upgraded argent-x account that supports
 plugins. To use it, you should:
 
-1. make sure your account is changed with ETH.
+1. make sure your account is charged with ETH.
 2. upgrade the argent-x account to an argent-x account that supports plugins
 3. withdraw some Starkpills from the Faucet.
 4. add the plugin that checks a specific signature to your account
@@ -12,7 +11,7 @@ plugins. To use it, you should:
    it and send a session token back to the application
 7. register the session token with the starknet burner
 8. play with the starknet burner
-   
+
 > Before you start, the current plugin is not secure and granting access to
 > the starknet burner will enable the user to use your account for any purpose.
 > For now, it is only available on the testnet (goerli) and you should use it
@@ -64,6 +63,7 @@ starknet call \
 ### Withdrawing Starkpills
 
 The Faucet checks:
+
 - the account you are using should not have more than 1 STRK already
 - the account implementation should be the modified starknet account
   that supports plugins
@@ -85,7 +85,7 @@ that uses the `starknet.burner` domain. To check the code, see the
 [`SessionKey.cairo`](../plugin/src/SessionKey.cairo) file in `plugin/src`
 folder. We have deployed the plugin on the testnet (goerli) and the plugin
 class hash is
-`0x377e145923e881f59d62269a46057d8dac67e27d68a12679b198d4224a0966b`. 
+`0x377e145923e881f59d62269a46057d8dac67e27d68a12679b198d4224a0966b`.
 
 To add the plugin to your account, copy the account address from the argent-x
 extension, navigate to [voyager](https://goerli.voyager.network) and check your
