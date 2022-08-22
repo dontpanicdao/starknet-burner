@@ -1,4 +1,4 @@
-The Starknet burner helps builders to build dapps on mobile applications 
+The Starknet burner helps builders to build dapps on mobile applications
 without having to deal with all the abstract account interactions.
 
 ## Content (sofar...)
@@ -7,6 +7,7 @@ without having to deal with all the abstract account interactions.
 
 The project is now a working extension that relies on Argent-X plugins to
 pre-authorize a limited access to an account. It includes:
+
 - the extension available from npmjs as @starknet/burner
 - a tool called drone to generate session token with Argent-X and also to
   upgrade the account and deploy a plugin
@@ -52,7 +53,7 @@ You will find more details about v0.10.0
 
 ### Payment delegation
 
-Once the previous change is done done, the roadmap would also include the
+Once the previous change is done, the roadmap would also include the
 ability to delegate paiements to a `PaymentContract`. A third party contract
 would be able to pay the fees for your transactions based on a previous
 commitment. This could be a security improvement for the plugin that could
@@ -91,7 +92,8 @@ We can find some work here and there to support hashing/signing with other
 schemes than [sn_keccak and pederson](https://docs.starknet.io/docs/Hashing/hash-functions/).
 
 For instance, you can find these resources:
-- [A cairo implementation of NIST P-256, aka secp256r1](https://github.com/spartucus/nistp256-cairo) 
+
+- [A cairo implementation of NIST P-256, aka secp256r1](https://github.com/spartucus/nistp256-cairo)
 - [Cairo examples, including Ethereum secp256k1](https://github.com/starkware-libs/cairo-examples/tree/master/secp)
 - [A set of contracts that embed secp256r1 signature](https://github.com/cartridge-gg/contracts)
 
