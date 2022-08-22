@@ -4,7 +4,7 @@ import { KeyringMessage } from "./keyring";
 import { ConfigMessage } from "./configuration";
 
 export const uuid = "589c80c1eb85413d";
-export const defaultTimeoutMilliseconds = 5000;
+export const defaultTimeoutMilliseconds = 30000;
 
 export type MessageType =
   | ProviderMessage

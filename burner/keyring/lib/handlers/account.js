@@ -1,7 +1,8 @@
-import { Account, Signer, Provider, ec } from "starknet";
+import { Account, Signer, Provider, ec, transaction } from "starknet";
 import { notify } from ".";
 import { toBN } from "starknet/utils/number";
 import { getLocalStorage } from "lib/handleLocalStorage";
+import { fromCallsToExecuteCalldataWithNonce } from "starknet/utils/transaction";
 
 // TODO: make the plugin configurable; it should include:
 // - the plugin hash
@@ -13,6 +14,10 @@ const pluginHash =
 const patchTransaction = (calls) => {
   if (!calls) {
     throw new Error("no calls provided");
+  }
+  let contract = calls.contractAddress;
+  if (calls instanceof Array) {
+    contract = calls[0].contractAddress;
   }
   const storedSessionToken = getLocalStorage("bwsessiontoken");
   if (!storedSessionToken) {
@@ -33,11 +38,9 @@ const patchTransaction = (calls) => {
     throw new Error("error parsing session token");
   }
   const pluginCall = {
-    contractAddress: toBN(account).toString(10),
-    entrypoint: toBN(
-      "0x27ad8765fc3b8f3afef2481081767daadd0abafbd10a7face32534f2e4730e2"
-    ).toString(10), // use_plugin
-    callData: [
+    contractAddress: contract,
+    entrypoint: "use_plugin",
+    calldata: [
       toBN(pluginHash).toString(10),
       toBN(sessionPublicKey).toString(10),
       toBN(expires).toString(10),
@@ -67,9 +70,16 @@ export const accountEventHandler = async (type, data) => {
           patchTransaction(calls),
           estimateFeeDetails
         );
-        notify({
+        const { overall_fee, gas_consumed, gas_price, suggestedMaxFee } =
+          estimateFeeResponse;
+        return notify({
           type: "account_EstimateFeeResponse",
-          data: estimateFeeResponse,
+          data: {
+            overall_fee: overall_fee.toString("hex"),
+            gas_consumed: gas_consumed.toString("hex"),
+            gas_price: gas_price.toString("hex"),
+            suggestedMaxFee: suggestedMaxFee.toString("hex"),
+          },
         });
       }
       break;
@@ -81,13 +91,16 @@ export const accountEventHandler = async (type, data) => {
           abis,
           transactionsDetail
         );
-        notify({ type: "account_ExecuteResponse", data: executeResponse });
+        return notify({
+          type: "account_ExecuteResponse",
+          data: executeResponse,
+        });
       }
       break;
     case "account_SignMessage":
       {
         const typedData = data;
-        const signMessageResponse = await account.SignMessage(typedData);
+        const signMessageResponse = await account.signMessage(typedData);
         notify({
           type: "account_SignMessageResponse",
           data: signMessageResponse,
@@ -97,7 +110,7 @@ export const accountEventHandler = async (type, data) => {
     case "account_HashMessage":
       {
         const typedData = data;
-        const hashMessageResponse = await account.HashMessage(typedData);
+        const hashMessageResponse = await account.hashMessage(typedData);
         notify({
           type: "account_HashMessageResponse",
           data: hashMessageResponse,
@@ -107,7 +120,7 @@ export const accountEventHandler = async (type, data) => {
     case "account_VerifyMessage":
       {
         const { typedData, signature } = data;
-        const verifyMessageResponse = await account.VerifyMessage(
+        const verifyMessageResponse = await account.verifyMessage(
           typedData,
           signature
         );
@@ -120,7 +133,7 @@ export const accountEventHandler = async (type, data) => {
     case "account_VerifyMessageHash":
       {
         const { hash, signature } = data;
-        const verifyMessageHashResponse = await account.VerifyMessageHash(
+        const verifyMessageHashResponse = await account.verifyMessageHash(
           hash,
           signature
         );
@@ -132,7 +145,7 @@ export const accountEventHandler = async (type, data) => {
       break;
     case "account_GetNonce":
       {
-        const getNonceResponse = await account.GetNonce();
+        const getNonceResponse = await account.getNonce();
         notify({
           type: "account_GetNonceResponse",
           data: getNonceResponse,

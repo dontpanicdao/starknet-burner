@@ -1,7 +1,7 @@
 {
   "name": "@starknet/burner",
   "private": false,
-  "version": "0.2.101",
+  "version": "0.2.103",
   "description": "A burner for Starknet",
   "type": "module",
   "files": [
@@ -23,6 +23,7 @@
   ],
   "scripts": {
     "dev": "vite",
+    "dev:build": "tsc && vite build --mode development",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "prebuild": "node ./scripts/prebuild.js",

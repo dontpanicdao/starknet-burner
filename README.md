@@ -1,4 +1,5 @@
-A Javascript wallet to interact with Starknet from mobile and web applications.
+A Key Manager to interact with Starknet accounts. Starknet burner allows to
+build mobile and web applications without any security compromise.
 
 <!-- badges -->
 <p align="center">
@@ -12,40 +13,55 @@ A Javascript wallet to interact with Starknet from mobile and web applications.
 
 ## Warning ** Experimental Project **
 
-This project is still in development. It is not yet ready for use in production.
+This project is in alpha release. It has a number of limitation that should be
+lift progressively, including (1) the fact that it is limited to a simple
+plugin for now and (2) it has not yet been audited.
 
-## What is Starknet Burner?
+## What is the Starknet Burner?
 
-`Starknet Burner` is a wallet built to help users that needs to interact with
-Starknet for a limited period of time and for a limited number of assets from
-mobile and web applications. Ideal to work with blockchain games or social
-activities, the burner has been built to improve user experience and also to
-help developers to participate with Hackathons. The project includes:
+The `Starknet Burner` is a Key Manager, i.e. a library that you add to your
+application and helps users to manage keys that are not their regular signing
+keys. The way it works depends on the type of keys. For now, the burner manages
+session keys, i.e. keys that work with an account that has a plugin setup and
+have been authorized by the signer offline.
 
-- the `burner` is a javascript library that can easily be added to any web
-  or mobile applications and provides a simple way to interact with Starknet;
-- the `plugin` is an argent-x account extension; it is used by the `burner`
-  to invoke commands;
-- `drone` is a web3 application that works on a browser with the argent-x
-  wallet. `drone` helps users to grant access to different `burner` wallets.
-- `starkpiller` is a demo application that uses the `burner` to mint and burn
-  Stark pills.
+## Why use the Starknet Burner?
 
-To use the burner wallet, check the
-[Getting Started](./docs/README.md) guide.
+See the Starknet Burner as a way to create and some temporary/limited keys
+that could be validated by your personal wallet like Argent-X for some specific
+purposes. What could you do with it?
 
-## Special thanks to
+- You could use that key for a limited time to interact in an "auto-validating"
+  scenario with a video game or some social engaging activities. This could
+  only position at risk a small part of your assets.
+- You could provide the key to a third party, including friends, relatives
+  or managed services to use it with a for a very specific case.
+- You could use it as part of a multi-party interaction with an service that
+  could/would only approve a subset of conditions. For instance you could wire
+  a monthly amount to a specific account
+- You would use it to access an account managed by a third party for some
+  specific operations. 
+
+Ultimately, Starknet Burner is a project that would help people to experience
+the power of Starknet with the ease of regular web and mobile applications.
+Ideal to develop new experiences, the starknet burner has been built to improve
+user experience and help developers to participate with hackathons.
+
+To use the burner wallet, check the [Getting Started](./docs/getting-started.md) 
+guide.
+
+## Special Thanks
 
 - [Austin Griffith](https://twitter.com/austingriffith) for the original
   [burner wallet](https://github.com/austintgriffith/burner-wallet), dozens of
   projects and the many people he has brought to Ethereum. If one day you read
   these lines, you are an inspiration for so many of us.
-- [argent](https://twitter.com/argentHQ) for the fantastic work they do daily
-  to bring Argent-X to starknet and work with Starkware and the community to
+- [Argent](https://twitter.com/argentHQ) for the fantastic work they do daily
+  to bring Argent-X to Starknet and work with Starkware and the community to
   build a better future.
 - [@crema](https://twitter.com/crema_fr) and
   [@DrSpacemn](https://twitter.com/DrSpacemn) for helping starting the project
-  and providing some support.
-- [0xs34n](https://twitter.com/0xs34n) from 
-  [aspect.co](https://twitter.com/aspectdotco) for building and maintaining
-  [starknet-js](https://github.com/0xs34n/starknet.js).
+  and providing some support before and during the Hackathon
+- [0xs34n](https://twitter.com/0xs34n) for starting
+  [starknet.js](https://github.com/0xs34n/starknet.js) and
+  [0xjanek](https://twitter.com/0xjanek) for maintening it as well a number of other javascript projects around Starknet.

@@ -20,6 +20,7 @@ import Layout from "components/Layout";
 import AskForDrone from "components/AskForDrone";
 import Connected from "components/Connected";
 import CloseButton from "components/CloseButton";
+import { getKeyPair, getStarkKey } from "starknet/utils/ellipticCurve";
 
 export default function Home() {
   const [state, setState, key, setKey] = useStateContext();
@@ -32,7 +33,8 @@ export default function Home() {
     const sessionKey = generateKey();
     saveLocalStorage("bwsessionkey", sessionKey);
     setSessionToken(null);
-    setKey(sessionKey);
+    const keyPair = getKeyPair(sessionKey);
+    setKey(getStarkKey(keyPair));
     setState(INITIALIZED);
   };
 
@@ -76,7 +78,8 @@ export default function Home() {
         }, 1000);
         return () => clearTimeout(timer);
       }
-      setKey(sessionKey);
+      const keyPair = getKeyPair(sessionKey);
+      setKey(getStarkKey(keyPair));
       const token = getLocalStorage("bwsessiontoken");
       if (!token) {
         setState(INITIALIZED);
