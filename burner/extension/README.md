@@ -35,7 +35,7 @@ user experience and help developers to participate with Hackathons.
 
 ## How to use the Key Manager
 
-For examples of how to configure and program with the burner wallet, check the
+For examples of how to configure and program with the starknet burner, check the
 [docs/users](https://github.com/dontpanicdao/starknet-burner/tree/main/docs/users)
 directory on the
 [dontpanicdao/starknet-burner](https://github.com/dontpanicdao/starknet-burner)

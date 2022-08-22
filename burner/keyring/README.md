@@ -1,3 +1,3 @@
-## the wallet
+## the key ring
 
-The wallet is a web application that you embed in your web browser.
+keyring is a web application that you embed in your web browser.

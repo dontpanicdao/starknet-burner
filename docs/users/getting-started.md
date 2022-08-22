@@ -10,7 +10,7 @@ The Starknet Burner manages keys for your account.
 
 ### An example
 
-## Opening the wallet Modal Window
+## Opening the Burner Modal Window
 
 ## Interacting with a contract with the provider
 

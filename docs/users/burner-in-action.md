@@ -7,14 +7,14 @@ plugins. To use it, you should:
 2. upgrade the argent-x account to an argent-x account that supports plugins
 3. withdraw some Starkpills from the Faucet.
 4. add the plugin that checks a specific signature to your account
-5. connect to the burner wallet and generate a session key
+5. connect to the starknet burner and generate a session key
 6. send the session key to the drone application that will help you to sign
    it and send a session token back to the application
-7. register the session token with the burner wallet
-8. play with the wallet
+7. register the session token with the starknet burner
+8. play with the starknet burner
    
 > Before you start, the current plugin is not secure and granting access to
-> the burner wallet will enable the user to use your account for any purpose.
+> the starknet burner will enable the user to use your account for any purpose.
 > For now, it is only available on the testnet (goerli) and you should use it
 > on a separate account.
 
@@ -112,9 +112,9 @@ starknet call \
    --inputs 0x377e145923e881f59d62269a46057d8dac67e27d68a12679b198d4224a0966b
 ```
 
-### First Burner Wallet connection
+### First starknet burner connection
 
-To start the burner wallet, run:
+To start the starknet burner, run:
 
 ```shell
 cd burner
@@ -122,7 +122,7 @@ npm install
 npm run dev
 ```
 
-When you connect to the burner wallet, for the first time, you get a string
+When you connect to the starknet burner, for the first time, you get a string
 asking for the account and session tokens like below:
 
 <p align="center">
@@ -130,7 +130,7 @@ asking for the account and session tokens like below:
 </p>
 
 You can copy the session key; we will use it with the drone application to
-grant access to the burner wallet.
+grant access to the starknet burner.
 
 ### Connect to the drone application
 
@@ -150,16 +150,16 @@ When you connect to drone, it requests for a session key like below:
 
 You can copy the session key and click on the sign button. It will connect to
 your argent-x extension and request to sign the session key. Once you have
-signed the session key, it will provide the session token to the burner wallet.
+signed the session key, it will provide the session token to the starknet burner.
 
 <p align="center">
 <img src="./img/drone-signing.png" alt="drone signature" width="480px">
 </p>
 
-### Register the session token with the burner wallet
+### Register the session token with the starknet burner
 
 You can copy the URL from drone, and use it from your browser and it should
-reload the burner wallet this time with the session token and the associated
+reload the starknet burner this time with the session token and the associated
 account. Check it is correctly loaded by clicking on the `Keys...` button, the
 keys screen should look like below:
 
@@ -167,10 +167,10 @@ keys screen should look like below:
 <img src="./img/burner-2ndconnection.png" alt="second burner connection" width="480px">
 </p>
 
-### You are ready to use the burner wallet
+### You are ready to use the starknet burner
 
 You can click on the `Send...` button and send Starkpill tokens to whoever you
-want from the burner wallet...
+want from the starknet burner...
 
 ### To continue...
 

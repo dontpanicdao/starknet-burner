@@ -47,13 +47,13 @@ the power of Starknet with the ease of regular web and mobile applications.
 Ideal to develop new experiences, the starknet burner has been built to improve
 user experience and help developers to participate with hackathons.
 
-To use the burner wallet, check the [Getting Started](./docs/getting-started.md) 
+To use the starknet burner, check the [Getting Started](./docs/getting-started.md) 
 guide.
 
 ## Special Thanks
 
 - [Austin Griffith](https://twitter.com/austingriffith) for the original
-  [burner wallet](https://github.com/austintgriffith/burner-wallet), dozens of
+  [starknet burner](https://github.com/austintgriffith/burner-wallet), dozens of
   projects and the many people he has brought to Ethereum. If one day you read
   these lines, you are an inspiration for so many of us.
 - [Argent](https://twitter.com/argentHQ) for the fantastic work they do daily

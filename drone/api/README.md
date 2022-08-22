@@ -14,7 +14,7 @@ drone the way it works is:
 ## Configure the environment
 
 This service provides a simple storage to exchange the data between drone and
-the burner wallet. In order to deploy it, you must configure a number of files
+the starknet burner. In order to deploy it, you must configure a number of files
 that are not part of the repository
 
 - `.env` contains a number of parameter to build the lambda, including the
