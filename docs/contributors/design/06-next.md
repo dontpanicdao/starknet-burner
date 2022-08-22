@@ -28,7 +28,7 @@ better:
    sync and we do not break things with upgrade
 2. better documentation and diagnostic tools. In particular, the extension
    should control the token and the account
-3. an extensible drone. For now, only one plugin is supportedm we should
+3. an extensible drone. For now, only one plugin is supported we should
    generate plugins specifics to dapps
 4. a social backed wallet that would rely on the OZ account and provide the
    extensibility of the burner out of the box (target v0.5.0)
