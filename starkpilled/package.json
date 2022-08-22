@@ -1,6 +1,6 @@
 {
   "name": "starkpilled",
-  "version": "0.2.102",
+  "version": "0.2.103",
   "private": true,
   "scripts": {
     "dev": "next dev --port 3001",
