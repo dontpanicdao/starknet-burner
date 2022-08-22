@@ -16,7 +16,7 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@starknet/burner": "^0.2.103",
+    "@starknet/burner": "^0.2.104",
     "eslint": "8.21.0",
     "eslint-config-next": "12.2.3",
     "starknet": "^4.3.0"
