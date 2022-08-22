@@ -2,6 +2,7 @@ import styles from "../styles/Form.module.css";
 import { useState, useEffect } from "react";
 import Loader from "./Loader";
 import Modal from "./Modal";
+import { toBN, BN } from "starknet/utils/number";
 
 const Form = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -35,9 +36,30 @@ const Form = () => {
     });
   };
 
-  const operate = async (starknet) => {
+  const operate = async (starknet, address, amount) => {
     const nonce = await starknet.account.getNonce();
-    return nonce;
+    const estimate = await starknet.account.estimateFee(
+      {
+        contractAddress:
+          "0x7a1a9784591aad3cc294ed3d89fa45add74e96e8c20e46a21153a6aa979a9cb",
+        entrypoint: "transfer",
+        calldata: [toBN(address).toString(10), toBN(amount).toString(10), "0"],
+      },
+      { nonce, blockIdentifier: "pending" }
+    );
+    const { suggestedMaxFee } = estimate;
+
+    const tx = await starknet.account.execute(
+      {
+        contractAddress:
+          "0x7a1a9784591aad3cc294ed3d89fa45add74e96e8c20e46a21153a6aa979a9cb",
+        entrypoint: "transfer",
+        calldata: [toBN(address).toString(10), toBN(amount).toString(10), "0"],
+      },
+      null,
+      { nonce, maxFee: `0x${suggestedMaxFee}` }
+    );
+    return tx;
   };
 
   const send = async ({ address, amount }) => {
@@ -54,14 +76,19 @@ const Form = () => {
     }
     setIsLoading(true);
     try {
-      const nonce = await operate(starknet);
+      const tx = await operate(starknet, address, amount);
       setIsLoading(false);
-      setModalMessage({ level: 1, text: `the nonce is ${nonce}` });
+      console.log(`transaction executed ${tx.transaction_hash}`);
+      setModalMessage({
+        level: 1,
+        text: `transaction OK...`,
+      });
       return;
     } catch (e) {
+      console.error(e);
       const timer = setTimeout(() => {
         setIsLoading(false);
-        setModalMessage({ level: 1, text: "Transaction succeeded!" });
+        setModalMessage({ level: 2, text: "Transaction failed!" });
       }, 5000);
       return () => clearTimeout(timer);
     }

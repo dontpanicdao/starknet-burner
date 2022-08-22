@@ -1,5 +1,4 @@
 import type {
-  EstimateFeeResponse,
   InvokeFunctionResponse,
   Signature,
   Call,
@@ -20,6 +19,13 @@ type ExecuteRequest = {
   transactions: Call | Call[];
   abis?: Abi[];
   transactionsDetail?: InvocationsDetails;
+};
+
+type EstimateFeeResponse = {
+  overall_fee: string;
+  gas_consumed?: string;
+  gas_price?: string;
+  suggestedMaxFee?: string;
 };
 
 type VerifyMessageRequest = {
