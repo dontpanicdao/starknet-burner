@@ -20,7 +20,7 @@ signer, that is a web or mobile signer that running as part of an application
 as well as an account signer is a signer for that account. The account signer
 is usually owned by a wallet like Argent-X and potentially others.
 
-> The session key signer uses the same signing scheme as any other signer. 
+> The session key signer uses the same signing scheme as any other signer.
 
 Before you can sign any transactions, an offchain process must be completed.
 This process consists in:
@@ -37,7 +37,7 @@ This process consists in:
   generate token that token, a data set should be generated and hashed. The
   data set includes:
   - the session key public key,
-  - the session key expiration time, and 
+  - the session key expiration time, and
   - the session key authorizations, like the contract and token involved.
 
 > For now, session key authorizations are not implemented which makes the
@@ -47,7 +47,7 @@ This process consists in:
   signer. By doing it, the account signer delegates some abilities to the
   session key signer limited to the content of data set and the hash. The signing
   scheme relies on an EIP-712 like signature as you can read in the
-  [learning more](./04-learning-more.md) section of the documentation.
+  [learning more](./05-learning-more.md) section of the documentation.
 
 > The account will enforce the check for the session key signer when checking
 > the session token. It will be exchanged with Starknet and as a result, it
@@ -57,6 +57,7 @@ This process consists in:
 When calling running an invoke with an account to interact with a contract,
 the session key signer requires you prefix the other calls with a special
 invocation method that should include:
+
 - the information saying it is a session key signer and the plugin identifier
   associated with tha feature
 - the session key signer public key

@@ -1,7 +1,8 @@
 ## Running the extension locally
 
 There are 2 things to known when you run the extension locally:
-- when running the extension with `npm run dev` the iframe opens on 
+
+- when running the extension with `npm run dev` the iframe opens on
   [localhost:3000](http://localhost:3000), so assuming keyring has been started
   already on localhost:3000 the extension will use that version
 - there is a simple demo page when you run the extension locally. As a result,
@@ -55,7 +56,7 @@ npm run dev:build
 ```
 
 - export the extension to the npm local packages by running, from the
-  `burner/extension`  directory again:
+  `burner/extension` directory again:
 
 ```shell
 npm link
@@ -96,7 +97,8 @@ To test the extension, tou can simply open the development tools in your
 browser and iteract with the StarknetWindowObject. A good starting point
 would be the [troubleshooting](../../users/troubleshooting.md) guide.
 
-Below is a simple test you can run to check the 
+Below is a simple test you can run to check
+
 ```javascript
 const burner = window["starknet-burner"];
 
@@ -105,12 +107,15 @@ burner.enable();
 console.log(burner.isConnected);
 
 const output = await burner.provider.callContract({
-  contractAddress: "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
+  contractAddress:
+    "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
   entrypoint: "balanceOf",
-  calldata: ["0x0207aCC15dc241e7d167E67e30E769719A727d3E0fa47f9E187707289885Dfde"],
+  calldata: [
+    "0x0207aCC15dc241e7d167E67e30E769719A727d3E0fa47f9E187707289885Dfde",
+  ],
 });
 
-console.log(output)
+console.log(output);
 ```
 
 The output should be an array with 2 strings in it representing Felts in
