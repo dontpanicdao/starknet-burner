@@ -1,21 +1,14 @@
 {
 	"compilerOptions": {
-	  "target": "ESNext",
-	  "useDefineForClassFields": true,
-	  "module": "ESNext",
-	  "lib": ["ESNext", "DOM"],
-	  "moduleResolution": "Node",
-	  "strict": true,
-	  "sourceMap": true,
-	  "resolveJsonModule": true,
-	  "isolatedModules": true,
+	  "module": "CommonJS",
+	  "types": ["vite/client"],
+	  "target": "ES2015",
 	  "esModuleInterop": true,
-	  "noEmit": true,
-	  "noUnusedLocals": true,
-	  "noUnusedParameters": true,
-	  "noImplicitReturns": true,
-	  "skipLibCheck": true
+	  "sourceMap": true,
+	  "outDir": "./dist",
+	  "noImplicitAny": true,
+	  "declaration": true
 	},
-	"include": ["src"]
+	"include": ["src//*"],
+	"exclude": ["node_modules", "docs", "tests//*", "src/lib/mocks.ts"]
   }
-  

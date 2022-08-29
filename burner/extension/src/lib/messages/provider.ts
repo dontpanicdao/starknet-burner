@@ -20,7 +20,10 @@ import type {
   DeclareContractPayload,
 } from "starknet";
 import { sendMessage, waitForMessage } from "./default";
-import { BigNumberish } from "starknet/utils/number";
+import {
+  BigNumberish,
+  bigNumberishArrayToDecimalStringArray,
+} from "starknet/utils/number";
 
 export interface CallContractRequest {
   transactions: Call | Call[];
@@ -164,13 +167,11 @@ export const callContract = async (
 };
 
 export const getBlock = async (
-  blockIdentifier: BlockIdentifier = "pending"
+  blockIdentifier: BlockIdentifier = 0
 ): Promise<GetBlockResponse> => {
   sendMessage({
     type: "provider_GetBlock",
-    data: {
-      blockIdentifier,
-    },
+    data: blockIdentifier,
   });
   return await waitForMessage("provider_GetBlockResponse");
 };
@@ -226,9 +227,7 @@ export const getTransaction = async (
 ): Promise<GetTransactionResponse> => {
   sendMessage({
     type: "provider_GetTransaction",
-    data: {
-      transactionHash,
-    },
+    data: transactionHash,
   });
   return await waitForMessage("provider_GetTransactionResponse");
 };
@@ -236,9 +235,7 @@ export const getTransaction = async (
 export const getTransactionReceipt = async (transactionHash: BigNumberish) => {
   sendMessage({
     type: "provider_GetTransactionReceipt",
-    data: {
-      transactionHash,
-    },
+    data: transactionHash,
   });
   return await waitForMessage("provider_GetTransactionReceiptResponse");
 };
