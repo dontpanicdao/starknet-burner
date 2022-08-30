@@ -1,5 +1,5 @@
 import type {
-  InvokeFunctionResponse,
+  AddTransactionResponse,
   Signature,
   Call,
   EstimateFeeDetails,
@@ -9,6 +9,7 @@ import type {
 import { BigNumberish } from "starknet/utils/number";
 import { sendMessage, waitForMessage } from "./default";
 import { TypedData } from "starknet/utils/typedData";
+import { EstimateFee } from "starknet/types/account";
 
 type EstimateFeeRequest = {
   calls: Call | Call[];
@@ -20,15 +21,6 @@ type ExecuteRequest = {
   abis?: Abi[];
   transactionsDetail?: InvocationsDetails;
 };
-
-// type EstimateFeeResponse = {
-//   overall_fee: string;
-//   gas_consumed?: string;
-//   gas_price?: string;
-//   suggestedMaxFee?: string;
-// };
-
-import { EstimateFeeResponse } from "starknet/types/provider";
 
 type VerifyMessageRequest = {
   typedData: TypedData;
@@ -47,7 +39,7 @@ export type AccountMessage =
     }
   | {
       type: "account_EstimateFeeResponse";
-      data: EstimateFeeResponse;
+      data: EstimateFee;
     }
   | {
       type: "account_Execute";
@@ -55,7 +47,7 @@ export type AccountMessage =
     }
   | {
       type: "account_ExecuteResponse";
-      data: InvokeFunctionResponse;
+      data: AddTransactionResponse;
     }
   | {
       type: "account_SignMessage";
@@ -100,7 +92,7 @@ export type AccountMessage =
 export const estimateFee = async (
   calls: Call | Call[],
   estimateFeeDetails: EstimateFeeDetails
-): Promise<EstimateFeeResponse> => {
+): Promise<EstimateFee> => {
   sendMessage({
     type: "account_EstimateFee",
     data: {
@@ -115,7 +107,7 @@ export const execute = async (
   transactions: Call | Call[],
   abis?: Abi[],
   transactionsDetail?: InvocationsDetails
-): Promise<InvokeFunctionResponse> => {
+): Promise<AddTransactionResponse> => {
   sendMessage({
     type: "account_Execute",
     data: {
