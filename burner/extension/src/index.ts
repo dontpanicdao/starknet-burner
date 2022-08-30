@@ -9,16 +9,14 @@ export const keyManager = () => {
     throw new Error("Could not query starknetburner");
   }
 
-  //   src="${
-  //   import.meta.env.DEV
-  //     ? "http://localhost:3000"
-  //     : "https://starknet-burner.vercel.app/"
-  // }"
-
   element.innerHTML = `
     <div id="modal-wrapper"></div>
     <iframe id="iframe" 
-	src="https://starknet-burner.vercel.app/"
+	src="${
+    import.meta.env.DEV
+      ? "http://localhost:3000"
+      : "https://starknet-burner.vercel.app/"
+  }"
        allow="clipboard-write"/>
 `;
   hideIFrame();

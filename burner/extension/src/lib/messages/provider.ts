@@ -1,4 +1,5 @@
 import { BlockIdentifier } from "starknet/provider/utils";
+import BN from "bn.js";
 import {
   CallContractResponse,
   GetBlockResponse,
@@ -20,10 +21,7 @@ import type {
   DeclareContractPayload,
 } from "starknet";
 import { sendMessage, waitForMessage } from "./default";
-import {
-  BigNumberish,
-  bigNumberishArrayToDecimalStringArray,
-} from "starknet/utils/number";
+import { BigNumberish } from "starknet/utils/number";
 
 export interface CallContractRequest {
   transactions: Call | Call[];
@@ -42,7 +40,7 @@ export interface GetEstimateFeeRequest {
 export interface GetStorageAtRequest {
   contractAddress: string;
   key: BigNumberish;
-  blockIdentifier: BlockIdentifier;
+  blockHashOrTag?: string | number | BN | undefined;
 }
 export interface InvokeFunctionRequest {
   invocation: Invocation;
@@ -209,14 +207,14 @@ export const getEstimateFee = async (
 export const getStorageAt = async (
   contractAddress: string,
   key: BigNumberish,
-  blockIdentifier: BlockIdentifier
+  blockHashOrTag?: string | number | BN | undefined
 ): Promise<BigNumberish> => {
   sendMessage({
     type: "provider_GetStorageAt",
     data: {
       contractAddress,
       key,
-      blockIdentifier,
+      blockHashOrTag,
     },
   });
   return await waitForMessage("provider_GetStorageAtResponse");
