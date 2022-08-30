@@ -7,8 +7,8 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/burner.umd.cjs",
-  "module": "./dist/burner.js",
+  "main": "./dist/index.umd.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist",

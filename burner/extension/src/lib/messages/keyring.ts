@@ -181,23 +181,23 @@ export const enable = async (options?: {
 }): Promise<string[]> => {
   if (options?.showModal) {
     request("keyring_OpenModal");
-    return new Promise(() => []);
+    return Promise.resolve([]);
   }
   sendMessage({ type: "keyring_CheckStatus" });
   const status = await waitForMessage("keyring_CheckStatusResponse");
   if (!status || !status.connected) {
     disconnectWindow();
     request("keyring_OpenModal");
-    return new Promise(() => []);
+    return Promise.resolve([]);
   }
   const { connected, network, addresses } = status;
   if (!connected || !addresses?.length || addresses?.length === 0 || !network) {
     disconnectWindow();
     request("keyring_OpenModal");
-    return new Promise(() => []);
+    return Promise.resolve([]);
   }
   connectWindow(network, addresses[0]);
-  return new Promise(() => [addresses[0]]);
+  return Promise.resolve([]);
 };
 
 export const extensionEventHandler = async (event: MessageEvent) => {
