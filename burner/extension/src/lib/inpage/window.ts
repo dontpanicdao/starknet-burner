@@ -18,7 +18,7 @@ export const log = (...args: any[]) => {
   }
 };
 
-export const starketWindow: IStarknetWindowObject = {
+export const starknetWindow: IStarknetWindowObject = {
   name: "burner",
   icon: "https://starknet-burner.vercel.app/fire.64.png",
   id: uuid,
@@ -27,7 +27,7 @@ export const starketWindow: IStarknetWindowObject = {
   selectedAddress: "",
   chainId: undefined,
   request,
-  isPreauthorized: () => Promise.resolve(starketWindow.isConnected),
+  isPreauthorized: () => Promise.resolve(starknetWindow.isConnected),
   enable,
   on,
   off,
@@ -36,26 +36,26 @@ export const starketWindow: IStarknetWindowObject = {
 };
 
 export const connectWindow = (network: StarknetChainId, address: string) => {
-  starketWindow.isConnected = true;
-  starketWindow.selectedAddress = address;
-  starketWindow.chainId = network;
-  starketWindow.provider = provider;
-  starketWindow.account = account;
+  starknetWindow.isConnected = true;
+  starknetWindow.selectedAddress = address;
+  starknetWindow.chainId = network;
+  starknetWindow.provider = provider;
+  starknetWindow.account = account;
 };
 
 export const disconnectWindow = () => {
-  starketWindow.isConnected = false;
-  starketWindow.selectedAddress = "";
-  starketWindow.chainId = undefined;
-  starketWindow.provider = undefined;
-  starketWindow.account = undefined;
+  starknetWindow.isConnected = false;
+  starknetWindow.selectedAddress = "";
+  starknetWindow.chainId = undefined;
+  starknetWindow.provider = undefined;
+  starknetWindow.account = undefined;
 };
 
 export const registerWindow = () => {
   if (window) {
     window.addEventListener("message", extensionEventHandler);
     Object.defineProperty(window, "starknet-burner", {
-      value: starketWindow,
+      value: starknetWindow,
       writable: false,
     });
   }

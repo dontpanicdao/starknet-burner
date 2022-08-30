@@ -24,3 +24,6 @@ export const keyManager = () => {
   hideIFrame();
   hideModal();
 };
+
+export type { IStarknetWindowObject } from "./lib/inpage/interface";
+export { starknetWindow } from "./lib/inpage/window";
