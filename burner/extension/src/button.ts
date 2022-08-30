@@ -1,4 +1,4 @@
-import { starketWindow } from "./lib/inpage/window";
+import { starknetWindow } from "./lib/inpage/window";
 
 export const injectButton = (): any => {
   const button = document.querySelector<HTMLButtonElement>("#button-burner");
@@ -6,7 +6,7 @@ export const injectButton = (): any => {
     throw new Error("Error on button display");
   }
   const handleButtonClick = async () => {
-    await starketWindow.request("keyring_OpenModal");
+    await starknetWindow.request("keyring_OpenModal");
   };
   button.addEventListener("click", handleButtonClick);
 };

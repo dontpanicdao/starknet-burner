@@ -21,12 +21,14 @@ type ExecuteRequest = {
   transactionsDetail?: InvocationsDetails;
 };
 
-type EstimateFeeResponse = {
-  overall_fee: string;
-  gas_consumed?: string;
-  gas_price?: string;
-  suggestedMaxFee?: string;
-};
+// type EstimateFeeResponse = {
+//   overall_fee: string;
+//   gas_consumed?: string;
+//   gas_price?: string;
+//   suggestedMaxFee?: string;
+// };
+
+import { EstimateFeeResponse } from "starknet/types/provider";
 
 type VerifyMessageRequest = {
   typedData: TypedData;

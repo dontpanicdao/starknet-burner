@@ -1,21 +1,29 @@
 {
 	"compilerOptions": {
-	  "target": "ESNext",
-	  "useDefineForClassFields": true,
-	  "module": "ESNext",
-	  "lib": ["ESNext", "DOM"],
-	  "moduleResolution": "Node",
-	  "strict": true,
-	  "sourceMap": true,
-	  "resolveJsonModule": true,
-	  "isolatedModules": true,
-	  "esModuleInterop": true,
-	  "noEmit": true,
-	  "noUnusedLocals": true,
-	  "noUnusedParameters": true,
-	  "noImplicitReturns": true,
-	  "skipLibCheck": true
+		"declaration": true,
+		"esModuleInterop": true,
+		"module": "ES2022",
+		"moduleResolution": "Node",
+		"noEmit": true,
+		"noImplicitAny": true,
+		"noImplicitReturns": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"outDir": "./dist",
+		"skipLibCheck": true,
+		"sourceMap": true,
+		"strict": true,
+		"target": "ES2015",
+		"types": [
+			"vite/client"
+		],
+		"useDefineForClassFields": true
 	},
-	"include": ["src"]
-  }
-  
+	"exclude": [
+		"node_modules",
+		"dist"
+	],
+	"include": [
+		"src/**/*.ts"
+	]
+}

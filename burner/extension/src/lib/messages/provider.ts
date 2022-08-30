@@ -1,4 +1,5 @@
 import { BlockIdentifier } from "starknet/provider/utils";
+import BN from "bn.js";
 import {
   CallContractResponse,
   GetBlockResponse,
@@ -39,7 +40,7 @@ export interface GetEstimateFeeRequest {
 export interface GetStorageAtRequest {
   contractAddress: string;
   key: BigNumberish;
-  blockIdentifier: BlockIdentifier;
+  blockHashOrTag?: string | number | BN | undefined;
 }
 export interface InvokeFunctionRequest {
   invocation: Invocation;
@@ -164,13 +165,11 @@ export const callContract = async (
 };
 
 export const getBlock = async (
-  blockIdentifier: BlockIdentifier = "pending"
+  blockIdentifier: BlockIdentifier = 0
 ): Promise<GetBlockResponse> => {
   sendMessage({
     type: "provider_GetBlock",
-    data: {
-      blockIdentifier,
-    },
+    data: blockIdentifier,
   });
   return await waitForMessage("provider_GetBlockResponse");
 };
@@ -208,14 +207,14 @@ export const getEstimateFee = async (
 export const getStorageAt = async (
   contractAddress: string,
   key: BigNumberish,
-  blockIdentifier: BlockIdentifier
+  blockHashOrTag?: string | number | BN | undefined
 ): Promise<BigNumberish> => {
   sendMessage({
     type: "provider_GetStorageAt",
     data: {
       contractAddress,
       key,
-      blockIdentifier,
+      blockHashOrTag,
     },
   });
   return await waitForMessage("provider_GetStorageAtResponse");
@@ -226,9 +225,7 @@ export const getTransaction = async (
 ): Promise<GetTransactionResponse> => {
   sendMessage({
     type: "provider_GetTransaction",
-    data: {
-      transactionHash,
-    },
+    data: transactionHash,
   });
   return await waitForMessage("provider_GetTransactionResponse");
 };
@@ -236,9 +233,7 @@ export const getTransaction = async (
 export const getTransactionReceipt = async (transactionHash: BigNumberish) => {
   sendMessage({
     type: "provider_GetTransactionReceipt",
-    data: {
-      transactionHash,
-    },
+    data: transactionHash,
   });
   return await waitForMessage("provider_GetTransactionReceiptResponse");
 };
