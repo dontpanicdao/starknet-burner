@@ -1,6 +1,6 @@
 {
   "name": "keyring",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -16,10 +16,10 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "eslint": "8.20.0",
+    "eslint": "^8.23.0",
     "eslint-config-next": "^12.2.2",
     "next": "^12.2.3",
     "react-jazzicon": "^1.0.4",
-    "starknet": "^4.3.0"
+    "starknet": "^3.18.2"
   }
 }

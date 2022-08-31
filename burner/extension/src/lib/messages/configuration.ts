@@ -1,5 +1,5 @@
 import { StarknetChainId } from "starknet/constants";
-import { sendMessage, waitForMessage } from "./default";
+import { sendMessage, waitForMessage, getKey } from "./default";
 
 export type WatchAssetParameterOptions = {
   address: string;
@@ -61,27 +61,35 @@ export type ConfigMessage =
 export const switchStarknetChain = async (
   chainId: StarknetChainId
 ): Promise<boolean> => {
-  sendMessage({
-    type: "wallet_switchStarknetChain",
-    data: {
-      chainId,
+  const key = getKey();
+  sendMessage(
+    {
+      type: "wallet_switchStarknetChain",
+      data: {
+        chainId,
+      },
     },
-  });
-  return await waitForMessage("wallet_switchStarknetChainResponse");
+    key
+  );
+  return await waitForMessage("wallet_switchStarknetChainResponse", key);
 };
 
 export const watchAsset = async (
   type: string,
   options: WatchAssetParameterOptions
 ): Promise<ActionResponse> => {
-  sendMessage({
-    type: "wallet_watchAsset",
-    data: {
-      type,
-      options,
+  const key = getKey();
+  sendMessage(
+    {
+      type: "wallet_watchAsset",
+      data: {
+        type,
+        options,
+      },
     },
-  });
-  return await waitForMessage("wallet_watchAssetResponse");
+    key
+  );
+  return await waitForMessage("wallet_watchAssetResponse", key);
 };
 
 export const addStarknetChain = async (
@@ -93,17 +101,21 @@ export const addStarknetChain = async (
   explorerUrl: string,
   accountClassHash: string
 ): Promise<ActionResponse> => {
-  sendMessage({
-    type: "wallet_addStarknetChain",
-    data: {
-      id,
-      name,
-      chainId,
-      baseUrl,
-      rpcUrl,
-      explorerUrl,
-      accountClassHash,
+  const key = getKey();
+  sendMessage(
+    {
+      type: "wallet_addStarknetChain",
+      data: {
+        id,
+        name,
+        chainId,
+        baseUrl,
+        rpcUrl,
+        explorerUrl,
+        accountClassHash,
+      },
     },
-  });
-  return await waitForMessage("wallet_addStarknetChainResponse");
+    key
+  );
+  return await waitForMessage("wallet_addStarknetChainResponse", key);
 };

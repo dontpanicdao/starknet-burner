@@ -1,5 +1,5 @@
 import type {
-  InvokeFunctionResponse,
+  AddTransactionResponse,
   Signature,
   Call,
   EstimateFeeDetails,
@@ -7,8 +7,9 @@ import type {
   InvocationsDetails,
 } from "starknet";
 import { BigNumberish } from "starknet/utils/number";
-import { sendMessage, waitForMessage } from "./default";
+import { sendMessage, waitForMessage, getKey } from "./default";
 import { TypedData } from "starknet/utils/typedData";
+import { EstimateFee } from "starknet/types/account";
 
 type EstimateFeeRequest = {
   calls: Call | Call[];
@@ -20,15 +21,6 @@ type ExecuteRequest = {
   abis?: Abi[];
   transactionsDetail?: InvocationsDetails;
 };
-
-// type EstimateFeeResponse = {
-//   overall_fee: string;
-//   gas_consumed?: string;
-//   gas_price?: string;
-//   suggestedMaxFee?: string;
-// };
-
-import { EstimateFeeResponse } from "starknet/types/provider";
 
 type VerifyMessageRequest = {
   typedData: TypedData;
@@ -47,7 +39,7 @@ export type AccountMessage =
     }
   | {
       type: "account_EstimateFeeResponse";
-      data: EstimateFeeResponse;
+      data: EstimateFee;
     }
   | {
       type: "account_Execute";
@@ -55,7 +47,7 @@ export type AccountMessage =
     }
   | {
       type: "account_ExecuteResponse";
-      data: InvokeFunctionResponse;
+      data: AddTransactionResponse;
     }
   | {
       type: "account_SignMessage";
@@ -100,80 +92,108 @@ export type AccountMessage =
 export const estimateFee = async (
   calls: Call | Call[],
   estimateFeeDetails: EstimateFeeDetails
-): Promise<EstimateFeeResponse> => {
-  sendMessage({
-    type: "account_EstimateFee",
-    data: {
-      calls,
-      estimateFeeDetails,
+): Promise<EstimateFee> => {
+  const key = getKey();
+  sendMessage(
+    {
+      type: "account_EstimateFee",
+      data: {
+        calls,
+        estimateFeeDetails,
+      },
     },
-  });
-  return await waitForMessage("account_EstimateFeeResponse");
+    key
+  );
+  return await waitForMessage("account_EstimateFeeResponse", key);
 };
 
 export const execute = async (
   transactions: Call | Call[],
   abis?: Abi[],
   transactionsDetail?: InvocationsDetails
-): Promise<InvokeFunctionResponse> => {
-  sendMessage({
-    type: "account_Execute",
-    data: {
-      transactions,
-      abis,
-      transactionsDetail,
+): Promise<AddTransactionResponse> => {
+  const key = getKey();
+  sendMessage(
+    {
+      type: "account_Execute",
+      data: {
+        transactions,
+        abis,
+        transactionsDetail,
+      },
     },
-  });
-  return await waitForMessage("account_ExecuteResponse");
+    key
+  );
+  return await waitForMessage("account_ExecuteResponse", key);
 };
 
 export const signMessage = async (typedData: TypedData): Promise<Signature> => {
-  sendMessage({
-    type: "account_SignMessage",
-    data: typedData,
-  });
-  return await waitForMessage("account_SignMessageResponse");
+  const key = getKey();
+  sendMessage(
+    {
+      type: "account_SignMessage",
+      data: typedData,
+    },
+    key
+  );
+  return await waitForMessage("account_SignMessageResponse", key);
 };
 
 export const hashMessage = async (typedData: TypedData): Promise<string> => {
-  sendMessage({
-    type: "account_HashMessage",
-    data: typedData,
-  });
-  return await waitForMessage("account_HashMessageResponse");
+  const key = getKey();
+  sendMessage(
+    {
+      type: "account_HashMessage",
+      data: typedData,
+    },
+    key
+  );
+  return await waitForMessage("account_HashMessageResponse", key);
 };
 
 export const verifyMessage = async (
   typedData: TypedData,
   signature: Signature
 ): Promise<boolean> => {
-  sendMessage({
-    type: "account_VerifyMessage",
-    data: {
-      typedData,
-      signature,
+  const key = getKey();
+  sendMessage(
+    {
+      type: "account_VerifyMessage",
+      data: {
+        typedData,
+        signature,
+      },
     },
-  });
-  return await waitForMessage("account_VerifyMessageResponse");
+    key
+  );
+  return await waitForMessage("account_VerifyMessageResponse", key);
 };
 
 export const verifyMessageHash = async (
   hash: BigNumberish,
   signature: Signature
 ): Promise<boolean> => {
-  sendMessage({
-    type: "account_VerifyMessageHash",
-    data: {
-      hash,
-      signature,
+  const key = getKey();
+  sendMessage(
+    {
+      type: "account_VerifyMessageHash",
+      data: {
+        hash,
+        signature,
+      },
     },
-  });
-  return await waitForMessage("account_VerifyMessageHashResponse");
+    key
+  );
+  return await waitForMessage("account_VerifyMessageHashResponse", key);
 };
 
 export const getNonce = async (): Promise<string> => {
-  sendMessage({
-    type: "account_GetNonce",
-  });
-  return await waitForMessage("account_GetNonceResponse");
+  const key = getKey();
+  sendMessage(
+    {
+      type: "account_GetNonce",
+    },
+    key
+  );
+  return await waitForMessage("account_GetNonceResponse", key);
 };

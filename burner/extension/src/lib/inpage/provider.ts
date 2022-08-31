@@ -2,31 +2,32 @@ import { StarknetChainId } from "starknet/constants";
 import {
   callContract,
   getBlock,
-  getClassAt,
-  getEstimateFee,
+  getContractAddresses,
   getStorageAt,
+  getTransactionStatus,
   getTransaction,
   getTransactionReceipt,
   invokeFunction,
   deployContract,
-  declareContract,
   getCode,
   waitForTransaction,
 } from "../messages/provider";
 import { ProviderInterface } from "starknet/provider/interface";
 
 export const provider: ProviderInterface = {
+  baseUrl: "https://alpha4.starknet.io",
+  feederGatewayUrl: "https://alpha4.starknet.io/feeder_gateway",
+  gatewayUrl: "https://alpha4.starknet.io/gateway",
   chainId: StarknetChainId.TESTNET,
+  getContractAddresses,
   getBlock,
-  getClassAt,
-  getEstimateFee,
   getStorageAt,
   getTransaction,
+  getTransactionStatus,
   getTransactionReceipt,
   callContract,
   invokeFunction,
   deployContract,
-  declareContract,
   getCode,
   waitForTransaction,
 };

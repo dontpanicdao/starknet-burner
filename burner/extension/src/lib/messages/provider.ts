@@ -1,16 +1,14 @@
 import { BlockIdentifier } from "starknet/provider/utils";
 import BN from "bn.js";
 import {
+  AddTransactionResponse,
   CallContractResponse,
   GetBlockResponse,
-  ContractClass,
-  EstimateFeeResponse,
   GetTransactionResponse,
-  InvokeTransactionReceiptResponse,
-  InvokeFunctionResponse,
-  DeployContractResponse,
-  DeclareContractResponse,
+  GetContractAddressesResponse,
   GetCodeResponse,
+  TransactionReceiptResponse,
+  GetTransactionStatusResponse,
 } from "starknet/types";
 import type {
   Abi,
@@ -20,7 +18,7 @@ import type {
   DeployContractPayload,
   DeclareContractPayload,
 } from "starknet";
-import { sendMessage, waitForMessage } from "./default";
+import { sendMessage, waitForMessage, getKey } from "./default";
 import { BigNumberish } from "starknet/utils/number";
 
 export interface CallContractRequest {
@@ -54,6 +52,13 @@ export interface WaitForTxRequest {
 
 export type ProviderMessage =
   | {
+      type: "provider_GetContractAddresses";
+    }
+  | {
+      type: "provider_GetContractAddressesResponse";
+      data: GetContractAddressesResponse;
+    }
+  | {
       type: "provider_CallContract";
       data: CallContractRequest;
     }
@@ -63,27 +68,11 @@ export type ProviderMessage =
     }
   | {
       type: "provider_GetBlock";
-      data: BlockIdentifier;
+      data?: BlockIdentifier;
     }
   | {
       type: "provider_GetBlockResponse";
       data: GetBlockResponse;
-    }
-  | {
-      type: "provider_GetClassAt";
-      data: GetClassAtRequest;
-    }
-  | {
-      type: "provider_GetClassAtResponse";
-      data: ContractClass;
-    }
-  | {
-      type: "provider_GetEstimateFee";
-      data: GetEstimateFeeRequest;
-    }
-  | {
-      type: "provider_GetEstimateFeeResponse";
-      data: EstimateFeeResponse;
     }
   | {
       type: "provider_GetStorageAt";
@@ -102,12 +91,20 @@ export type ProviderMessage =
       data: GetTransactionResponse;
     }
   | {
+      type: "provider_GetTransactionStatus";
+      data: BigNumberish;
+    }
+  | {
+      type: "provider_GetTransactionStatusResponse";
+      data: GetTransactionStatusResponse;
+    }
+  | {
       type: "provider_GetTransactionReceipt";
       data: BigNumberish;
     }
   | {
       type: "provider_GetTransactionReceiptResponse";
-      data: InvokeTransactionReceiptResponse;
+      data: TransactionReceiptResponse;
     }
   | {
       type: "provider_InvokeFunction";
@@ -115,7 +112,7 @@ export type ProviderMessage =
     }
   | {
       type: "provider_InvokeFunctionResponse";
-      data: InvokeFunctionResponse;
+      data: AddTransactionResponse;
     }
   | {
       type: "provider_DeployContract";
@@ -123,15 +120,11 @@ export type ProviderMessage =
     }
   | {
       type: "provider_DeployContractResponse";
-      data: DeployContractResponse;
+      data: AddTransactionResponse;
     }
   | {
       type: "provider_DeclareContract";
       data: DeclareContractPayload;
-    }
-  | {
-      type: "provider_DeclareContractResponse";
-      data: DeclareContractResponse;
     }
   | {
       type: "provider_GetCode";
@@ -151,147 +144,174 @@ export type ProviderMessage =
     };
 
 export const callContract = async (
-  call: Call,
-  blockIdentifier: BlockIdentifier = "pending"
+  invokeTransaction: Call,
+  options: {
+    blockIdentifier: BlockIdentifier;
+  }
 ): Promise<CallContractResponse> => {
-  sendMessage({
-    type: "provider_CallContract",
-    data: {
-      transactions: call,
-      blockIdentifier,
+  const key = getKey();
+  sendMessage(
+    {
+      type: "provider_CallContract",
+      data: {
+        transactions: invokeTransaction,
+        ...options,
+      },
     },
-  });
-  return await waitForMessage("provider_CallContractResponse");
+    key
+  );
+  let me = await waitForMessage("provider_CallContractResponse", key);
+  return me;
+};
+
+export const getContractAddresses = async () => {
+  const key = getKey();
+  sendMessage(
+    {
+      type: "provider_GetContractAddresses",
+    },
+    key
+  );
+  return await waitForMessage("provider_GetContractAddressesResponse", key);
 };
 
 export const getBlock = async (
-  blockIdentifier: BlockIdentifier = 0
+  blockIdentifier?: BlockIdentifier
 ): Promise<GetBlockResponse> => {
-  sendMessage({
-    type: "provider_GetBlock",
-    data: blockIdentifier,
-  });
-  return await waitForMessage("provider_GetBlockResponse");
-};
-
-export const getClassAt = async (
-  contractAddress: string,
-  blockIdentifier: BlockIdentifier
-): Promise<ContractClass> => {
-  sendMessage({
-    type: "provider_GetClassAt",
-    data: {
-      contractAddress,
-      blockIdentifier,
+  const key = getKey();
+  sendMessage(
+    {
+      type: "provider_GetBlock",
+      data: blockIdentifier,
     },
-  });
-  return await waitForMessage("provider_GetClassAtResponse");
-};
-
-export const getEstimateFee = async (
-  invocation: Invocation,
-  blockIdentifier: BlockIdentifier,
-  details: InvocationsDetails
-): Promise<EstimateFeeResponse> => {
-  sendMessage({
-    type: "provider_GetEstimateFee",
-    data: {
-      invocation,
-      blockIdentifier,
-      details,
-    },
-  });
-  return await waitForMessage("provider_GetEstimateFeeResponse");
+    key
+  );
+  return await waitForMessage("provider_GetBlockResponse", key);
 };
 
 export const getStorageAt = async (
   contractAddress: string,
   key: BigNumberish,
-  blockHashOrTag?: string | number | BN | undefined
-): Promise<BigNumberish> => {
-  sendMessage({
-    type: "provider_GetStorageAt",
-    data: {
-      contractAddress,
-      key,
-      blockHashOrTag,
+  blockIdentifier?: BlockIdentifier | undefined
+): Promise<Object> => {
+  const idKEY = getKey();
+  sendMessage(
+    {
+      type: "provider_GetStorageAt",
+      data: {
+        contractAddress,
+        key,
+        blockHashOrTag: blockIdentifier || undefined,
+      },
     },
-  });
-  return await waitForMessage("provider_GetStorageAtResponse");
+    idKEY
+  );
+  return await waitForMessage("provider_GetStorageAtResponse", idKEY);
 };
 
 export const getTransaction = async (
   transactionHash: BigNumberish
 ): Promise<GetTransactionResponse> => {
-  sendMessage({
-    type: "provider_GetTransaction",
-    data: transactionHash,
-  });
-  return await waitForMessage("provider_GetTransactionResponse");
+  const key = getKey();
+  sendMessage(
+    {
+      type: "provider_GetTransaction",
+      data: transactionHash,
+    },
+    key
+  );
+  return await waitForMessage("provider_GetTransactionResponse", key);
+};
+
+export const getTransactionStatus = async (
+  transactionHash: BigNumberish
+): Promise<GetTransactionStatusResponse> => {
+  const key = getKey();
+  sendMessage(
+    {
+      type: "provider_GetTransactionStatus",
+      data: transactionHash,
+    },
+    key
+  );
+  return await waitForMessage("provider_GetTransactionStatusResponse", key);
 };
 
 export const getTransactionReceipt = async (transactionHash: BigNumberish) => {
-  sendMessage({
-    type: "provider_GetTransactionReceipt",
-    data: transactionHash,
-  });
-  return await waitForMessage("provider_GetTransactionReceiptResponse");
+  const key = getKey();
+  sendMessage(
+    {
+      type: "provider_GetTransactionReceipt",
+      data: transactionHash,
+    },
+    key
+  );
+  return await waitForMessage("provider_GetTransactionReceiptResponse", key);
 };
 
 export const invokeFunction = async (
-  invocation: Invocation,
-  details: InvocationsDetails
-): Promise<InvokeFunctionResponse> => {
-  sendMessage({
-    type: "provider_InvokeFunction",
-    data: {
-      invocation,
-      details,
+  invocation: Invocation
+): Promise<AddTransactionResponse> => {
+  const key = getKey();
+  sendMessage(
+    {
+      type: "provider_InvokeFunction",
+      data: {
+        invocation,
+        details: {},
+      },
     },
-  });
-  return await waitForMessage("provider_InvokeFunctionResponse");
+    key
+  );
+  return await waitForMessage("provider_InvokeFunctionResponse", key);
 };
+
 export const deployContract = async (
   payload: DeployContractPayload
-): Promise<DeployContractResponse> => {
-  sendMessage({
-    type: "provider_DeployContract",
-    data: payload,
-  });
-  return await waitForMessage("provider_DeployContractResponse");
+): Promise<AddTransactionResponse> => {
+  const key = getKey();
+  sendMessage(
+    {
+      type: "provider_DeployContract",
+      data: payload,
+    },
+    key
+  );
+  return await waitForMessage("provider_DeployContractResponse", key);
 };
-export const declareContract = async (
-  payload: DeclareContractPayload
-): Promise<DeclareContractResponse> => {
-  sendMessage({
-    type: "provider_DeclareContract",
-    data: payload,
-  });
-  return await waitForMessage("provider_DeclareContractResponse");
-};
+
 export const getCode = async (
   contractAddress: string,
   blockIdentifier: BlockIdentifier
 ): Promise<GetCodeResponse> => {
-  sendMessage({
-    type: "provider_GetCode",
-    data: {
-      contractAddress,
-      blockIdentifier,
+  const key = getKey();
+  sendMessage(
+    {
+      type: "provider_GetCode",
+      data: {
+        contractAddress,
+        blockIdentifier,
+      },
     },
-  });
-  return await waitForMessage("provider_GetCodeResponse");
+    key
+  );
+  return await waitForMessage("provider_GetCodeResponse", key);
 };
+
 export const waitForTransaction = async (
   txHash: BigNumberish,
   retryInterval?: number
 ): Promise<void> => {
-  sendMessage({
-    type: "provider_WaitForTx",
-    data: {
-      txHash,
-      retryInterval,
+  const key = getKey();
+  sendMessage(
+    {
+      type: "provider_WaitForTx",
+      data: {
+        txHash,
+        retryInterval,
+      },
     },
-  });
-  return await waitForMessage("provider_WaitForTxResponse");
+    key
+  );
+  return await waitForMessage("provider_WaitForTxResponse", key);
 };
