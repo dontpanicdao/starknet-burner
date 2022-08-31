@@ -15,9 +15,9 @@ import {
 import { ProviderInterface } from "starknet/provider/interface";
 
 export const provider: ProviderInterface = {
-  baseUrl: "",
-  feederGatewayUrl: "",
-  gatewayUrl: "",
+  baseUrl: "https://alpha4.starknet.io",
+  feederGatewayUrl: "https://alpha4.starknet.io/feeder_gateway",
+  gatewayUrl: "https://alpha4.starknet.io/gateway",
   chainId: StarknetChainId.TESTNET,
   getContractAddresses,
   getBlock,

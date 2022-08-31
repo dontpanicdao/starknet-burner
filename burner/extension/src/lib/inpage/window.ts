@@ -41,6 +41,7 @@ export const connectWindow = (network: StarknetChainId, address: string) => {
   starknetWindow.chainId = network;
   starknetWindow.provider = provider;
   starknetWindow.account = account;
+  starknetWindow.account.address = address;
 };
 
 export const disconnectWindow = () => {
