@@ -2,6 +2,7 @@ import {
   defaultTimeoutMilliseconds,
   MessageType,
   sendMessage,
+  getKey,
   uuid,
 } from "./default";
 import type { WindowMessageType } from "./default";
@@ -15,6 +16,7 @@ import {
   log,
 } from "../inpage/window";
 import { executeNetworkHandler, executeAccountsHandler } from "./events";
+
 export type StatusResponse = {
   connected: boolean;
   network?: StarknetChainId;
@@ -80,6 +82,7 @@ export const waitForMessage = async <
   T extends { type: K } & KeyringMessage
 >(
   type: K,
+  key: string,
   predicate: (x: T) => boolean = () => true
 ): Promise<T extends { data: infer S } ? S : undefined> => {
   return new Promise((resolve, reject) => {
@@ -87,10 +90,13 @@ export const waitForMessage = async <
       () => reject(new Error("Timeout")),
       defaultTimeoutMilliseconds
     );
-    const handler = (event: MessageEvent<WindowMessageType>) => {
+    const handler = (
+      event: MessageEvent<WindowMessageType & { key: string }>
+    ) => {
       if (
         event.data.type === type &&
         event.data.uuid === uuid &&
+        event.data.key === key &&
         predicate(event.data as any)
       ) {
         clearTimeout(pid);
@@ -144,20 +150,23 @@ export const request = async <T extends RpcMessage>(
   const type = call["type"];
   switch (type) {
     case "keyring_Ping": {
-      sendMessage({ type, data: "ping" } as MessageType);
-      const msg = await waitForMessage("keyring_Ping");
+      const key = getKey();
+      sendMessage({ type, data: "ping" } as MessageType, key);
+      const msg = await waitForMessage("keyring_Ping", key);
       return msg;
     }
     case "keyring_SetDebug": {
+      const key = getKey();
       setDebug(true);
-      sendMessage({ type } as MessageType);
-      const msg = await waitForMessage("keyring_Debug");
+      sendMessage({ type } as MessageType, key);
+      const msg = await waitForMessage("keyring_Debug", key);
       return msg;
     }
     case "keyring_ClearDebug": {
+      const key = getKey();
       setDebug(false);
-      sendMessage({ type } as MessageType);
-      const msg = await waitForMessage("keyring_Debug");
+      sendMessage({ type } as MessageType, key);
+      const msg = await waitForMessage("keyring_Debug", key);
       return msg;
     }
     case "keyring_Disconnect": {
@@ -167,21 +176,24 @@ export const request = async <T extends RpcMessage>(
     case "keyring_OpenModal": {
       displayModal();
       displayIFrame();
-      sendMessage({ type } as MessageType);
-      await waitForMessage("keyring_OpenModal");
+      const key = getKey();
+      sendMessage({ type } as MessageType, key);
+      await waitForMessage("keyring_OpenModal", key);
       return Promise.resolve(true);
     }
     case "keyring_CloseModal": {
       hideIFrame();
       hideModal();
-      sendMessage({ type, data: "request" } as MessageType);
-      await waitForMessage("keyring_CloseModal");
+      const key = getKey();
+      sendMessage({ type, data: "request" } as MessageType, key);
+      await waitForMessage("keyring_CloseModal", key);
       await request({ type: "keyring_CheckStatus" });
       return Promise.resolve(true);
     }
     case "keyring_CheckStatus": {
-      sendMessage({ type } as MessageType);
-      const status = await waitForMessage("keyring_CheckStatusResponse");
+      const key = getKey();
+      sendMessage({ type } as MessageType, key);
+      const status = await waitForMessage("keyring_CheckStatusResponse", key);
       if (!status || !status.connected) {
         disconnectWindow();
         return Promise.resolve(undefined);
@@ -200,8 +212,9 @@ export const request = async <T extends RpcMessage>(
       return { connected, network, addresses };
     }
     case "keyring_ResetSessionKey": {
-      sendMessage({ type } as MessageType);
-      const status = await waitForMessage("keyring_CheckStatusResponse");
+      const key = getKey();
+      sendMessage({ type } as MessageType, key);
+      const status = await waitForMessage("keyring_CheckStatusResponse", key);
       if (!status?.connected) {
         disconnectWindow();
         return Promise.resolve(undefined);
@@ -229,8 +242,9 @@ export const enable = async (options?: {
     request({ type: "keyring_OpenModal" });
     return Promise.resolve([]);
   }
-  sendMessage({ type: "keyring_CheckStatus" });
-  const status = await waitForMessage("keyring_CheckStatusResponse");
+  const key = getKey();
+  sendMessage({ type: "keyring_CheckStatus" }, key);
+  const status = await waitForMessage("keyring_CheckStatusResponse", key);
   if (!status || !status.connected) {
     disconnectWindow();
     request({ type: "keyring_OpenModal" });
