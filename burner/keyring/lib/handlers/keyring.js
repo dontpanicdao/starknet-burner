@@ -10,27 +10,27 @@ export const log = (...args) => {
   }
 };
 
-export const keyringEventHandler = async (type, data) => {
+export const keyringEventHandler = async (type, data, key) => {
   switch (type) {
     case "keyring_Ping":
-      notify({ type: "keyring_Pong", data });
+      notify({ type: "keyring_Pong", data, key });
       break;
     case "keyring_OpenModal":
       callbacks.setDisplayed(true);
-      notify({ type: "keyring_OpenModal", data: "ack" });
+      notify({ type: "keyring_OpenModal", data: "ack", key });
       break;
     case "keyring_CloseModal":
       callbacks.setDisplayed(false);
-      notify({ type: "keyring_CloseModal", data: "ack" });
+      notify({ type: "keyring_CloseModal", data: "ack", key });
       break;
     case "keyring_SetDebug":
       console.log("in:keyring", "debug", "enabling");
       debug = true;
-      notify({ type: "keyring_Debug", data: true });
+      notify({ type: "keyring_Debug", data: true, key });
       break;
     case "keyring_ClearDebug":
       debug = false;
-      notify({ type: "keyring_Debug", data: false });
+      notify({ type: "keyring_Debug", data: false, key });
       break;
     case "keyring_CheckStatus":
       const storageSessionToken = getLocalStorage("bwsessiontoken");
@@ -44,6 +44,7 @@ export const keyringEventHandler = async (type, data) => {
               addresses: [sessionToken?.account],
               network: StarknetChainId.TESTNET,
             },
+            key,
           });
           return;
         }
@@ -51,6 +52,7 @@ export const keyringEventHandler = async (type, data) => {
       notify({
         type: "keyring_CheckStatusResponse",
         data: { connected: false },
+        key,
       });
       break;
     case "keyring_ResetSessionKey":
@@ -60,6 +62,7 @@ export const keyringEventHandler = async (type, data) => {
       notify({
         type: "keyring_CheckStatusResponse",
         data: { connected: false },
+        key,
       });
       break;
     default:

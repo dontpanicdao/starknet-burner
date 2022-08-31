@@ -7,13 +7,14 @@ export const provider = new Provider({
   sequencer: { network: "goerli-alpha" },
 });
 
-export const providerEventHandler = async (type, data) => {
+export const providerEventHandler = async (type, data, key) => {
   switch (type) {
     case "provider_GetContractAddresses": {
       const output = await provider.getContractAddresses();
       return notify({
         type: "provider_GetContractAddressesResponse",
         data: output,
+        key,
       });
     }
     case "provider_CallContract": {
@@ -28,7 +29,11 @@ export const providerEventHandler = async (type, data) => {
       const output = await provider.callContract(newCall, {
         blockIdentifier,
       });
-      return notify({ type: "provider_CallContractResponse", data: output });
+      return notify({
+        type: "provider_CallContractResponse",
+        data: output,
+        key,
+      });
     }
     case "provider_CallContract": {
       const { transactions, blockIdentifier } = data;
@@ -42,7 +47,11 @@ export const providerEventHandler = async (type, data) => {
       const output = await provider.callContract(newCall, {
         blockIdentifier,
       });
-      return notify({ type: "provider_CallContractResponse", data: output });
+      return notify({
+        type: "provider_CallContractResponse",
+        data: output,
+        key,
+      });
     }
     case "provider_GetBlock": {
       if (!data) {
@@ -51,10 +60,10 @@ export const providerEventHandler = async (type, data) => {
       const { blockIdentifier } = data;
       if (!blockIdentifier) {
         const output = await provider.getBlock();
-        return notify({ type: "provider_GetBlockResponse", data: output });
+        return notify({ type: "provider_GetBlockResponse", data: output, key });
       }
       const output = await provider.getBlock(blockIdentifier);
-      return notify({ type: "provider_GetBlockResponse", data: output });
+      return notify({ type: "provider_GetBlockResponse", data: output, key });
     }
     case "provider_GetClassAt":
       {
@@ -63,7 +72,7 @@ export const providerEventHandler = async (type, data) => {
           contractAddress,
           blockIdentifier
         );
-        notify({ type: "provider_GetClassAtResponse", data: output });
+        notify({ type: "provider_GetClassAtResponse", data: output, key });
       }
       break;
     case "provider_GetStorageAt":
@@ -74,21 +83,21 @@ export const providerEventHandler = async (type, data) => {
           key,
           blockIdentifier
         );
-        notify({ type: "provider_GetStorageAtResponse", data: output });
+        notify({ type: "provider_GetStorageAtResponse", data: output, key });
       }
       break;
     case "provider_GetTransaction":
       {
         const { transactionHash } = data;
         const output = await provider.getTransaction(transactionHash);
-        notify({ type: "provider_GetTransactionResponse", data: output });
+        notify({ type: "provider_GetTransactionResponse", data: output, key });
       }
       break;
     case "provider_GetTransactionStatus":
       {
         const { transactionHash } = data;
         const output = await provider.getTransactionStatus(transactionHash);
-        notify({ type: "provider_GetTransactionResponse", data: output });
+        notify({ type: "provider_GetTransactionResponse", data: output, key });
       }
       break;
     case "provider_GetTransactionReceipt":
@@ -98,6 +107,7 @@ export const providerEventHandler = async (type, data) => {
         notify({
           type: "provider_GetTransactionReceiptResponse",
           data: output,
+          key,
         });
       }
       break;

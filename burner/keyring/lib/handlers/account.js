@@ -54,7 +54,7 @@ const patchTransaction = (calls) => {
   return [pluginCall, calls];
 };
 
-export const accountEventHandler = async (type, data) => {
+export const accountEventHandler = async (type, data, key) => {
   const sessionKey = getLocalStorage("bwsessionkey");
   const token = getLocalStorage("bwsessiontoken");
   const address = JSON.parse(token)?.account;
@@ -80,6 +80,7 @@ export const accountEventHandler = async (type, data) => {
             gas_price: gas_price.toString("hex"),
             suggestedMaxFee: suggestedMaxFee.toString("hex"),
           },
+          key,
         });
       }
       break;
@@ -94,6 +95,7 @@ export const accountEventHandler = async (type, data) => {
         return notify({
           type: "account_ExecuteResponse",
           data: executeResponse,
+          key,
         });
       }
       break;

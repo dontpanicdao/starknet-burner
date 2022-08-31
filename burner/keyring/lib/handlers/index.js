@@ -25,18 +25,18 @@ export const eventHandler = async (event) => {
   if (event?.data?.uuid !== uuid) {
     return;
   }
-  const { type, data } = event.data;
+  const { type, key, data } = event.data;
   if (typeof type !== "string") {
     return;
   }
-  log("in:keyring", type, data);
+  log("in:keyring", type, key, data);
   switch (type.split("_")[0]) {
     case "account":
-      return await accountEventHandler(type, data);
+      return await accountEventHandler(type, data, key);
     case "keyring":
-      return await keyringEventHandler(type, data);
+      return await keyringEventHandler(type, data, key);
     case "provider":
-      return await providerEventHandler(type, data);
+      return await providerEventHandler(type, data, key);
     default:
       break;
   }
