@@ -1,5 +1,8 @@
 /index.html
-/src/main.js
-/src/button.js
+/src
 /public
 /scripts
+/.vscode
+/dist/button*
+/dist/main*
+/vite.config.ts
