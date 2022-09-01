@@ -6,8 +6,8 @@ import {
   uuid,
 } from "./default";
 import type { WindowMessageType } from "./default";
-import { displayModal, hideModal } from "../../components/modal";
-import { displayIFrame, hideIFrame } from "../../components/iframe";
+import { displayModal, hideModal } from "../../../components/modal";
+import { displayIFrame, hideIFrame } from "../../../components/iframe";
 import { StarknetChainId } from "starknet/constants";
 import {
   connectWindow,

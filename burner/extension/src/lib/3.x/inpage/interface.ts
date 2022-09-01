@@ -15,6 +15,7 @@ export interface IStarknetWindowObject {
   isConnected: boolean;
   selectedAddress?: string;
   chainId?: StarknetChainId;
+  compatible: string;
 
   provider?: ProviderInterface;
   account?: AccountInterface;

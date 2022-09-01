@@ -1,9 +1,9 @@
 import { hideIFrame } from "./components/iframe";
 import { hideModal } from "./components/modal";
-import { registerWindow } from "./lib/inpage/window";
+import { registerWindow as registerWindow3x } from "./lib/3.x/inpage/window";
 
-export const keyManager = () => {
-  registerWindow();
+export const keyManager = (version: string = "3.x") => {
+  registerWindow3x();
   const element = document.querySelector<HTMLDivElement>("#starknetburner");
   if (!element) {
     throw new Error("Could not query starknetburner");
@@ -23,5 +23,5 @@ export const keyManager = () => {
   hideModal();
 };
 
-export type { IStarknetWindowObject } from "./lib/inpage/interface";
-export { starknetWindow } from "./lib/inpage/window";
+export type { IStarknetWindowObject } from "./lib/3.x/inpage/interface";
+export { starknetWindow } from "./lib/3.x/inpage/window";

@@ -8,7 +8,9 @@ export default defineConfig({
       entry: resolve(__dirname, "src/index.ts"),
       name: "burner",
       // the proper extensions will be added
-      fileName: "index",
+      fileName: (format) => {
+        return `index.${format.toString() === "es" ? "js" : "umd.js"}`;
+      },
     },
   },
   plugins: [],

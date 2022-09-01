@@ -1,4 +1,4 @@
-import { version } from "../version";
+import { version } from "../../version";
 import { extensionEventHandler, request, enable, uuid } from "../messages";
 import { on, off } from "../messages/events";
 import { IStarknetWindowObject } from "./interface";
@@ -22,10 +22,11 @@ export const starknetWindow: IStarknetWindowObject = {
   name: "burner",
   icon: "https://starknet-burner.vercel.app/starknetburner-nobg.64.png",
   id: "burner",
-  version: version,
+  version,
   isConnected: false,
   selectedAddress: "",
   chainId: undefined,
+  compatible: "3.x",
   request,
   isPreauthorized: () => Promise.resolve(starknetWindow.isConnected),
   enable,
