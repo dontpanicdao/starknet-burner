@@ -53,7 +53,7 @@ If you plan to delete the session key, you can do it directly from the
 `request` function like below:
 
 ```javascript
-await burner.request("keyring_ResetSessionKey")
+await burner.request({type: "keyring_ResetSessionKey"})
 ```
 
 ## How to open and close the key manager?
@@ -62,14 +62,14 @@ To open of the key manager in your browser whether you are connected or not,
 run: 
 
 ```javascript
-await burner.request("keyring_OpenModal");
+await burner.request({type: "keyring_OpenModal"});
 ```
 
 Once the window is opened, you should be able to close it with the command
 below:
 
 ```javascript
-await burner.request("keyring_CloseModal");
+await burner.request({type: "keyring_CloseModal"});
 ```
 
 ## How to setup the debugging mode?
@@ -80,13 +80,13 @@ running inside an iframe. To trigger the debugging, you can simply run the
 command below:
 
 ```javascript
-await burner.request("keyring_SetDebug");
+await burner.request({type: "keyring_SetDebug"});
 ```
 
 If, at some point, you want to disable the debugging, execute:
 
 ```javascript
-await burner.request("keyring_ClearDebug");
+await burner.request({type: "keyring_ClearDebug"});
 ```
 
 ## How to exchange messages between the extension and keyring?
@@ -95,7 +95,7 @@ Starknet burner provides a simple tool to make a handcheck between the
 extension and the keyring. To use that tool, run:
 
 ```javascript
-burner.request("keyring_Ping");
+burner.request({type: "keyring_Ping"});
 ```
 
 Assuming you have setup the debug mode, you should be able to view the
@@ -107,13 +107,13 @@ Starknet burner also provides a way to try to connect without opening
 the window. To try to connect, run:
 
 ```javascript
-await burner.request("keyring_CheckStatus")
+await burner.request({type: "keyring_CheckStatus"})
 ```
 
 To disconnect, without erasing the key, run:
 
 ```javascript
-await burner.request("keyring_Disconnect")
+await burner.request({type: "keyring_Disconnect"})
 ```
 
 ## Where to get more help?

@@ -20,8 +20,8 @@ export const log = (...args: any[]) => {
 
 export const starknetWindow: IStarknetWindowObject = {
   name: "burner",
-  icon: "https://starknet-burner.vercel.app/fire.64.png",
-  id: uuid,
+  icon: "https://starknet-burner.vercel.app/starknetburner-nobg.64.png",
+  id: "burner",
   version: version,
   isConnected: false,
   selectedAddress: "",
