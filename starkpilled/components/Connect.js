@@ -22,7 +22,7 @@ const Connect = () => {
       <div id="starknetburner" />
       <button className={styles.button} onClick={click}>
         Connect
-        <Image src="/connect.svg" width={16} height={16} />
+        <Image src="/connect.svg" width={16} height={16} alt="connect" />
       </button>
     </>
   );

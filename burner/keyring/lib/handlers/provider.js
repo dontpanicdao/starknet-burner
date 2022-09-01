@@ -115,14 +115,14 @@ export const providerEventHandler = async (type, data, key) => {
       {
         const { invocation, details } = data;
         const output = await provider.invokeFunction(invocation, details);
-        notify({ type: "provider_InvokeFunctionResponse", data: output });
+        notify({ type: "provider_InvokeFunctionResponse", data: output, key });
       }
       break;
     case "provider_DeployContract":
       {
         const { payload } = data;
         const output = await provider.deployContract(payload);
-        notify({ type: "provider_DeployContractResponse", data: output });
+        notify({ type: "provider_DeployContractResponse", data: output, key });
       }
       break;
 
@@ -130,14 +130,14 @@ export const providerEventHandler = async (type, data, key) => {
       {
         const { contractAddress, blockIdentifier } = data;
         const output = await provider.getCode(contractAddress, blockIdentifier);
-        notify({ type: "provider_GetCodeResponse", data: output });
+        notify({ type: "provider_GetCodeResponse", data: output, key });
       }
       break;
     case "provider_WaitForTx":
       {
         const { txHash, retryInterval } = data;
         const output = await provider.waitForTransaction(txHash, retryInterval);
-        notify({ type: "provider_WaitForTxResponse", data: output });
+        notify({ type: "provider_WaitForTxResponse", data: output, key });
       }
       break;
     default:

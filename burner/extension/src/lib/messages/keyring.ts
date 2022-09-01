@@ -248,6 +248,8 @@ export const enable = async (options?: {
   if (!status || !status.connected) {
     disconnectWindow();
     request({ type: "keyring_OpenModal" });
+    // TODO: We should wait for the person to close the window
+    // And return the promise only when the account is set
     return Promise.resolve([]);
   }
   const { connected, network, addresses } = status;
