@@ -106,7 +106,7 @@ export const accountEventHandler = async (type, data, key) => {
         notify({
           type: "account_SignMessageResponse",
           data: signMessageResponse,
-		  key,
+          key,
         });
       }
       break;
@@ -117,7 +117,7 @@ export const accountEventHandler = async (type, data, key) => {
         notify({
           type: "account_HashMessageResponse",
           data: hashMessageResponse,
-		  key,
+          key,
         });
       }
       break;
@@ -131,7 +131,7 @@ export const accountEventHandler = async (type, data, key) => {
         notify({
           type: "account_VerifyMessageResponse",
           data: verifyMessageResponse,
-		  key,
+          key,
         });
       }
       break;
@@ -145,7 +145,7 @@ export const accountEventHandler = async (type, data, key) => {
         notify({
           type: "account_VerifyMessageHashResponse",
           data: verifyMessageHashResponse,
-		  key,
+          key,
         });
       }
       break;
@@ -155,7 +155,7 @@ export const accountEventHandler = async (type, data, key) => {
         notify({
           type: "account_GetNonceResponse",
           data: getNonceResponse,
-		  key,
+          key,
         });
       }
       break;
