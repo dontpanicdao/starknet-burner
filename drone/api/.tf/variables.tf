@@ -10,6 +10,16 @@ variable "certificate" {
   type = string
 }
 
-variable "origin" {
+variable "drone" {
   type = string
+}
+
+variable "keyring" {
+  type    = string
+  default = "https://starknet-burner.vercel.app"
+}
+
+variable "test" {
+  type    = string
+  default = "http://localhost:3000"
 }

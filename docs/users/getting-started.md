@@ -28,7 +28,7 @@ it, you can simply import the script with it with a `script` tag. Once done,
 the script exports should be accessible from `starknetburner` and
 `window.starknetburner`. The html file below shows how to install the script.
 `<div id="starknetburner">` is used as an anchor for the burner. The components
-will be attached to it. You should run `keyManager()` at the end of the file
+will be attached to it. You should run `register()` at the end of the file
 so that the `div` with id `starknetburner` is available when starting the
 burner:
 
@@ -45,8 +45,8 @@ burner:
     <div id="starknetburner"></div>
     <h1>hello</h1>
     <script type="text/javascript">
-      const { keyManager } = starknetburner;
-      keyManager();
+      const { register } = starknetburner;
+      register();
     </script>
   </body>
 </html>
@@ -66,7 +66,7 @@ Bookmarklets run javascript from the your browser menus. To install one, create
 a bookmark and copy/paste the content of the script below instead of the URL:
 
 ```javascript
-javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://unpkg.com/@starknet/burner';document.body.appendChild(document.createElement('div')).setAttribute('id','starknetburner');setTimeout(()=>{window.starknetburner.keyManager();console.log('inject starknet-burner in the browser window...')},2000)})();
+javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://unpkg.com/@starknet/burner';document.body.appendChild(document.createElement('div')).setAttribute('id','starknetburner');setTimeout(()=>{window.starknetburner.register();console.log('inject starknet-burner in the browser window...')},2000)})();
 ```
 
 > Note: If the website implements

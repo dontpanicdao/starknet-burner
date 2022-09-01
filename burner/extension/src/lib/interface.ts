@@ -1,11 +1,11 @@
-import { ProviderInterface } from "starknet/provider/interface";
-import { AccountInterface } from "starknet/account/interface";
-import { StarknetChainId } from "starknet/constants";
+import { ProviderInterface } from "starknet3x/provider/interface";
+import { AccountInterface } from "starknet3x/account/interface";
+import { StarknetChainId } from "starknet3x/constants";
 
 export type EventType = "accountsChanged" | "networkChanged";
 export type EventHandler = (data: any) => void;
 
-import type { RpcMessage } from "../messages/keyring";
+import type { RpcMessage } from "./keyring";
 
 export interface IStarknetWindowObject {
   id: string;

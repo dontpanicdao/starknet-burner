@@ -6,6 +6,7 @@ addition, you should:
 
 - limit the access to one contract only and probably also reduce the surface of
   that contract by splitting it from whatever else.
+- use the security best practices to avoid XSS, including CSP.
 - make sure the user is aware of the risks of using the burner and rely on an
   account that does not hold valuable assets.
 - implement the burner in conjunction with another signer that would provide

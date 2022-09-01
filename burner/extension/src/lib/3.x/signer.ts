@@ -1,5 +1,6 @@
-import { SignerInterface } from "starknet/signer/interface";
-import { log } from "./window";
+import { SignerInterface } from "starknet3x/signer/interface";
+import { log } from "../shared/log";
+
 export const signer: SignerInterface = {
   getPubKey: async () => {
     return "0x";

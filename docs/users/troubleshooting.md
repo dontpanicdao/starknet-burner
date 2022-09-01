@@ -14,7 +14,7 @@ Do not hesitate to ask additional questions if needed.
 ## How to check the burner is installed?
 
 The burner should be installed with the application. Usually the way to do that
-consists in installing the library and running the keymanager() script.
+consists in installing the library and running the register() script.
 Once done, you should be able to check it is correctly installed by running the
 following commands from your browser console...
 

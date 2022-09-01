@@ -1,22 +1,10 @@
-import { version } from "../../version";
-import { extensionEventHandler, request, enable, uuid } from "../messages";
-import { on, off } from "../messages/events";
+import { version } from "./version";
+import { extensionEventHandler, request, enable } from "./keyring";
+import { on, off } from "./events";
 import { IStarknetWindowObject } from "./interface";
-import { account } from "./account";
-import { provider } from "./provider";
-import { StarknetChainId } from "starknet/constants";
-
-let debug = false;
-
-export const setDebug = (mode: boolean) => {
-  debug = mode;
-};
-
-export const log = (...args: any[]) => {
-  if (debug) {
-    console.log(...args);
-  }
-};
+import { account } from "./3.x/account";
+import { provider } from "./3.x/provider";
+import { StarknetChainId } from "starknet3x/constants";
 
 export const starknetWindow: IStarknetWindowObject = {
   name: "burner",
@@ -53,7 +41,10 @@ export const disconnectWindow = () => {
   starknetWindow.account = undefined;
 };
 
-export const registerWindow = () => {
+export const registerWindow = (version: string = "3.x") => {
+  if (version !== "3.x") {
+    throw "@burner/wallet only supports starknet-js 3.x";
+  }
   if (window) {
     window.addEventListener("message", extensionEventHandler);
     Object.defineProperty(window, "starknet-burner", {

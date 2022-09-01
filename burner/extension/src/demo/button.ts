@@ -1,4 +1,4 @@
-import { starknetWindow } from "./lib/3.x/inpage/window";
+import { starknetWindow } from "..";
 
 export const injectButton = (): any => {
   const button = document.querySelector<HTMLButtonElement>("#button-burner");

@@ -1,3 +1,21 @@
+import { AccountInterface as AccountInterfacev3x } from "starknet3x/account/interface";
+import { signer } from "./signer";
+import { StarknetChainId } from "starknet3x/constants";
+import { provider } from "./provider";
+const {
+  callContract,
+  getBlock,
+  getCode,
+  getStorageAt,
+  getTransaction,
+  getTransactionReceipt,
+  invokeFunction,
+  getContractAddresses,
+  getTransactionStatus,
+  deployContract,
+  waitForTransaction,
+} = provider;
+
 import type {
   AddTransactionResponse,
   Signature,
@@ -5,11 +23,11 @@ import type {
   EstimateFeeDetails,
   Abi,
   InvocationsDetails,
-} from "starknet";
-import { BigNumberish } from "starknet/utils/number";
-import { sendMessage, waitForMessage, getKey } from "./default";
-import { TypedData } from "starknet/utils/typedData";
-import { EstimateFee } from "starknet/types/account";
+} from "starknet3x";
+import { BigNumberish } from "starknet3x/utils/number";
+import { sendMessage, waitForMessage, getKey } from "../shared/message";
+import { TypedData } from "starknet3x/utils/typedData";
+import { EstimateFee } from "starknet3x/types/account";
 
 type EstimateFeeRequest = {
   calls: Call | Call[];
@@ -34,58 +52,58 @@ type VerifyMessageHashRequest = {
 
 export type AccountMessage =
   | {
-      type: "account_EstimateFee";
+      type: "account3x_EstimateFee";
       data: EstimateFeeRequest;
     }
   | {
-      type: "account_EstimateFeeResponse";
+      type: "account3x_EstimateFeeResponse";
       data: EstimateFee;
     }
   | {
-      type: "account_Execute";
+      type: "account3x_Execute";
       data: ExecuteRequest;
     }
   | {
-      type: "account_ExecuteResponse";
+      type: "account3x_ExecuteResponse";
       data: AddTransactionResponse;
     }
   | {
-      type: "account_SignMessage";
+      type: "account3x_SignMessage";
       data: TypedData;
     }
   | {
-      type: "account_SignMessageResponse";
+      type: "account3x_SignMessageResponse";
       data: Signature;
     }
   | {
-      type: "account_HashMessage";
+      type: "account3x_HashMessage";
       data: TypedData;
     }
   | {
-      type: "account_HashMessageResponse";
+      type: "account3x_HashMessageResponse";
       data: string;
     }
   | {
-      type: "account_VerifyMessage";
+      type: "account3x_VerifyMessage";
       data: VerifyMessageRequest;
     }
   | {
-      type: "account_VerifyMessageResponse";
+      type: "account3x_VerifyMessageResponse";
       data: boolean;
     }
   | {
-      type: "account_VerifyMessageHash";
+      type: "account3x_VerifyMessageHash";
       data: VerifyMessageHashRequest;
     }
   | {
-      type: "account_VerifyMessageHashResponse";
+      type: "account3x_VerifyMessageHashResponse";
       data: boolean;
     }
   | {
-      type: "account_GetNonce";
+      type: "account3x_GetNonce";
     }
   | {
-      type: "account_GetNonceResponse";
+      type: "account3x_GetNonceResponse";
       data: string;
     };
 
@@ -96,7 +114,7 @@ export const estimateFee = async (
   const key = getKey();
   sendMessage(
     {
-      type: "account_EstimateFee",
+      type: "account3x_EstimateFee",
       data: {
         calls,
         estimateFeeDetails,
@@ -104,7 +122,7 @@ export const estimateFee = async (
     },
     key
   );
-  return await waitForMessage("account_EstimateFeeResponse", key);
+  return await waitForMessage("account3x_EstimateFeeResponse", key);
 };
 
 export const execute = async (
@@ -115,7 +133,7 @@ export const execute = async (
   const key = getKey();
   sendMessage(
     {
-      type: "account_Execute",
+      type: "account3x_Execute",
       data: {
         transactions,
         abis,
@@ -124,31 +142,31 @@ export const execute = async (
     },
     key
   );
-  return await waitForMessage("account_ExecuteResponse", key);
+  return await waitForMessage("account3x_ExecuteResponse", key);
 };
 
 export const signMessage = async (typedData: TypedData): Promise<Signature> => {
   const key = getKey();
   sendMessage(
     {
-      type: "account_SignMessage",
+      type: "account3x_SignMessage",
       data: typedData,
     },
     key
   );
-  return await waitForMessage("account_SignMessageResponse", key);
+  return await waitForMessage("account3x_SignMessageResponse", key);
 };
 
 export const hashMessage = async (typedData: TypedData): Promise<string> => {
   const key = getKey();
   sendMessage(
     {
-      type: "account_HashMessage",
+      type: "account3x_HashMessage",
       data: typedData,
     },
     key
   );
-  return await waitForMessage("account_HashMessageResponse", key);
+  return await waitForMessage("account3x_HashMessageResponse", key);
 };
 
 export const verifyMessage = async (
@@ -158,7 +176,7 @@ export const verifyMessage = async (
   const key = getKey();
   sendMessage(
     {
-      type: "account_VerifyMessage",
+      type: "account3x_VerifyMessage",
       data: {
         typedData,
         signature,
@@ -166,7 +184,7 @@ export const verifyMessage = async (
     },
     key
   );
-  return await waitForMessage("account_VerifyMessageResponse", key);
+  return await waitForMessage("account3x_VerifyMessageResponse", key);
 };
 
 export const verifyMessageHash = async (
@@ -176,7 +194,7 @@ export const verifyMessageHash = async (
   const key = getKey();
   sendMessage(
     {
-      type: "account_VerifyMessageHash",
+      type: "account3x_VerifyMessageHash",
       data: {
         hash,
         signature,
@@ -184,16 +202,42 @@ export const verifyMessageHash = async (
     },
     key
   );
-  return await waitForMessage("account_VerifyMessageHashResponse", key);
+  return await waitForMessage("account3x_VerifyMessageHashResponse", key);
 };
 
 export const getNonce = async (): Promise<string> => {
   const key = getKey();
   sendMessage(
     {
-      type: "account_GetNonce",
+      type: "account3x_GetNonce",
     },
     key
   );
-  return await waitForMessage("account_GetNonceResponse", key);
+  return await waitForMessage("account3x_GetNonceResponse", key);
+};
+export const account: AccountInterfacev3x = {
+  signer,
+  chainId: StarknetChainId.TESTNET,
+  baseUrl: provider.baseUrl,
+  feederGatewayUrl: provider.feederGatewayUrl,
+  gatewayUrl: provider.gatewayUrl,
+  address: "",
+  getContractAddresses,
+  estimateFee,
+  execute,
+  signMessage,
+  hashMessage,
+  verifyMessage,
+  verifyMessageHash,
+  getNonce,
+  callContract,
+  getCode,
+  getStorageAt,
+  getTransaction,
+  getTransactionStatus,
+  getTransactionReceipt,
+  getBlock,
+  invokeFunction,
+  deployContract,
+  waitForTransaction,
 };
