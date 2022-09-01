@@ -4,7 +4,27 @@ The Starknet Burner manages keys for your account.
 
 ### From npmjs.com
 
-### From the CDN
+### From unpkg.com
+
+
+```
+<html>
+  <head>
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/@starknet/burner"
+    ></script>
+  </head>
+  <body>
+    <div id="starknetburner"></div>
+    <h1>hello</h1>
+    <script type="text/javascript">
+      const { keyManager } = starknetburner;
+      keyManager();
+    </script>
+  </body>
+</html>
+```
 
 ## Loading the StarknetWindowObject
 

@@ -6,7 +6,7 @@ export default defineConfig({
     emptyOutDir: false,
     lib: {
       entry: resolve(__dirname, "src/index.ts"),
-      name: "burner",
+      name: "starknetburner",
       // the proper extensions will be added
       fileName: (format) => {
         return `index.${format.toString() === "es" ? "js" : "umd.js"}`;
