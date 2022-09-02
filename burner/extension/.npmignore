@@ -4,4 +4,11 @@
 /scripts
 /.vscode
 /dist/demo/*
+/dist/**/*.test.d.ts
+/dist/**/*.test.js
+/dist/**/*.test.js.map
 /vite.config.ts
+/jest.config.ts
+/reference.md
+/tsconfig.json
+/typedoc.json

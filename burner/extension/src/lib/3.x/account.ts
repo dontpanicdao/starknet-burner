@@ -57,7 +57,8 @@ export type AccountMessage =
     }
   | {
       type: "account3x_EstimateFeeResponse";
-      data: EstimateFee;
+      data?: EstimateFee;
+      exception?: string;
     }
   | {
       type: "account3x_Execute";
@@ -66,6 +67,7 @@ export type AccountMessage =
   | {
       type: "account3x_ExecuteResponse";
       data: AddTransactionResponse;
+      exception?: string;
     }
   | {
       type: "account3x_SignMessage";
@@ -74,6 +76,7 @@ export type AccountMessage =
   | {
       type: "account3x_SignMessageResponse";
       data: Signature;
+      exception?: string;
     }
   | {
       type: "account3x_HashMessage";
@@ -82,6 +85,7 @@ export type AccountMessage =
   | {
       type: "account3x_HashMessageResponse";
       data: string;
+      exception?: string;
     }
   | {
       type: "account3x_VerifyMessage";
@@ -90,6 +94,7 @@ export type AccountMessage =
   | {
       type: "account3x_VerifyMessageResponse";
       data: boolean;
+      exception?: string;
     }
   | {
       type: "account3x_VerifyMessageHash";
@@ -98,6 +103,7 @@ export type AccountMessage =
   | {
       type: "account3x_VerifyMessageHashResponse";
       data: boolean;
+      exception?: string;
     }
   | {
       type: "account3x_GetNonce";
@@ -105,6 +111,7 @@ export type AccountMessage =
   | {
       type: "account3x_GetNonceResponse";
       data: string;
+      exception?: string;
     };
 
 export const estimateFee = async (

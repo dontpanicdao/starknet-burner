@@ -1,7 +1,7 @@
 {
   "name": "@starknet/burner",
   "private": false,
-  "version": "0.3.8",
+  "version": "0.3.9",
   "description": "Starknet Burner",
   "type": "module",
   "module": "./src/index.js",

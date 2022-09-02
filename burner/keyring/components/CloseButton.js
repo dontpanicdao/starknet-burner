@@ -3,7 +3,7 @@ import { notify } from "../lib/handlers";
 
 const CloseButton = () => {
   const close = () => {
-    notify({ type: "keyring_CloseModalRequested" });
+    notify({ type: "keyring_CloseModalRequested", key: "close" });
   };
 
   return (

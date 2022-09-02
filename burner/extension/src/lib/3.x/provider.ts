@@ -61,6 +61,7 @@ export type ProviderMessage =
   | {
       type: "provider3x_GetContractAddressesResponse";
       data: GetContractAddressesResponse;
+      exception?: string;
     }
   | {
       type: "provider3x_CallContract";
@@ -69,6 +70,7 @@ export type ProviderMessage =
   | {
       type: "provider3x_CallContractResponse";
       data: CallContractResponse;
+      exception?: string;
     }
   | {
       type: "provider3x_GetBlock";
@@ -77,6 +79,7 @@ export type ProviderMessage =
   | {
       type: "provider3x_GetBlockResponse";
       data: GetBlockResponse;
+      exception?: string;
     }
   | {
       type: "provider3x_GetStorageAt";
@@ -85,6 +88,7 @@ export type ProviderMessage =
   | {
       type: "provider3x_GetStorageAtResponse";
       data: BigNumberish;
+      exception?: string;
     }
   | {
       type: "provider3x_GetTransaction";
@@ -93,6 +97,7 @@ export type ProviderMessage =
   | {
       type: "provider3x_GetTransactionResponse";
       data: GetTransactionResponse;
+      exception?: string;
     }
   | {
       type: "provider3x_GetTransactionStatus";
@@ -101,6 +106,7 @@ export type ProviderMessage =
   | {
       type: "provider3x_GetTransactionStatusResponse";
       data: GetTransactionStatusResponse;
+      exception?: string;
     }
   | {
       type: "provider3x_GetTransactionReceipt";
@@ -109,6 +115,7 @@ export type ProviderMessage =
   | {
       type: "provider3x_GetTransactionReceiptResponse";
       data: TransactionReceiptResponse;
+      exception?: string;
     }
   | {
       type: "provider3x_InvokeFunction";
@@ -117,6 +124,7 @@ export type ProviderMessage =
   | {
       type: "provider3x_InvokeFunctionResponse";
       data: AddTransactionResponse;
+      exception?: string;
     }
   | {
       type: "provider3x_DeployContract";
@@ -125,6 +133,7 @@ export type ProviderMessage =
   | {
       type: "provider3x_DeployContractResponse";
       data: AddTransactionResponse;
+      exception?: string;
     }
   | {
       type: "provider3x_DeclareContract";
@@ -137,6 +146,7 @@ export type ProviderMessage =
   | {
       type: "provider3x_GetCodeResponse";
       data: GetCodeResponse;
+      exception?: string;
     }
   | {
       type: "provider3x_WaitForTx";
@@ -145,6 +155,7 @@ export type ProviderMessage =
   | {
       type: "provider3x_WaitForTxResponse";
       data: void;
+      exception?: string;
     };
 
 export const callContract = async (

@@ -1,10 +1,67 @@
 import { version } from "./version";
-import { extensionEventHandler, request, enable } from "./keyring";
 import { on, off } from "./events";
 import { IStarknetWindowObject } from "./interface";
-import { account } from "./3.x/account";
-import { provider } from "./3.x/provider";
+import { account as account3x } from "./3.x/account";
+import { provider as provider3x } from "./3.x/provider";
 import { StarknetChainId } from "starknet3x/constants";
+import { eventHandler } from "./events";
+import { RpcMessage } from "./interface";
+import {
+  keyringPing,
+  keyringSetDebug,
+  keyringClearDebug,
+  keyringCheckStatus,
+  keyringResetSessionKey,
+  keyringOpenModal,
+  keyringCloseModal,
+  keyringWaitForCloseModal,
+} from "./keyring";
+
+export const request = async <T extends RpcMessage>(
+  call: Omit<T, "result">
+): Promise<T["result"]> => {
+  const type = call["type"];
+  switch (type) {
+    case "keyring_Ping":
+      return await keyringPing();
+    case "keyring_SetDebug":
+      return await keyringSetDebug();
+    case "keyring_ClearDebug":
+      return await keyringClearDebug();
+    case "keyring_Disconnect": {
+      disconnect();
+      return Promise.resolve(true);
+    }
+    case "keyring_CheckStatus":
+      return keyringCheckStatus();
+    case "keyring_ResetSessionKey":
+      return await keyringResetSessionKey();
+    default:
+      return Promise.resolve(false);
+  }
+};
+
+export const enable = async (options?: {
+  showModal?: boolean;
+}): Promise<string[]> => {
+  if (!options || !options.showModal) {
+    const status = await keyringCheckStatus();
+    if (status.connected) {
+      connect(status.network, status.addresses[0]);
+      return status.addresses;
+    }
+  }
+  await keyringOpenModal();
+  await keyringWaitForCloseModal();
+  await keyringCloseModal();
+  const status = await keyringCheckStatus();
+  if (status?.connected) {
+    connect(status.network, status.addresses[0]);
+    return status.addresses;
+  }
+  disconnect();
+  return [];
+};
 
 export const starknetWindow: IStarknetWindowObject = {
   name: "burner",
@@ -20,20 +77,20 @@ export const starknetWindow: IStarknetWindowObject = {
   enable,
   on,
   off,
-  account,
-  provider,
+  account: account3x,
+  provider: provider3x,
 };
 
-export const connectWindow = (network: StarknetChainId, address: string) => {
+export const connect = (network: StarknetChainId, address: string) => {
   starknetWindow.isConnected = true;
   starknetWindow.selectedAddress = address;
   starknetWindow.chainId = network;
-  starknetWindow.provider = provider;
-  starknetWindow.account = account;
-  starknetWindow.account.address = address;
+  starknetWindow.provider = provider3x;
+  account3x.address = address;
+  starknetWindow.account = account3x;
 };
 
-export const disconnectWindow = () => {
+export const disconnect = () => {
   starknetWindow.isConnected = false;
   starknetWindow.selectedAddress = "";
   starknetWindow.chainId = undefined;
@@ -46,7 +103,7 @@ export const registerWindow = (version: string = "3.x") => {
     throw "@burner/wallet only supports starknet-js 3.x";
   }
   if (window) {
-    window.addEventListener("message", extensionEventHandler);
+    window.addEventListener("message", eventHandler);
     Object.defineProperty(window, "starknet-burner", {
       value: starknetWindow,
       writable: false,

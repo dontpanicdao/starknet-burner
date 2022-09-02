@@ -1,19 +1,21 @@
 import { SignerInterface } from "starknet3x/signer/interface";
-import { log } from "../shared/log";
+import { newLog } from "../shared/log";
+
+const log = newLog();
 
 export const signer: SignerInterface = {
   getPubKey: async () => {
     return "0x";
   },
   signTransaction: async (transactions, transactionsDetail, abis) => {
-    log("transactions", transactions);
-    log("transactionsDetail", transactionsDetail);
-    log("abis", abis);
+    log.debug("transactions", transactions);
+    log.debug("transactionsDetail", transactionsDetail);
+    log.debug("abis", abis);
     return Promise.resolve(["0x0"]);
   },
   signMessage: async (typedData, accountAddress) => {
-    log("typedData", typedData);
-    log("accountAddress", accountAddress);
+    log.debug("typedData", typedData);
+    log.debug("accountAddress", accountAddress);
     return Promise.resolve(["0x0"]);
   },
 };
