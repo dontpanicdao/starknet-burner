@@ -3,7 +3,7 @@
 ### v0.3.0 - 🐾 it works! - 2022-08-31
 
 This release implements the session key pattern on an upgraded argent-x
-accounr. the new release implements:
+account. It implements:
 
 - a full rewrite of `extension` and `keyring`; the former in vanilla typescript
   and the later with nextjs as well as a messaging system for the 2 to interact

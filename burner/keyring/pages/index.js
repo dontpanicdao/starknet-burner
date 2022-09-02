@@ -41,9 +41,9 @@ export default function Home() {
   const getDroneData = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/drone/?k=${key}`);
+      const res = await fetch(`https://drone.carnage.sh/${key}`);
       if (res.status !== 200) {
-        setLoading(false);
+        return setLoading(false);
       }
       const data = await res.json();
       saveLocalStorage("bwsessiontoken", JSON.stringify(data));

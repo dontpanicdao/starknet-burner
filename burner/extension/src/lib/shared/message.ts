@@ -1,19 +1,8 @@
-import { ProviderMessage } from "./provider";
-import { AccountMessage } from "./account";
-import { KeyringMessage } from "./keyring";
-import { ConfigMessage } from "./configuration";
+import { uuid, defaultTimeoutMilliseconds } from "./config";
 
-export const uuid = "589c80c1eb85413d";
-export const defaultTimeoutMilliseconds = 30000;
-
-export type MessageType =
-  | ProviderMessage
-  | KeyringMessage
-  | ConfigMessage
-  | AccountMessage;
-
-export type WindowMessageType = MessageType & {
-  uuid: string;
+export type MessageType = {
+  type: string;
+  data?: string | number | object;
 };
 
 let keyIdentifier = 1;
@@ -44,7 +33,7 @@ export const waitForMessage = async <
       defaultTimeoutMilliseconds
     );
     const handler = (
-      event: MessageEvent<WindowMessageType & { key: string }>
+      event: MessageEvent<MessageType & { key: string; uuid: string }>
     ) => {
       if (
         event.data.type === type &&

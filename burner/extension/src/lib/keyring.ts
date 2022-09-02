@@ -1,20 +1,15 @@
+import { uuid } from "./shared/config";
 import {
-  defaultTimeoutMilliseconds,
-  MessageType,
   sendMessage,
+  waitForMessage,
+  MessageType,
   getKey,
-  uuid,
-} from "./default";
-import type { WindowMessageType } from "./default";
-import { displayModal, hideModal } from "../../../components/modal";
-import { displayIFrame, hideIFrame } from "../../../components/iframe";
-import { StarknetChainId } from "starknet/constants";
-import {
-  connectWindow,
-  disconnectWindow,
-  setDebug,
-  log,
-} from "../inpage/window";
+} from "./shared/message";
+import { log, setDebug } from "./shared/log";
+import { displayModal, hideModal } from "../components/modal";
+import { displayIFrame, hideIFrame } from "../components/iframe";
+import { StarknetChainId } from "starknet3x/constants";
+import { connectWindow, disconnectWindow } from "./window";
 import { executeNetworkHandler, executeAccountsHandler } from "./events";
 
 export type StatusResponse = {
@@ -76,39 +71,6 @@ export type KeyringMessage =
       type: "keyring_CheckStatusResponse";
       data: StatusResponse | undefined;
     };
-
-export const waitForMessage = async <
-  K extends KeyringMessage["type"],
-  T extends { type: K } & KeyringMessage
->(
-  type: K,
-  key: string,
-  predicate: (x: T) => boolean = () => true
-): Promise<T extends { data: infer S } ? S : undefined> => {
-  return new Promise((resolve, reject) => {
-    const pid = setTimeout(
-      () => reject(new Error("Timeout")),
-      defaultTimeoutMilliseconds
-    );
-    const handler = (
-      event: MessageEvent<WindowMessageType & { key: string }>
-    ) => {
-      if (
-        event.data.type === type &&
-        event.data.uuid === uuid &&
-        event.data.key === key &&
-        predicate(event.data as any)
-      ) {
-        clearTimeout(pid);
-        window.removeEventListener("message", handler);
-        return resolve(
-          ("data" in event.data ? event.data.data : undefined) as any
-        );
-      }
-    };
-    window.addEventListener("message", handler);
-  });
-};
 
 export type RpcMessage =
   | {
@@ -193,7 +155,10 @@ export const request = async <T extends RpcMessage>(
     case "keyring_CheckStatus": {
       const key = getKey();
       sendMessage({ type } as MessageType, key);
-      const status = await waitForMessage("keyring_CheckStatusResponse", key);
+      const status: StatusResponse | undefined = await waitForMessage(
+        "keyring_CheckStatusResponse",
+        key
+      );
       if (!status || !status.connected) {
         disconnectWindow();
         return Promise.resolve(undefined);
@@ -214,8 +179,11 @@ export const request = async <T extends RpcMessage>(
     case "keyring_ResetSessionKey": {
       const key = getKey();
       sendMessage({ type } as MessageType, key);
-      const status = await waitForMessage("keyring_CheckStatusResponse", key);
-      if (!status?.connected) {
+      const status: StatusResponse | undefined = await waitForMessage(
+        "keyring_CheckStatusResponse",
+        key
+      );
+      if (!status || !status?.connected) {
         disconnectWindow();
         return Promise.resolve(undefined);
       }
@@ -244,7 +212,10 @@ export const enable = async (options?: {
   }
   const key = getKey();
   sendMessage({ type: "keyring_CheckStatus" }, key);
-  const status = await waitForMessage("keyring_CheckStatusResponse", key);
+  const status: StatusResponse | undefined = await waitForMessage(
+    "keyring_CheckStatusResponse",
+    key
+  );
   if (!status || !status.connected) {
     disconnectWindow();
     request({ type: "keyring_OpenModal" });

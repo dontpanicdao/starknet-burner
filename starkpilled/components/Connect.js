@@ -1,12 +1,12 @@
 import styles from "../styles/Connect.module.css";
 import { useEffect } from "react";
-import { keyManager } from "@starknet/burner";
+import { register } from "@starknet/burner";
 import Image from "next/image";
 
 const Connect = () => {
   useEffect(() => {
     if (window) {
-      keyManager();
+      register();
     }
   }, []);
 

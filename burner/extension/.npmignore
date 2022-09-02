@@ -3,6 +3,5 @@
 /public
 /scripts
 /.vscode
-/dist/button*
-/dist/main*
+/dist/demo/*
 /vite.config.ts

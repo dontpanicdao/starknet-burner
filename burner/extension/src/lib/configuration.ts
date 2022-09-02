@@ -1,5 +1,5 @@
-import { StarknetChainId } from "starknet/constants";
-import { sendMessage, waitForMessage, getKey } from "./default";
+import { StarknetChainId } from "starknet3x/constants";
+import { sendMessage, waitForMessage, getKey } from "./shared/message";
 
 export type WatchAssetParameterOptions = {
   address: string;

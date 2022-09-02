@@ -1,4 +1,4 @@
 bucket      = "bucket"
 dns         = "dns"
 certificate = "arn:::certificate"
-origin      = "https://origin"
+origin      = "https://stark"

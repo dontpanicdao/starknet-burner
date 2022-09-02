@@ -2,7 +2,6 @@ import { Account, Signer, Provider, ec, transaction } from "starknet";
 import { notify } from ".";
 import { toBN } from "starknet/utils/number";
 import { getLocalStorage } from "lib/handleLocalStorage";
-import { fromCallsToExecuteCalldataWithNonce } from "starknet/utils/transaction";
 
 // TODO: make the plugin configurable; it should include:
 // - the plugin hash
@@ -63,7 +62,7 @@ export const accountEventHandler = async (type, data, key) => {
   const provider = new Provider({ sequencer: { network: "alpha-goerli" } });
   const account = new Account(provider, address, signer);
   switch (type) {
-    case "account_EstimateFee":
+    case "account3x_EstimateFee":
       {
         const { calls, estimateFeeDetails } = data;
         const estimateFeeResponse = await account.estimateFee(
@@ -73,7 +72,7 @@ export const accountEventHandler = async (type, data, key) => {
         const { overall_fee, gas_consumed, gas_price, suggestedMaxFee } =
           estimateFeeResponse;
         return notify({
-          type: "account_EstimateFeeResponse",
+          type: "account3x_EstimateFeeResponse",
           data: {
             overall_fee: overall_fee.toString("hex"),
             gas_consumed: gas_consumed.toString("hex"),
@@ -84,7 +83,7 @@ export const accountEventHandler = async (type, data, key) => {
         });
       }
       break;
-    case "account_Execute":
+    case "account3x_Execute":
       {
         const { transactions, abis, transactionsDetail } = data;
         const executeResponse = await account.execute(
@@ -93,35 +92,35 @@ export const accountEventHandler = async (type, data, key) => {
           transactionsDetail
         );
         return notify({
-          type: "account_ExecuteResponse",
+          type: "account3x_ExecuteResponse",
           data: executeResponse,
           key,
         });
       }
       break;
-    case "account_SignMessage":
+    case "account3x_SignMessage":
       {
         const typedData = data;
         const signMessageResponse = await account.signMessage(typedData);
         notify({
-          type: "account_SignMessageResponse",
+          type: "account3x_SignMessageResponse",
           data: signMessageResponse,
           key,
         });
       }
       break;
-    case "account_HashMessage":
+    case "account3x_HashMessage":
       {
         const typedData = data;
         const hashMessageResponse = await account.hashMessage(typedData);
         notify({
-          type: "account_HashMessageResponse",
+          type: "account3x_HashMessageResponse",
           data: hashMessageResponse,
           key,
         });
       }
       break;
-    case "account_VerifyMessage":
+    case "account3x_VerifyMessage":
       {
         const { typedData, signature } = data;
         const verifyMessageResponse = await account.verifyMessage(
@@ -129,13 +128,13 @@ export const accountEventHandler = async (type, data, key) => {
           signature
         );
         notify({
-          type: "account_VerifyMessageResponse",
+          type: "account3x_VerifyMessageResponse",
           data: verifyMessageResponse,
           key,
         });
       }
       break;
-    case "account_VerifyMessageHash":
+    case "account3x_VerifyMessageHash":
       {
         const { hash, signature } = data;
         const verifyMessageHashResponse = await account.verifyMessageHash(
@@ -143,17 +142,17 @@ export const accountEventHandler = async (type, data, key) => {
           signature
         );
         notify({
-          type: "account_VerifyMessageHashResponse",
+          type: "account3x_VerifyMessageHashResponse",
           data: verifyMessageHashResponse,
           key,
         });
       }
       break;
-    case "account_GetNonce":
+    case "account3x_GetNonce":
       {
         const getNonceResponse = await account.getNonce();
         notify({
-          type: "account_GetNonceResponse",
+          type: "account3x_GetNonceResponse",
           data: getNonceResponse,
           key,
         });
