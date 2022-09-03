@@ -9,12 +9,16 @@ export enum module {
   DEFAULT = "DEFAULT",
   PING = "PING",
   KEYRING = "KEYRING",
+  PROVIDER3X = "PROVIDER3X",
+  ACCOUNT3X = "ACCOUNT3X",
 }
 
 const debugLevel: Record<module, level> = {
   DEFAULT: level.INFO,
   PING: level.INFO,
   KEYRING: level.INFO,
+  PROVIDER3X: level.INFO,
+  ACCOUNT3X: level.INFO,
 };
 
 export const setDebug = (on: boolean | Record<module, level> = true) => {
@@ -33,9 +37,14 @@ export const setDebug = (on: boolean | Record<module, level> = true) => {
   }
 };
 
-const logWithLevel = (l: level, m: module, ...args: any[]): void => {
+const logWithLevel = (
+  writer: (...data: any[]) => void,
+  l: level,
+  m: module,
+  ...args: any[]
+): void => {
   if (l >= debugLevel[m]) {
-    console.log("in:extension", ...args);
+    writer("in:extension", ...args);
   }
 };
 
@@ -51,16 +60,16 @@ export const newLog = (m: module = module.DEFAULT): logger => {
   const log = {
     _module: m,
     log: (...args: any[]) => {
-      logWithLevel(level.INFO, log._module, ...args);
+      logWithLevel(console.log, level.INFO, log._module, ...args);
     },
     warn: (...args: any[]) => {
-      logWithLevel(level.WARN, log._module, ...args);
+      logWithLevel(console.warn, level.WARN, log._module, ...args);
     },
     error: (...args: any[]) => {
-      logWithLevel(level.ERROR, log._module, ...args);
+      logWithLevel(console.error, level.ERROR, log._module, ...args);
     },
     debug: (...args: any[]) => {
-      logWithLevel(level.DEBUG, log._module, ...args);
+      logWithLevel(console.debug, level.DEBUG, log._module, ...args);
     },
   };
   return log;

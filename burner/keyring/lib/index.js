@@ -2,6 +2,7 @@ import { accountEventHandler } from "./3.x/account";
 import { keyringEventHandler } from "./keyring";
 import { providerEventHandler } from "./3.x/provider";
 import { newLog } from "./shared/log";
+import { uuid } from "./shared/config";
 
 const log = newLog();
 

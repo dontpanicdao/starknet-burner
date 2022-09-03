@@ -1,27 +1,31 @@
-export const level = {
-  DEBUG: 0,
-  INFO: 1,
-  WARN: 2,
-  ERROR: 3,
-};
+export const logLevelDEBUG = 0;
+export const logLevelINFO = 1;
+export const logLevelWARN = 2;
+export const logLevelERROR = 3;
 
-export const module = {
-  DEFAULT: "DEFAULT",
-  PING: "PING",
-  KEYRING: "KEYRING",
-};
+export const logModuleDEFAULT = "DEFAULT";
+export const logModulePING = "PING";
+export const logModuleKEYRING = "KEYRING";
+export const logModuleACCOUNT3X = "ACCOUNT3X";
+export const logModulePROVIDER3X = "PROVIDER3X";
 
 const debugLevel = {
-  DEFAULT: process.env.NODE_ENV === "development" ? level.DEBUG : level.INFO,
-  PING: process.env.NODE_ENV === "development" ? level.DEBUG : level.INFO,
-  KEYRING: process.env.NODE_ENV === "development" ? level.DEBUG : level.INFO,
+  DEFAULT:
+    process.env.NODE_ENV === "development" ? logLevelDEBUG : logLevelINFO,
+  PING: process.env.NODE_ENV === "development" ? logLevelDEBUG : logLevelINFO,
+  KEYRING:
+    process.env.NODE_ENV === "development" ? logLevelDEBUG : logLevelINFO,
+  ACCOUNT3X:
+    process.env.NODE_ENV === "development" ? logLevelDEBUG : logLevelINFO,
+  PROVIDER3X:
+    process.env.NODE_ENV === "development" ? logLevelDEBUG : logLevelINFO,
 };
 
 export const setDebug = (on = true) => {
   if (typeof on === "boolean") {
-    let mode = level.INFO;
+    let mode = logLevelINFO;
     if (on) {
-      mode = level.DEBUG;
+      mode = logLevelDEBUG;
     }
     for (let prop in debugLevel) {
       debugLevel[prop] = mode;
@@ -33,26 +37,26 @@ export const setDebug = (on = true) => {
   }
 };
 
-const logWithLevel = (l, m, ...args) => {
+const logWithLevel = (writer, l, m, ...args) => {
   if (l >= debugLevel[m]) {
-    console.log("in:keyring", ...args);
+    writer("in:keyring", ...args);
   }
 };
 
-export const newLog = (m = module.DEFAULT) => {
+export const newLog = (m = logModuleDEFAULT) => {
   const log = {
     _module: m,
     log: (...args) => {
-      logWithLevel(level.INFO, log._module, ...args);
+      logWithLevel(console.log, logLevelINFO, log._module, ...args);
     },
     warn: (...args) => {
-      logWithLevel(level.WARN, log._module, ...args);
+      logWithLevel(console.warn, logLevelWARN, log._module, ...args);
     },
     error: (...args) => {
-      logWithLevel(level.ERROR, log._module, ...args);
+      logWithLevel(console.error, logLevelERROR, log._module, ...args);
     },
     debug: (...args) => {
-      logWithLevel(level.DEBUG, log._module, ...args);
+      logWithLevel(console.debug, logLevelDEBUG, log._module, ...args);
     },
   };
   return log;

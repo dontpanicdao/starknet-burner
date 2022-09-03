@@ -57,7 +57,6 @@ export const waitForMessage = async <
           log.error(event.data.type, "exception", event.data.exception);
           return reject(new Error(event.data.exception));
         }
-        log.debug(event.data.type, "data" in event.data ? event.data.data : "");
         return resolve(
           ("data" in event.data ? event.data.data : undefined) as any
         );

@@ -1,7 +1,11 @@
 /index.html
 /src
+/e2e
 /public
 /scripts
+/coverage
+/test-results/
+/playwright*
 /.vscode
 /dist/demo/*
 /dist/**/*.test.d.ts
@@ -12,3 +16,5 @@
 /reference.md
 /tsconfig.json
 /typedoc.json
+/playwright.config.ts
+/reference.md

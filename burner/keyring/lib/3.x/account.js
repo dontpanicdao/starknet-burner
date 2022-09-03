@@ -175,6 +175,7 @@ const getNonce = async (account, data, key) => {
 };
 
 export const accountEventHandler = async (type, data, key) => {
+  log.debug(type, key, data);
   const sessionKey = getLocalStorage("bwsessionkey");
   const token = getLocalStorage("bwsessiontoken");
   const address = JSON.parse(token)?.account;

@@ -1,6 +1,7 @@
 import { version } from "./version";
 import { on, off } from "./events";
 import { IStarknetWindowObject } from "./interface";
+import { account as account0 } from "./disabled/account";
 import { account as account3x } from "./3.x/account";
 import { provider as provider3x } from "./3.x/provider";
 import { StarknetChainId } from "starknet3x/constants";
@@ -43,7 +44,12 @@ export const request = async <T extends RpcMessage>(
 
 export const enable = async (options?: {
   showModal?: boolean;
+  partial?: boolean;
 }): Promise<string[]> => {
+  if (options?.partial) {
+    partialConnect(StarknetChainId.TESTNET);
+    return ["0x0"];
+  }
   if (!options || !options.showModal) {
     const status = await keyringCheckStatus();
     if (status.connected) {
@@ -88,6 +94,15 @@ export const connect = (network: StarknetChainId, address: string) => {
   starknetWindow.provider = provider3x;
   account3x.address = address;
   starknetWindow.account = account3x;
+};
+
+export const partialConnect = (network: StarknetChainId) => {
+  starknetWindow.isConnected = true;
+  starknetWindow.selectedAddress = "0x0";
+  starknetWindow.chainId = network;
+  starknetWindow.provider = provider3x;
+  account0.address = "0x0";
+  starknetWindow.account = account0;
 };
 
 export const disconnect = () => {

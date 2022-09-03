@@ -1,6 +1,7 @@
 import { getLocalStorage, removeLocalStorage } from "lib/storage";
 import { StarknetChainId } from "starknet/constants";
-import { notify, callbacks } from ".";
+import { notify } from "./shared/message";
+import { callbacks } from ".";
 
 import { newLog, setDebug } from "./shared/log";
 const log = newLog("KEYRING");

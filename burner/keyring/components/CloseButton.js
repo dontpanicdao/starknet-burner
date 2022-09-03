@@ -1,5 +1,5 @@
 import styles from "styles/CloseButton.module.css";
-import { notify } from "../lib/handlers";
+import { notify } from "../lib/shared/message";
 
 const CloseButton = () => {
   const close = () => {

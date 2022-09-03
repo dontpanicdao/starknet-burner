@@ -13,7 +13,7 @@ import {
 } from "lib/storage";
 import { generateKey } from "lib/sessionkey";
 import Loader from "components/Loader";
-import { eventHandler, injectSets } from "lib/handlers";
+import { eventHandler, injectSets } from "lib/index";
 import { newLog } from "../lib/shared/log";
 
 const log = newLog();
@@ -58,7 +58,7 @@ export default function Home() {
   useEffect(() => {
     if (!sessionToken && displayed) {
       const interval = setInterval(async () => {
-        await getDroneData().catch(log.log);
+        await getDroneData().catch(log.debug);
       }, 4000);
       return () => clearInterval(interval);
     }
