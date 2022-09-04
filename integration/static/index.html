@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/@starknet/burner"
+    ></script>
+  </head>
+  <body>
+    <div id="starknetburner"></div>
+    <h2>using the @starknet/burner...</h2>
+    <p>it should be installed already assuming you have open this file in your broweser; open the console and run:</p>
+    <pre>
+const burner = window['starknet-burner'];
+burner;
+</pre>
+    <script type="text/javascript">
+      const { register } = starknetburner;
+      register();
+    </script>
+  </body>
+</html>
