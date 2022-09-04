@@ -22,10 +22,13 @@ It implements:
 - the ability to test all the components locally
 - jest tests on extension and keyring
 - playwright tests on extension and keyring
-- an example of the burner with static, package and get-starknet
+- an example with a static file and the CDN/unpkg package
+- an example with the @starknet/burner package from npmjs.com
+- an example with @starknet/burner and get-starknet
+- an example with @starknet/burner and @starknet-react/core
 
 It fixes:
-- event leaking between waitForMessages()
+- event leaks between waitForMessages()
 - promises that were never fullfilled
 
 ## Content (sofar...)
