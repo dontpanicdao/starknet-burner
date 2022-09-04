@@ -1,3 +1,6 @@
+import { uuid } from "./shared/config";
+import { newLog } from "./shared/log";
+
 export type AccountsChangeEventHandler = (accounts: string[]) => void;
 
 export type NetworkChangeEventHandler = (network?: string) => void;
@@ -63,5 +66,25 @@ export const off = (event: string, handler: WalletEventHandlers) => {
     if (key !== -1) {
       delete events.accountsChange[key];
     }
+  }
+};
+
+const log = newLog();
+
+export const eventHandler = async (event: MessageEvent) => {
+  if (event?.data?.uuid !== uuid || event?.data?.key) {
+    return;
+  }
+  const { type, data } = event.data;
+  log.debug(type, data);
+  switch (type) {
+    case "keyring_NetworkChanged":
+      executeNetworkHandler(data);
+      break;
+    case "keyring_AccountsChanged":
+      executeAccountsHandler(data);
+      break;
+    default:
+      break;
   }
 };

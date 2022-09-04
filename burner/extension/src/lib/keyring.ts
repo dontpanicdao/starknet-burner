@@ -1,16 +1,16 @@
-import { uuid } from "./shared/config";
 import {
   sendMessage,
   waitForMessage,
   MessageType,
   getKey,
 } from "./shared/message";
-import { log, setDebug } from "./shared/log";
+
+import { setDebug, module, level } from "./shared/log";
 import { displayModal, hideModal } from "../components/modal";
 import { displayIFrame, hideIFrame } from "../components/iframe";
 import { StarknetChainId } from "starknet3x/constants";
-import { connectWindow, disconnectWindow } from "./window";
-import { executeNetworkHandler, executeAccountsHandler } from "./events";
+import { connect, disconnect } from "./window";
+import { infiniteTimeoutMilliseconds } from "./shared/config";
 
 export type StatusResponse = {
   connected: boolean;
@@ -18,14 +18,11 @@ export type StatusResponse = {
   addresses?: string[];
 };
 
-// KeyringMessage are the management messages to interact with the key ring.
-export type KeyringMessage =
+// KeyringAction defines the actions data and types used to to interact with
+// Key Ring.
+export type KeyringAction =
   | {
       type: "keyring_Ping";
-      data: string;
-    }
-  | {
-      type: "keyring_Pong";
       data: string;
     }
   | {
@@ -37,7 +34,35 @@ export type KeyringMessage =
       data?: string;
     }
   | {
+      type: "keyring_SetDebug";
+      data?: Record<module, level>;
+    }
+  | {
+      type: "keyring_ClearDebug";
+    }
+  | {
+      type: "keyring_ResetSessionKey";
+    }
+  | {
+      type: "keyring_CheckStatus";
+    };
+
+// KeyringResponse are keyring Events and Response sent back by Key Ring.
+export type KeyringResponse =
+  | {
+      type: "keyring_Pong";
+      data: string;
+    }
+  | {
+      type: "keyring_OpenModalResponse";
+      data?: string;
+    }
+  | {
       type: "keyring_CloseModalRequested";
+      data?: string;
+    }
+  | {
+      type: "keyring_CloseModalResponse";
       data?: string;
     }
   | {
@@ -50,219 +75,92 @@ export type KeyringMessage =
     }
   | {
       type: "keyring_Debug";
-      data: boolean;
-    }
-  | {
-      type: "keyring_SetDebug";
-    }
-  | {
-      type: "keyring_ClearDebug";
-    }
-  | {
-      type: "keyring_ResetSessionKey";
-    }
-  | {
-      type: "keyring_Disconnect";
-    }
-  | {
-      type: "keyring_CheckStatus";
+      data: Record<module, level>;
     }
   | {
       type: "keyring_CheckStatusResponse";
       data: StatusResponse | undefined;
     };
 
-export type RpcMessage =
-  | {
-      type: "keyring_Ping";
-      params: string;
-      result: string;
-    }
-  | {
-      type: "keyring_SetDebug";
-      result: boolean;
-    }
-  | {
-      type: "keyring_ClearDebug";
-      result: boolean;
-    }
-  | {
-      type: "keyring_OpenModal";
-      result: boolean;
-    }
-  | {
-      type: "keyring_CloseModal";
-      result: boolean;
-    }
-  | {
-      type: "keyring_CheckStatus";
-      result:
-        | { connected: boolean; network: string; addresses: string[] }
-        | undefined;
-    }
-  | {
-      type: string;
-      params: unknown;
-      result: never;
-    };
-
-export const request = async <T extends RpcMessage>(
-  call: Omit<T, "result">
-): Promise<T["result"]> => {
-  const type = call["type"];
-  switch (type) {
-    case "keyring_Ping": {
-      const key = getKey();
-      sendMessage({ type, data: "ping" } as MessageType, key);
-      const msg = await waitForMessage("keyring_Ping", key);
-      return msg;
-    }
-    case "keyring_SetDebug": {
-      const key = getKey();
-      setDebug(true);
-      sendMessage({ type } as MessageType, key);
-      const msg = await waitForMessage("keyring_Debug", key);
-      return msg;
-    }
-    case "keyring_ClearDebug": {
-      const key = getKey();
-      setDebug(false);
-      sendMessage({ type } as MessageType, key);
-      const msg = await waitForMessage("keyring_Debug", key);
-      return msg;
-    }
-    case "keyring_Disconnect": {
-      disconnectWindow();
-      return Promise.resolve(true);
-    }
-    case "keyring_OpenModal": {
-      displayModal();
-      displayIFrame();
-      const key = getKey();
-      sendMessage({ type } as MessageType, key);
-      await waitForMessage("keyring_OpenModal", key);
-      return Promise.resolve(true);
-    }
-    case "keyring_CloseModal": {
-      hideIFrame();
-      hideModal();
-      const key = getKey();
-      sendMessage({ type, data: "request" } as MessageType, key);
-      await waitForMessage("keyring_CloseModal", key);
-      await request({ type: "keyring_CheckStatus" });
-      return Promise.resolve(true);
-    }
-    case "keyring_CheckStatus": {
-      const key = getKey();
-      sendMessage({ type } as MessageType, key);
-      const status: StatusResponse | undefined = await waitForMessage(
-        "keyring_CheckStatusResponse",
-        key
-      );
-      if (!status || !status.connected) {
-        disconnectWindow();
-        return Promise.resolve(undefined);
-      }
-      const { connected, network, addresses } = status;
-      if (
-        !connected ||
-        !addresses?.length ||
-        addresses?.length === 0 ||
-        !network
-      ) {
-        disconnectWindow();
-        return Promise.resolve(undefined);
-      }
-      connectWindow(network, addresses[0]);
-      return { connected, network, addresses };
-    }
-    case "keyring_ResetSessionKey": {
-      const key = getKey();
-      sendMessage({ type } as MessageType, key);
-      const status: StatusResponse | undefined = await waitForMessage(
-        "keyring_CheckStatusResponse",
-        key
-      );
-      if (!status || !status?.connected) {
-        disconnectWindow();
-        return Promise.resolve(undefined);
-      }
-      const { connected, network, addresses } = status;
-      if (
-        !connected ||
-        !addresses?.length ||
-        addresses?.length === 0 ||
-        !network
-      ) {
-        return Promise.resolve(undefined);
-      }
-      return { connected, network, addresses };
-    }
-    default:
-      return Promise.resolve(false);
-  }
+export const keyringPing = async (
+  data?: string
+): Promise<string | undefined> => {
+  const key = getKey();
+  sendMessage(
+    { type: "keyring_Ping", data: data || "ping" } as MessageType,
+    key
+  );
+  const msg = await waitForMessage("keyring_Pong", key);
+  return msg;
 };
 
-export const enable = async (options?: {
-  showModal?: boolean;
-}): Promise<string[]> => {
-  if (options?.showModal) {
-    request({ type: "keyring_OpenModal" });
-    return Promise.resolve([]);
-  }
+export const keyringSetDebug = async (): Promise<boolean> => {
   const key = getKey();
-  sendMessage({ type: "keyring_CheckStatus" }, key);
-  const status: StatusResponse | undefined = await waitForMessage(
+  setDebug(true);
+  sendMessage({ type: "keyring_SetDebug" } as MessageType, key);
+  const isDebug = await waitForMessage("keyring_Debug", key);
+  return isDebug;
+};
+
+export const keyringClearDebug = async (): Promise<boolean> => {
+  const key = getKey();
+  setDebug(false);
+  sendMessage({ type: "keyring_ClearDebug" } as MessageType, key);
+  const isDebug = await waitForMessage("keyring_Debug", key);
+  return !isDebug;
+};
+
+export const keyringOpenModal = async (): Promise<void> => {
+  const key = getKey();
+  displayModal();
+  displayIFrame();
+  sendMessage({ type: "keyring_OpenModal" } as MessageType, key);
+  return await waitForMessage("keyring_OpenModalResponse", key);
+};
+
+export const keyringCloseModal = async (): Promise<void> => {
+  const key = getKey();
+  hideModal();
+  hideIFrame();
+  sendMessage({ type: "keyring_CloseModal" } as MessageType, key);
+  return await waitForMessage("keyring_CloseModalResponse", key);
+};
+
+export const keyringCheckStatus = async (): Promise<StatusResponse> => {
+  const key = getKey();
+  sendMessage({ type: "keyring_CheckStatus" } as MessageType, key);
+  const status: StatusResponse = await waitForMessage(
     "keyring_CheckStatusResponse",
     key
   );
-  if (!status || !status.connected) {
-    disconnectWindow();
-    request({ type: "keyring_OpenModal" });
-    // TODO: We should wait for the person to close the window
-    // And return the promise only when the account is set
-    return Promise.resolve([]);
+  if (!status.connected) {
+    disconnect();
+    return status;
   }
-  const { connected, network, addresses } = status;
-  if (!connected || !addresses?.length || addresses?.length === 0 || !network) {
-    disconnectWindow();
-    request({ type: "keyring_OpenModal" });
-    return Promise.resolve([]);
-  }
-  connectWindow(network, addresses[0]);
-  return Promise.resolve([]);
+  connect(status.network, status.addresses[0]);
+  return status;
 };
 
-export const extensionEventHandler = async (event: MessageEvent) => {
-  if (event?.data?.uuid !== uuid) {
-    return;
+export const keyringResetSessionKey = async (): Promise<StatusResponse> => {
+  const key = getKey();
+  sendMessage({ type: "keyring_ResetSessionKey" } as MessageType, key);
+  const status: StatusResponse = await waitForMessage(
+    "keyring_CheckStatusResponse",
+    key
+  );
+  if (!status.connected) {
+    disconnect();
+    return status;
   }
-  const { type, data } = event.data;
-  log("in:extension", type, data);
-  switch (type) {
-    case "keyring_Pong":
-      break;
-    case "keyring_OpenModal":
-      break;
-    case "keyring_CloseModal":
-      hideModal();
-      hideIFrame();
-      break;
-    case "keyring_NetworkChanged":
-      executeNetworkHandler(data);
-      break;
-    case "keyring_AccountsChanged":
-      executeAccountsHandler(data);
-      break;
-    case "keyring_CloseModalRequested":
-      await request({ type: "keyring_CloseModal" });
-      break;
-    case "keyring_Debug":
-      break;
-    case "keyring_CheckStatusResponse":
-      break;
-    default:
-      log("in:extension", "unknown", type);
-      break;
-  }
+  connect(status.network, status.addresses[0]);
+  return status;
+};
+
+export const keyringWaitForCloseModal = async (): Promise<void> => {
+  await waitForMessage(
+    "keyring_CloseModalRequested",
+    "close",
+    infiniteTimeoutMilliseconds
+  );
+  return;
 };

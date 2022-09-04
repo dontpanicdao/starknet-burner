@@ -1,23 +1,17 @@
-import { accountEventHandler } from "./account";
+import { accountEventHandler } from "./3.x/account";
 import { keyringEventHandler } from "./keyring";
-import { providerEventHandler } from "./provider";
-import { log } from "./keyring";
+import { providerEventHandler } from "./3.x/provider";
+import { newLog } from "./shared/log";
+import { uuid } from "./shared/config";
 
-const uuid = "589c80c1eb85413d";
-
-export const notify = (msg) => {
-  if (!msg || typeof msg !== "object") {
-    throw "unsupported message";
-  }
-  return window?.parent?.postMessage({ ...msg, uuid }, "*");
-};
+const log = newLog();
 
 export const callbacks = {
   setDisplayed: () => {
-    log("setDisplayed is not already set");
+    log.debug("setDisplayed is not already set");
   },
   resetSessionKey: () => {
-    log("resetSessionKey is not already set");
+    log.debug("resetSessionKey is not already set");
   },
 };
 
@@ -29,13 +23,13 @@ export const eventHandler = async (event) => {
   if (typeof type !== "string") {
     return;
   }
-  log("in:keyring", type, key, data);
+  log.debug(type, key, data);
   switch (type.split("_")[0]) {
-    case "account":
+    case "account3x":
       return await accountEventHandler(type, data, key);
     case "keyring":
       return await keyringEventHandler(type, data, key);
-    case "provider":
+    case "provider3x":
       return await providerEventHandler(type, data, key);
     default:
       break;

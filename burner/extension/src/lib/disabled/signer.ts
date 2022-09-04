@@ -8,7 +8,6 @@ import type {
   InvocationsSignerDetails,
 } from "starknet3x";
 import { BigNumberish } from "starknet3x/utils/number";
-import { sendMessage, waitForMessage, getKey } from "../shared/message";
 
 type GetPubKeyType =
   | {
@@ -21,14 +20,7 @@ type GetPubKeyType =
     };
 
 export const getPubKey = async (): Promise<string> => {
-  const key = getKey();
-  sendMessage(
-    {
-      type: "signer3x_GetPubKey",
-    },
-    key
-  );
-  return await waitForMessage("signer3x_GetPubKeyResponse", key);
+  return Promise.resolve("0x0");
 };
 
 export type SignMessageRequest = {
@@ -51,18 +43,8 @@ export const signMessage = async (
   typedData: TypedData,
   accountAddress: string
 ): Promise<Signature> => {
-  const key = getKey();
-  sendMessage(
-    {
-      type: "signer3x_SignTransaction",
-      data: {
-        typedData,
-        accountAddress,
-      },
-    },
-    key
-  );
-  return await waitForMessage("signer3x_SignTransactionResponse", key);
+  const signature: Signature = ["0x1", "0x2"];
+  return Promise.resolve(signature);
 };
 
 export type SignTransactionRequest = {
@@ -86,19 +68,8 @@ export const signTransaction = async (
   transactionsDetail: InvocationsSignerDetails,
   abis?: Abi[]
 ): Promise<Signature> => {
-  const key = getKey();
-  sendMessage(
-    {
-      type: "signer3x_SignTransaction",
-      data: {
-        transactions,
-        transactionsDetail,
-        abis,
-      },
-    },
-    key
-  );
-  return await waitForMessage("signer3x_SignTransactionResponse", key);
+  const signature: Signature = ["0x1", "0x2"];
+  return Promise.resolve(signature);
 };
 
 export type SignerMessage =

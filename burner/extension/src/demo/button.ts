@@ -6,7 +6,7 @@ export const injectButton = (): any => {
     throw new Error("Error on button display");
   }
   const handleButtonClick = async () => {
-    await starknetWindow.request({ type: "keyring_OpenModal" });
+    await starknetWindow.enable();
   };
   button.addEventListener("click", handleButtonClick);
 };

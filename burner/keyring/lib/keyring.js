@@ -1,14 +1,10 @@
-import { getLocalStorage, removeLocalStorage } from "lib/handleLocalStorage";
+import { getLocalStorage, removeLocalStorage } from "lib/storage";
 import { StarknetChainId } from "starknet/constants";
-import { notify, callbacks } from ".";
+import { notify } from "./shared/message";
+import { callbacks } from ".";
 
-let debug = false;
-
-export const log = (...args) => {
-  if (debug) {
-    console.log(...args.filter((val) => val !== undefined));
-  }
-};
+import { newLog, setDebug } from "./shared/log";
+const log = newLog("KEYRING");
 
 export const keyringEventHandler = async (type, data, key) => {
   switch (type) {
@@ -17,19 +13,20 @@ export const keyringEventHandler = async (type, data, key) => {
       break;
     case "keyring_OpenModal":
       callbacks.setDisplayed(true);
-      notify({ type: "keyring_OpenModal", data: "ack", key });
+      notify({ type: "keyring_OpenModalResponse", key });
       break;
     case "keyring_CloseModal":
       callbacks.setDisplayed(false);
-      notify({ type: "keyring_CloseModal", data: "ack", key });
+      notify({ type: "keyring_CloseModalResponse", key });
       break;
     case "keyring_SetDebug":
-      console.log("in:keyring", "debug", "enabling");
-      debug = true;
+      log.log("debug", "enabling");
+      setDebug(true);
       notify({ type: "keyring_Debug", data: true, key });
       break;
     case "keyring_ClearDebug":
-      debug = false;
+      log.debug("debug", "disabling");
+      setDebug(false);
       notify({ type: "keyring_Debug", data: false, key });
       break;
     case "keyring_CheckStatus":

@@ -5,17 +5,18 @@ import {
   UNINITIALIZED,
   INITIALIZED,
   CONNECTED,
-} from "lib/context";
+} from "lib/ui/context";
 import {
   getLocalStorage,
   saveLocalStorage,
   removeLocalStorage,
-} from "lib/handleLocalStorage";
-import { generateKey } from "lib/handleKey";
+} from "lib/storage";
+import { generateKey } from "lib/sessionkey";
 import Loader from "components/Loader";
-import { eventHandler, injectSets } from "lib/handlers";
-import { log } from "../lib/handlers/keyring";
+import { eventHandler, injectSets } from "lib/index";
+import { newLog } from "../lib/shared/log";
 
+const log = newLog();
 import Layout from "components/Layout";
 import AskForDrone from "components/AskForDrone";
 import Connected from "components/Connected";
@@ -57,7 +58,7 @@ export default function Home() {
   useEffect(() => {
     if (!sessionToken && displayed) {
       const interval = setInterval(async () => {
-        await getDroneData().catch(log);
+        await getDroneData().catch(log.debug);
       }, 4000);
       return () => clearInterval(interval);
     }

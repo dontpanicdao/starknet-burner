@@ -1,7 +1,8 @@
+import { BN } from "bn.js";
 import { AccountInterface as AccountInterfacev3x } from "starknet3x/account/interface";
 import { signer } from "./signer";
 import { StarknetChainId } from "starknet3x/constants";
-import { provider } from "./provider";
+import { provider } from "../3.x/provider";
 const {
   callContract,
   deployContract,
@@ -26,7 +27,6 @@ import type {
   AddTransactionResponse,
 } from "starknet3x";
 import { BigNumberish } from "starknet3x/utils/number";
-import { sendMessage, waitForMessage, getKey } from "../shared/message";
 import { TypedData } from "starknet3x/utils/typedData";
 
 export type EstimateFeeRequest = {
@@ -49,18 +49,12 @@ const estimateFee = async (
   calls: Call | Call[],
   estimateFeeDetails: EstimateFeeDetails
 ): Promise<EstimateFee> => {
-  const key = getKey();
-  sendMessage(
-    {
-      type: "account3x_EstimateFee",
-      data: {
-        calls,
-        estimateFeeDetails,
-      },
-    },
-    key
-  );
-  return await waitForMessage("account3x_EstimateFeeResponse", key);
+  const output: EstimateFee = {
+    amount: new BN(0),
+    unit: "",
+    suggestedMaxFee: new BN(0),
+  };
+  return Promise.resolve(output);
 };
 
 export type ExecuteRequest = {
@@ -85,19 +79,13 @@ export const execute = async (
   abis?: Abi[],
   transactionsDetail?: InvocationsDetails
 ): Promise<AddTransactionResponse> => {
-  const key = getKey();
-  sendMessage(
-    {
-      type: "account3x_Execute",
-      data: {
-        transactions,
-        abis,
-        transactionsDetail,
-      },
-    },
-    key
-  );
-  return await waitForMessage("account3x_ExecuteResponse", key);
+  const output: AddTransactionResponse = {
+    transaction_hash: "0x0",
+    code: "TRANSACTION_RECEIVED",
+    address: "0x0",
+    class_hash: "0x0",
+  };
+  return Promise.resolve(output);
 };
 
 export type SignMessageRequest = {
@@ -116,15 +104,7 @@ type SignMessageType =
     };
 
 export const signMessage = async (typedData: TypedData): Promise<Signature> => {
-  const key = getKey();
-  sendMessage(
-    {
-      type: "account3x_SignMessage",
-      data: typedData,
-    },
-    key
-  );
-  return await waitForMessage("account3x_SignMessageResponse", key);
+  return Promise.resolve(["0x1", "0x2"]);
 };
 
 export type HashMessageRequest = {
@@ -143,15 +123,7 @@ type HashMessageType =
     };
 
 export const hashMessage = async (typedData: TypedData): Promise<string> => {
-  const key = getKey();
-  sendMessage(
-    {
-      type: "account3x_HashMessage",
-      data: typedData,
-    },
-    key
-  );
-  return await waitForMessage("account3x_HashMessageResponse", key);
+  return Promise.resolve("0x0");
 };
 
 export type VerifyMessageRequest = {
@@ -174,18 +146,7 @@ export const verifyMessage = async (
   typedData: TypedData,
   signature: Signature
 ): Promise<boolean> => {
-  const key = getKey();
-  sendMessage(
-    {
-      type: "account3x_VerifyMessage",
-      data: {
-        typedData,
-        signature,
-      },
-    },
-    key
-  );
-  return await waitForMessage("account3x_VerifyMessageResponse", key);
+  return Promise.resolve(false);
 };
 
 export type VerifyMessageHashRequest = {
@@ -208,18 +169,7 @@ export const verifyMessageHash = async (
   hash: BigNumberish,
   signature: Signature
 ): Promise<boolean> => {
-  const key = getKey();
-  sendMessage(
-    {
-      type: "account3x_VerifyMessageHash",
-      data: {
-        hash,
-        signature,
-      },
-    },
-    key
-  );
-  return await waitForMessage("account3x_VerifyMessageHashResponse", key);
+  return Promise.resolve(false);
 };
 
 type GetNonceType =
@@ -233,14 +183,7 @@ type GetNonceType =
     };
 
 const getNonce = async (): Promise<string> => {
-  const key = getKey();
-  sendMessage(
-    {
-      type: "account3x_GetNonce",
-    },
-    key
-  );
-  return await waitForMessage("account3x_GetNonceResponse", key);
+  return Promise.resolve("0x0");
 };
 
 export type AccountMessage =

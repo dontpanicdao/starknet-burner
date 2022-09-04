@@ -1,4 +1,4 @@
-import { log } from "../lib/handlers/keyring";
+import { newLog } from "./shared/log";
 const sessionData = {};
 
 const getLocalStorage = (keyName) => {
@@ -9,11 +9,13 @@ const getLocalStorage = (keyName) => {
   }
 };
 
+const log = newLog();
+
 const saveLocalStorage = (keyName, value) => {
   try {
     return sessionStorage.setItem(keyName, value);
   } catch (e) {
-    log("sessionStorage unavailable, working with variable");
+    log.debug("sessionStorage unavailable, working with variable");
     sessionData[keyName] = value;
     return;
   }

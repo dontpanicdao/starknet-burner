@@ -1,5 +1,11 @@
-import { jest, describe, expect, it, beforeAll } from "@jest/globals";
-import { setDebug, newLog, module, level } from "./log";
+import {
+  setDebug,
+  newLog,
+  logModuleKEYRING,
+  logLevelINFO,
+  logLevelERROR,
+  logLevelDEBUG,
+} from "./log";
 
 beforeAll(() => {
   jest.spyOn(console, "debug").mockImplementation(jest.fn());
@@ -26,36 +32,32 @@ describe("test log and debug", () => {
   });
 
   it("check console.log is called/not called when debug a Record", () => {
-    const logLevel: Record<module, level> = {
-      PING: level.INFO,
-      KEYRING: level.DEBUG,
-      DEFAULT: level.INFO,
-      PROVIDER3X: level.INFO,
-      ACCOUNT3X: level.INFO,
+    const levels = {
+      PING: logLevelINFO,
+      KEYRING: logLevelDEBUG,
+      DEFAULT: logLevelINFO,
     };
-    setDebug(logLevel);
+    setDebug(levels);
     const spy = jest.spyOn(global.console, "debug");
     const logDefault = newLog();
     logDefault.debug("123");
     expect(spy).not.toHaveBeenCalled();
-    const logKeyring = newLog(module.KEYRING);
+    const logKeyring = newLog(logModuleKEYRING);
     logKeyring.debug("123");
     expect(spy).toHaveBeenCalled();
   });
 
   it("check console.log when logLevel is ERROR", () => {
-    const logLevel: Record<module, level> = {
-      PING: level.DEBUG,
-      KEYRING: level.DEBUG,
-      DEFAULT: level.ERROR,
-      PROVIDER3X: level.INFO,
-      ACCOUNT3X: level.INFO,
+    const levels = {
+      PING: logLevelDEBUG,
+      KEYRING: logLevelDEBUG,
+      DEFAULT: logLevelERROR,
     };
-    setDebug(logLevel);
+    setDebug(levels);
+    const spyDebug = jest.spyOn(global.console, "debug");
     const spyLog = jest.spyOn(global.console, "log");
     const spyWarn = jest.spyOn(global.console, "warn");
     const spyError = jest.spyOn(global.console, "error");
-    const spyDebug = jest.spyOn(global.console, "debug");
     const logDefault = newLog();
     logDefault.debug("123");
     expect(spyDebug).not.toHaveBeenCalled();

@@ -1,9 +1,9 @@
 import styles from "styles/CloseButton.module.css";
-import { notify } from "../lib/handlers";
+import { notify } from "../lib/shared/message";
 
 const CloseButton = () => {
   const close = () => {
-    notify({ type: "keyring_CloseModalRequested" });
+    notify({ type: "keyring_CloseModalRequested", key: "close" });
   };
 
   return (
