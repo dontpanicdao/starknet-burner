@@ -22,7 +22,7 @@ It implements:
 - the ability to test all the components locally
 - jest tests on extension and keyring
 - playwright tests on extension and keyring
-- an example of the burner with get-starknet
+- an example of the burner with static, package and get-starknet
 
 It fixes:
 - event leaking between waitForMessages()

@@ -1,5 +1,3 @@
-import { getStarknet, disconnect } from "get-starknet";
-
 let wallet;
 
 export const attachConnect = (id) => {
@@ -11,9 +9,8 @@ export const attachConnect = (id) => {
     "click",
     async (event) => {
       event.preventDefault();
-      console.log(`connecting to wallets`);
-      wallet = await getStarknet();
-      console.log(wallet);
+      console.log(`connecting to starknet-burner`);
+      wallet = window["starknet-burner"];
       await wallet.enable({ showModal: true });
     },
     false
@@ -30,13 +27,9 @@ export const attachDisconnect = (id) => {
     async (event) => {
       event.preventDefault();
       console.log(`disconnecting from wallet`);
-      try {
-        const result = await disconnect({
-          clearLastWallet: true,
-          clearDefaultWallet: true,
-        });
-      } catch (e) {
-        console.log(`wallet not connected`);
+      wallet = window["starknet-burner"];
+      if (wallet) {
+        await wallet.request({ type: "keyring_Disconnect" });
       }
       return;
     },

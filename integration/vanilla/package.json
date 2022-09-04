@@ -1,5 +1,5 @@
 {
-  "name": "get-starknet",
+  "name": "vanilla",
   "private": true,
   "version": "1.0.0",
   "scripts": {
@@ -9,8 +9,6 @@
   },
   "devDependencies": {
     "@starknet/burner": "^0.3.11",
-    "get-starknet": "^1.5.0",
-    "starknet": "^3.18.2",
     "vite": "^3.0.9"
   }
 }
