@@ -70,8 +70,8 @@ export const enable = async (options?: {
 };
 
 export const starknetWindow: IStarknetWindowObject = {
-  name: "burner",
-  icon: "https://starknet-burner.vercel.app/starknetburner-nobg.64.png",
+  name: "Starknet Burner",
+  icon: "https://starknet-burner.vercel.app/starknetburner.64.png",
   id: "burner",
   version,
   isConnected: false,

@@ -11,6 +11,7 @@
 /dist/**/*.test.d.ts
 /dist/**/*.test.js
 /dist/**/*.test.js.map
+/dist/**/__mocks__/**
 /vite.config.ts
 /jest.config.ts
 /reference.md

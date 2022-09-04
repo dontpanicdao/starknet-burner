@@ -1,0 +1,16 @@
+{
+  "name": "get-starknet",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@starknet/burner": "^0.3.10",
+    "get-starknet": "^1.5.0",
+    "starknet": "^3.18.2",
+    "vite": "^3.0.9"
+  }
+}

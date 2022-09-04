@@ -12,13 +12,17 @@ the integration experience. It cleans up the code to prepare for the next stages
 
 It implements:
 - support for typescript in the npm package
-- support for commonjs in the npm package and 
+- support for commonjs and es6 in the npm package
 - availability of @starknet/burner on a CDN via unpkg.com
 - move the account/provider back to starknet-js 3.x to support starknet-react
 - addition of the logo in .png and .svg
+- chaneg for friendly id and name
 - restructuration of the code to support multiple version of starknet-js
 - removal of the nextjs api to support static deployment in addition to Vercel
 - the ability to test all the components locally
+- jest tests on extension and keyring
+- playwright tests on extension and keyring
+- an example of the burner with get-starknet
 
 It fixes:
 - event leaking between waitForMessages()
