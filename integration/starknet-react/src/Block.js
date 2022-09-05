@@ -5,6 +5,7 @@ const Block = () => {
 
   return (
     <div>
+      <h2>useStarknetBlock</h2>
       <br />
       {loading || error ? "loading..." : data?.block_hash}
     </div>
