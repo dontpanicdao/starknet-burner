@@ -1,19 +1,6 @@
-<script context="module" lang="ts">
-	/** @type {import('./__types/[slug]').Load} */
-	export async function load({ url }) {
-		console.log('load...');
-		let qrcode = url.searchParams.get('qr');
-
-		return {
-			status: 200,
-			props: {
-				qr: qrcode
-			}
-		};
-	}
-</script>
-
 <script lang="ts">
+	throw new Error("@migration task: Add data prop (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292707)");
+
 	import QR from '$lib/QR.svelte';
 	import { connect } from '$lib/ts/utils';
 
