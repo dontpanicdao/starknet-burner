@@ -1,7 +1,10 @@
 <script lang="ts">
-	throw new Error("@migration task: Add data prop (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292707)");
+	import type { PageData } from './$types';
 
-	export let sessionkey = '';
+	/** @type {import('./$types').PageData */
+	export let data: PageData;
+	let { sessionkey } = data;
+	$: ({ sessionkey } = data);
 	import { goto } from '$app/navigation';
 	import Upgrade from '$lib/Upgrade.svelte';
 	import AddPlugin from '$lib/AddPlugin.svelte';

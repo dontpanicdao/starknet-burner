@@ -1,5 +1,10 @@
 <script lang="ts">
-	throw new Error("@migration task: Add data prop (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292707)");
+	import type { PageData } from './$types';
+
+	/** @type {import('./$types').PageData */
+	export let data: PageData;
+	let { sessionkey } = data;
+	$: ({ sessionkey } = data);
 
 	import { Buffer } from 'buffer';
 	import { toBN } from 'starknet/utils/number';
@@ -15,7 +20,6 @@
 
 	const apiURL = import.meta.env.VITE_API_BASEURL || '';
 	const baseURL = import.meta.env.VITE_BURNER_BASEURL || 'http://localhost:3000';
-	export let sessionkey = '';
 	let account = '';
 	let token1 = '';
 	let token2 = '';

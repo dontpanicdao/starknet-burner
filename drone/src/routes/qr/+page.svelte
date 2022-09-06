@@ -1,10 +1,13 @@
 <script lang="ts">
-	throw new Error("@migration task: Add data prop (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292707)");
+	import type { PageData } from './$types';
+
+	/** @type {import('./$types').PageData */
+	export let data: PageData;
+	let { qr } = data;
+	$: ({ qr } = data);
 
 	import QR from '$lib/QR.svelte';
 	import { connect } from '$lib/ts/utils';
-
-	export let qr = '';
 
 	const load = async () => {
 		let wallet = await connect();
