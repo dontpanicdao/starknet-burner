@@ -31,16 +31,18 @@ func TestIntegrationUploadJSONMessage(t *testing.T) {
 	if os.Getenv("INTEGRATION") != "true" {
 		t.Skip("Run only in integration...")
 	}
-	contract := "0xdeadbeef"
 	token := SessionKey{
 		SessionPublicKey: "0xdeadbeef",
-		Account:          "0xdeadbeef",
-		Contract:         &contract,
+		Policies:         []Policy{{ContractAddress: "0xdeadbeef", Selector: "0xdeadbeef"}},
+		Root:             "0xdeadbeef",
 		Expires:          1659210039,
-		Token:            []string{"0x01", "0x02"},
+		Signature:        []string{"0x01", "0x02"},
 	}
 	ctx := context.Background()
 	store, err := NewStore(ctx)
+	if err != nil {
+		t.Fatal("client should be connect, instead:", err)
+	}
 	key := &pathKeys{
 		store: store,
 		keys: map[string]string{
@@ -72,6 +74,9 @@ func TestIntegrationDownloadJSONMessage(t *testing.T) {
 	}
 	ctx := context.Background()
 	store, err := NewStore(ctx)
+	if err != nil {
+		t.Fatal("client should be connect, instead:", err)
+	}
 	key := &pathKeys{
 		store: store,
 		keys: map[string]string{
@@ -102,6 +107,9 @@ func TestIntegrationSimpleJSONMessage(t *testing.T) {
 	}
 	ctx := context.Background()
 	store, err := NewStore(ctx)
+	if err != nil {
+		t.Fatal("client should be connect, instead:", err)
+	}
 	input := &dynamodb.GetItemInput{
 		TableName: aws.String(os.Getenv("table")),
 		Key: map[string]types.AttributeValue{
@@ -116,6 +124,9 @@ func TestIntegrationSimpleJSONMessage(t *testing.T) {
 	}
 	item := SessionKey{}
 	err = attributevalue.UnmarshalMap(output.Item, &item)
+	if err != nil {
+		t.Fatal("client should be connect, instead:", err)
+	}
 	if item.SessionPublicKey != "0xdeadbeef" {
 		t.Fatal("expecting 0xdeadbeef, instead:", item.SessionPublicKey)
 	}

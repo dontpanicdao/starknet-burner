@@ -1,5 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import type { RequestSession } from '@argent/x-sessions';
+	import { createSession } from '@argent/x-sessions';
 
 	/** @type {import('./$types').PageData */
 	export let data: PageData;
@@ -9,7 +11,6 @@
 	import { Buffer } from 'buffer';
 	import { toBN } from 'starknet/utils/number';
 	import QR from '$lib/QR.svelte';
-	import { connect } from '$lib/ts/utils';
 	interface sessionToken {
 		sessionPublicKey: string;
 		account: string;
@@ -93,6 +94,24 @@
 			contract: '0xdeadbeef'
 		});
 	};
+
+	const argentSign = async () => {
+		if (!window) {
+			return;
+		}
+		const requestSession: RequestSession = {
+			key: '0x0',
+			expires: Math.floor((Date.now() + 1000 * 60 * 60 * 24) / 1000), // 1 day in seconds
+			policies: [
+				{
+					contractAddress: '0x0',
+					selector: 'doAction'
+				}
+			]
+		};
+		const signedSession = await createSession(requestSession, window['starknet-argentX'].account);
+		console.log();
+	};
 </script>
 
 <content>
@@ -168,6 +187,7 @@
 					}}>Clear</button
 				>
 				<button on:click={sign}>Sign</button>
+				<button on:click={argentSign}>Sign with Argent-X</button>
 			</div>
 		{/if}
 	</div>

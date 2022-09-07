@@ -26,12 +26,17 @@ type Request struct {
 	TTL              int64  `dynamodbav:"TTL" json:"-"`
 }
 
+type Policy struct {
+	ContractAddress string `dynamodbav:"contractAddress" json:"contractAddress"`
+	Selector        string `dynamodbav:"selector" json:"selector"`
+}
+
 type SessionKey struct {
-	SessionPublicKey string   `dynamodbav:"sessionPublicKey" json:"sessionPublicKey"`
-	Account          string   `dynamodbav:"account" json:"account"`
+	SessionPublicKey string   `dynamodbav:"sessionPublicKey" json:"key"`
+	Policies         []Policy `dynamodbav:"policies" json:"policies"`
 	Expires          int      `dynamodbav:"expires" json:"expires"`
-	Contract         *string  `dynamodbav:"contract,omitempty" json:"contract,omitempty"`
-	Token            []string `dynamodbav:"token" json:"token"`
+	Root             string   `dynamodbav:"root" json:"root"`
+	Signature        []string `dynamodbav:"signature" json:"signature"`
 	TTL              int64    `dynamodbav:"TTL" json:"-"`
 }
 
@@ -45,7 +50,7 @@ func (pk *pathKeys) uploadRequest(ctx context.Context, request events.APIGateway
 	if request.RequestContext.HTTP.Method != "POST" {
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusNotFound,
-			Body:       fmt.Sprintf(`{"message": "NotFound"}`),
+			Body:       `{"message": "NotFound"}`,
 			Headers:    map[string]string{"Content-Type": "application/json"},
 		}, nil
 	}
@@ -56,7 +61,7 @@ func (pk *pathKeys) uploadRequest(ctx context.Context, request events.APIGateway
 		if err != nil {
 			return events.APIGatewayV2HTTPResponse{
 				StatusCode: http.StatusBadRequest,
-				Body:       fmt.Sprintf(`{"message": "BadRequest"}`),
+				Body:       `{"message": "BadRequest"}`,
 				Headers:    map[string]string{"Content-Type": "application/json"},
 			}, nil
 		}
@@ -66,12 +71,12 @@ func (pk *pathKeys) uploadRequest(ctx context.Context, request events.APIGateway
 	if err != nil || sessionrequest.SessionPublicKey == "" {
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusBadRequest,
-			Body:       fmt.Sprintf(`{"message": "BadRequest"}`),
+			Body:       `{"message": "BadRequest"}`,
 			Headers:    map[string]string{"Content-Type": "application/json"},
 		}, nil
 	}
 	sessionrequest.TTL = time.Now().Add(time.Second * 120).Unix()
-	nBig, err := rand.Int(rand.Reader, big.NewInt(899999))
+	nBig, _ := rand.Int(rand.Reader, big.NewInt(899999))
 	sessionrequest.RequestID = nBig.Add(nBig, big.NewInt(100000)).Text(10)
 	item, err := attributevalue.MarshalMap(sessionrequest)
 	if err != nil {
@@ -106,7 +111,7 @@ func (pk *pathKeys) downloadRequest(ctx context.Context, request events.APIGatew
 	if request.RequestContext.HTTP.Method != "GET" {
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusNotFound,
-			Body:       fmt.Sprintf(`{"message": "NotFound"}`),
+			Body:       `{"message": "NotFound"}`,
 			Headers:    map[string]string{"Content-Type": "application/json"},
 		}, nil
 	}
@@ -131,8 +136,8 @@ func (pk *pathKeys) downloadRequest(ctx context.Context, request events.APIGatew
 	if output.Item == nil {
 		log.Println("could not find item with key", requestID)
 		return events.APIGatewayV2HTTPResponse{
-			StatusCode: http.StatusNotFound,
-			Body:       fmt.Sprintf(`{"message": "NotFound"}`),
+			StatusCode: http.StatusNoContent,
+			Body:       "",
 			Headers:    map[string]string{"Content-Type": "application/json"},
 		}, nil
 	}
@@ -148,14 +153,14 @@ func (pk *pathKeys) downloadRequest(ctx context.Context, request events.APIGatew
 	}
 	if item.SessionPublicKey == "" {
 		return events.APIGatewayV2HTTPResponse{
-			StatusCode: http.StatusNotFound,
-			Body:       fmt.Sprintf(`{"message": "NotFound"}`),
+			StatusCode: http.StatusNoContent,
+			Body:       "",
 			Headers:    map[string]string{"Content-Type": "application/json"},
 		}, nil
 	}
 	return events.APIGatewayV2HTTPResponse{
 		StatusCode: http.StatusOK,
-		Body:       fmt.Sprintf(`{"sessionPublicKey": "%s"}`, item.SessionPublicKey),
+		Body:       fmt.Sprintf(`{"key": "%s"}`, item.SessionPublicKey),
 		Headers:    map[string]string{"Content-Type": "application/json"},
 	}, nil
 }
@@ -165,7 +170,7 @@ func (pk *pathKeys) uploadSessionToken(ctx context.Context, request events.APIGa
 	if request.RequestContext.HTTP.Method != "PUT" {
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusNotFound,
-			Body:       fmt.Sprintf(`{"message": "NotFound"}`),
+			Body:       `{"message": "NotFound"}`,
 			Headers:    map[string]string{"Content-Type": "application/json"},
 		}, nil
 	}
@@ -176,7 +181,7 @@ func (pk *pathKeys) uploadSessionToken(ctx context.Context, request events.APIGa
 		if err != nil {
 			return events.APIGatewayV2HTTPResponse{
 				StatusCode: http.StatusBadRequest,
-				Body:       fmt.Sprintf(`{"message": "BadRequest"}`),
+				Body:       `{"message": "BadRequest"}`,
 				Headers:    map[string]string{"Content-Type": "application/json"},
 			}, nil
 		}
@@ -186,12 +191,11 @@ func (pk *pathKeys) uploadSessionToken(ctx context.Context, request events.APIGa
 	if err != nil || sessionKey.SessionPublicKey != pk.keys["sessionPublicKey"] {
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusBadRequest,
-			Body:       fmt.Sprintf(`{"message": "BadRequest"}`),
+			Body:       `{"message": "BadRequest"}`,
 			Headers:    map[string]string{"Content-Type": "application/json"},
 		}, nil
 	}
 	sessionKey.TTL = time.Now().Add(time.Second * 300).Unix()
-	data, _ = json.Marshal(sessionKey)
 	item, err := attributevalue.MarshalMap(sessionKey)
 	if err != nil {
 		return events.APIGatewayV2HTTPResponse{
@@ -214,7 +218,7 @@ func (pk *pathKeys) uploadSessionToken(ctx context.Context, request events.APIGa
 	}
 	return events.APIGatewayV2HTTPResponse{
 		StatusCode: http.StatusCreated,
-		Body:       fmt.Sprintf(`{"message": "Created", "sessionKey": "%s"}`, sessionKey.SessionPublicKey),
+		Body:       fmt.Sprintf(`{"message": "Created", "key": "%s"}`, sessionKey.SessionPublicKey),
 		Headers:    map[string]string{"Content-Type": "application/json"},
 	}, nil
 }
@@ -224,7 +228,7 @@ func (pk *pathKeys) downloadSessionToken(ctx context.Context, request events.API
 	if request.RequestContext.HTTP.Method != "GET" {
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusNotFound,
-			Body:       fmt.Sprintf(`{"message": "NotFound"}`),
+			Body:       `{"message": "NotFound"}`,
 			Headers:    map[string]string{"Content-Type": "application/json"},
 		}, nil
 	}
@@ -249,8 +253,8 @@ func (pk *pathKeys) downloadSessionToken(ctx context.Context, request events.API
 	if output.Item == nil {
 		log.Println("could not find item with key", sessionPublicKey)
 		return events.APIGatewayV2HTTPResponse{
-			StatusCode: http.StatusNotFound,
-			Body:       fmt.Sprintf(`{"message": "NotFound"}`),
+			StatusCode: http.StatusNoContent,
+			Body:       "",
 			Headers:    map[string]string{"Content-Type": "application/json"},
 		}, nil
 	}
@@ -266,8 +270,8 @@ func (pk *pathKeys) downloadSessionToken(ctx context.Context, request events.API
 	}
 	if item.SessionPublicKey == "" {
 		return events.APIGatewayV2HTTPResponse{
-			StatusCode: http.StatusNotFound,
-			Body:       fmt.Sprintf(`{"message": "NotFound"}`),
+			StatusCode: http.StatusNoContent,
+			Body:       "",
 			Headers:    map[string]string{"Content-Type": "application/json"},
 		}, nil
 	}
