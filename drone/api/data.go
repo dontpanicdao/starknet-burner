@@ -36,6 +36,7 @@ type SessionKey struct {
 	Policies         []Policy `dynamodbav:"policies" json:"policies"`
 	Expires          int      `dynamodbav:"expires" json:"expires"`
 	Root             string   `dynamodbav:"root" json:"root"`
+	Account          string   `dynamodbav:"account" json:"account"`
 	Signature        []string `dynamodbav:"signature" json:"signature"`
 	TTL              int64    `dynamodbav:"TTL" json:"-"`
 }
