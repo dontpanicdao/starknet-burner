@@ -48,6 +48,7 @@ export default function Home() {
       }
       const data = await res.json();
       saveLocalStorage("bwsessiontoken", JSON.stringify(data));
+      console.log("session key", data);
       setSessionToken(data);
     } catch (error) {
       setLoading(false);

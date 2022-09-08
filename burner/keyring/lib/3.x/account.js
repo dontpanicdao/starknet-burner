@@ -3,7 +3,7 @@ import { notify } from "../shared/message";
 import { toBN } from "starknet/utils/number";
 import { getLocalStorage } from "lib/storage";
 import { newLog } from "lib/shared/log";
-
+import { SessionAccount } from "@argent/x-sessions";
 // TODO: make the plugin configurable; it should include:
 // - the plugin hash
 // - addition parameters that might come between the exire and the token
@@ -87,10 +87,14 @@ const estimateFee = async (account, data, key) => {
   }
 };
 
-const execute = async (account, data, key) => {
+const execute = async (account, data, key, token) => {
   const { transactions, abis, transactionsDetail } = data;
   let executeResponse;
   try {
+    // TODO: Upgrade the token here!!!
+    // https://github.com/argentlabs/argent-x/blob/21a67353aae5f91c07d712a53299dbb75b311525/packages/sessions/src/account.ts#L34
+    let sessionAccount = new SessionAccount(signedSession);
+
     executeResponse = await account.execute(
       patchTransaction(transactions),
       abis,
@@ -178,7 +182,9 @@ export const accountEventHandler = async (type, data, key) => {
   log.debug(type, key, data);
   const sessionKey = getLocalStorage("bwsessionkey");
   const token = getLocalStorage("bwsessiontoken");
-  const address = JSON.parse(token)?.account;
+  const parsedToken = JSON.parse(token);
+  const address = parsedToken?.account;
+  delete (parsedToken, "account");
   const keypair = ec.getKeyPair(sessionKey);
   const signer = new Signer(keypair);
   const provider = new Provider({ sequencer: { network: "alpha-goerli" } });
@@ -187,7 +193,7 @@ export const accountEventHandler = async (type, data, key) => {
     case "account3x_EstimateFee":
       return await estimateFee(account, data, key);
     case "account3x_Execute":
-      return await execute(account, data, key);
+      return await execute(account, data, key, parsedToken);
     case "account3x_SignMessage":
       return await signMessage(account, data, key);
     case "account3x_HashMessage":
