@@ -50,7 +50,7 @@ const TransactionManager = () => {
 
   return (
     <>
-      <h2>useStarknetTransactionManager</h2>
+      <h2>useStarknetTransactionManager (manual)</h2>
       <input type="text" value={TX.transactionHash} onChange={handleTXChange} />
       <button onClick={monitor}>monitor</button>
       <button onClick={reset}>reset</button>
