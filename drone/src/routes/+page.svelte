@@ -1,32 +1,23 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import type { RequestSession } from '@argent/x-sessions';
-	import { createSession } from '@argent/x-sessions';
+	import {
+		createSession,
+		type SignedSession,
+		type RequestSession,
+		type PreparedSession
+	} from '@argent/x-sessions';
+	import { connect } from '$lib/ts/utils';
+	import { Policies } from '$lib/ts/dapps';
 
 	/** @type {import('./$types').PageData */
 	export let data: PageData;
 	let { sessionkey } = data;
 	$: ({ sessionkey } = data);
 
-	import { Buffer } from 'buffer';
-	import { toBN } from 'starknet/utils/number';
-	import QR from '$lib/QR.svelte';
-	interface sessionToken {
-		sessionPublicKey: string;
-		account: string;
-		expires: number;
-		token: string[];
-		contract: string;
-	}
-
 	const apiURL = import.meta.env.VITE_API_BASEURL || '';
-	const baseURL = import.meta.env.VITE_BURNER_BASEURL || 'http://localhost:3000';
-	let account = '';
-	let token1 = '';
-	let token2 = '';
-	let expires = Math.round(new Date().getTime() / 1000) + 60 * 60 * 24;
+
 	let errMessage = '';
-	const encode = (str: string): string => Buffer.from(str, 'binary').toString('base64');
+	let signedKey: (SignedSession & { account: string }) | undefined = undefined;
 
 	$: sessionkey, checkError();
 
@@ -38,11 +29,13 @@
 		errMessage = '';
 	};
 
-	const save = async (t: sessionToken) => {
+	const save = async (
+		t: SignedSession & RequestSession & PreparedSession & { account: string }
+	) => {
 		if (apiURL === '') {
-			return;
+			throw new Error(`apiURL is empty`);
 		}
-		const response = await fetch(`${apiURL}/${t.sessionPublicKey}`, {
+		const response = await fetch(`${apiURL}/${t.key}`, {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json'
@@ -55,101 +48,34 @@
 	};
 
 	const sign = async () => {
-		let wallet = await connect();
-		if (!wallet) {
-			return;
-		}
-		let msg: any = {
-			domain: {
-				name: 'burner.starknet',
-				version: '0.4',
-				chainId: 'SN_GOERLI'
-			},
-			types: {
-				StarkNetDomain: [
-					{ name: 'name', type: 'felt' },
-					{ name: 'version', type: 'felt' },
-					{ name: 'chainId', type: 'felt' }
-				],
-				Session: [
-					{ name: 'session_key', type: 'felt' },
-					{ name: 'expires', type: 'felt' }
-				]
-			},
-			primaryType: 'Session',
-			message: {
-				session_key: sessionkey,
-				expires: expires
-			}
-		};
-		account = wallet.address;
-		let signature = await wallet.signMessage(msg);
-		token1 = `0x${toBN(signature[0], 10).toString(16)}`;
-		token2 = `0x${toBN(signature[1], 10).toString(16)}`;
-		await save({
-			sessionPublicKey: sessionkey,
-			account: account,
-			expires: expires,
-			token: [token1, token2],
-			contract: '0xdeadbeef'
-		});
-	};
-
-	const argentSign = async () => {
 		if (!window) {
 			return;
 		}
+		let account = await connect();
+		if (!account) {
+			errMessage = 'cannot connect to wallet';
+			return;
+		}
 		const requestSession: RequestSession = {
-			key: '0x0',
+			key: sessionkey,
 			expires: Math.floor((Date.now() + 1000 * 60 * 60 * 24) / 1000), // 1 day in seconds
-			policies: [
-				{
-					contractAddress: '0x0',
-					selector: 'doAction'
-				}
-			]
+			policies: Policies.frenslands
 		};
-		const signedSession = await createSession(requestSession, window['starknet-argentX'].account);
-		console.log();
+		const signedSession = await createSession(requestSession, account);
+		await save({ ...signedSession, account: account.address });
+		signedKey = { ...signedSession, account: account.address };
 	};
 </script>
 
 <content>
 	<div class="selection">
-		{#if token1 && sessionkey}
-			<div>
-				<a
-					href={`${baseURL}?key=${encode(
-						JSON.stringify({
-							sessionkey,
-							account,
-							token1,
-							token2,
-							expires
-						})
-					)}`}
-				>
-					<QR
-						value={`${baseURL}?key=${encode(
-							JSON.stringify({
-								sessionkey,
-								account,
-								token1,
-								token2,
-								expires
-							})
-						)}`}
-					/>
-				</a>
-			</div>
+		{#if signedKey}
+			<h1>key signed, congrats!</h1>
 			<div class="buttons">
 				<button
 					on:click={() => {
-						sessionkey = '';
-						expires = Math.round(new Date().getTime() / 1000) + 60 * 60 * 24;
-						token1 = '';
-						token2 = '';
 						errMessage = '';
+						signedKey = undefined;
 					}}>Reset</button
 				>
 			</div>
@@ -162,32 +88,19 @@
 				placeholder="0x..."
 				bind:value={sessionkey}
 			/>
-			<label for="account">account (see argent-x)</label>
-			<input id="account" disabled type="text" class="key" placeholder="0" bind:value={account} />
-			<label for="expires">expires</label>
-			<input id="expires" disabled type="int" class="key" placeholder="0" bind:value={expires} />
-			<label for="token1">token (section #1)</label>
-			<input id="token1" disabled type="text" class="key" placeholder="0x..." bind:value={token1} />
-			<label for="token2">token (section #2)</label>
-			<input id="token2" disabled type="text" class="key" placeholder="0x..." bind:value={token2} />
+			<pre>{JSON.stringify(signedKey, null, ' ')}</pre>
 		{:else}
 			<h1>Drone</h1>
-			<p>see also <a href="/admin?s={sessionkey}">manage your account</a></p>
 			<label for="sessionkey">sessionkey</label>
 			<input id="sessionkey" type="text" class="key" placeholder="0x..." bind:value={sessionkey} />
 			<div class="message">{errMessage}</div>
 			<div class="buttons">
 				<button
 					on:click={() => {
-						sessionkey = '';
-						expires = Math.round(new Date().getTime() / 1000) + 60 * 60 * 24;
-						token1 = '';
-						token2 = '';
 						errMessage = '';
 					}}>Clear</button
 				>
 				<button on:click={sign}>Sign</button>
-				<button on:click={argentSign}>Sign with Argent-X</button>
 			</div>
 		{/if}
 	</div>
