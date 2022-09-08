@@ -102,6 +102,15 @@
 				>
 				<button on:click={sign}>Sign</button>
 			</div>
+			<h2 class="frenstitle">Frens...</h2>
+			<div class="frens">
+				<img
+					class="frenslands"
+					src="https://www.frenslands.xyz/resources/front/UI_GameTitle.png"
+					alt="frenslands"
+				/>
+				<button on:click={sign}>Sign</button>
+			</div>
 		{/if}
 	</div>
 </content>
@@ -127,7 +136,24 @@
 		width: 100px;
 	}
 	.buttons {
-		margin-top: 1em;
+		margin-top: 0.5em;
+	}
+
+	.frenstitle {
+		margin-top: 1.5em;
+		margin-bottom: 0em;
+	}
+
+	.frens {
+		display: flex;
+		margin-top: 0.5em;
+		justify-content: space-between;
+		align-items: center;
+		min-width: 250px;
+	}
+
+	.frenslands {
+		width: 64px;
 	}
 
 	.message {
