@@ -7,7 +7,9 @@ const Block = () => {
     <div>
       <h2>useStarknetBlock</h2>
       <br />
-      {loading || error ? "loading..." : data?.block_hash}
+      <pre>
+        {loading || error ? "loading..." : JSON.stringify(data, null, " ")}
+      </pre>
     </div>
   );
 };
