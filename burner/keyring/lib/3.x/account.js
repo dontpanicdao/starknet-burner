@@ -1,60 +1,10 @@
 import { Account, Signer, Provider, ec, transaction } from "starknet";
 import { notify } from "../shared/message";
-import { toBN } from "starknet/utils/number";
 import { getLocalStorage } from "lib/storage";
 import { newLog } from "lib/shared/log";
 import { SessionAccount } from "@argent/x-sessions";
-// TODO: make the plugin configurable; it should include:
-// - the plugin hash
-// - addition parameters that might come between the exire and the token
-//   and should be loaded from a URL.
-const pluginHash =
-  "0x377e145923e881f59d62269a46057d8dac67e27d68a12679b198d4224a0966b";
 
 const log = newLog();
-
-const patchTransaction = (calls) => {
-  if (!calls) {
-    throw new Error("no calls provided");
-  }
-  let contract = calls.contractAddress;
-  if (calls instanceof Array) {
-    contract = calls[0].contractAddress;
-  }
-  const storedSessionToken = getLocalStorage("bwsessiontoken");
-  if (!storedSessionToken) {
-    throw new Error("no session token found");
-  }
-  const sessionToken = JSON.parse(storedSessionToken);
-  if (!sessionToken) {
-    throw new Error("error parsing session token");
-  }
-  const { account, expires, sessionPublicKey, token } = sessionToken;
-  if (
-    !(token instanceof Array) ||
-    token.length !== 2 ||
-    !account ||
-    !expires ||
-    !sessionPublicKey
-  ) {
-    throw new Error("error parsing session token");
-  }
-  const pluginCall = {
-    contractAddress: contract,
-    entrypoint: "use_plugin",
-    calldata: [
-      toBN(pluginHash).toString(10),
-      toBN(sessionPublicKey).toString(10),
-      toBN(expires).toString(10),
-      toBN(token[0]).toString(10),
-      toBN(token[1]).toString(10),
-    ],
-  };
-  if (calls instanceof Array) {
-    return [pluginCall, ...calls];
-  }
-  return [pluginCall, calls];
-};
 
 const estimateFee = async (account, data, key) => {
   {
@@ -62,7 +12,7 @@ const estimateFee = async (account, data, key) => {
     let estimateFeeResponse;
     try {
       estimateFeeResponse = await account.estimateFee(
-        patchTransaction(calls),
+        calls,
         estimateFeeDetails
       );
     } catch (e) {
@@ -87,26 +37,26 @@ const estimateFee = async (account, data, key) => {
   }
 };
 
-const execute = async (account, data, key, token) => {
+const execute = async (account, data, key) => {
+  console.log("yes");
   const { transactions, abis, transactionsDetail } = data;
+  console.log("yes 1", transactions, abis, transactionsDetail);
   let executeResponse;
   try {
-    // TODO: Upgrade the token here!!!
-    // https://github.com/argentlabs/argent-x/blob/21a67353aae5f91c07d712a53299dbb75b311525/packages/sessions/src/account.ts#L34
-    let sessionAccount = new SessionAccount(signedSession);
-
     executeResponse = await account.execute(
-      patchTransaction(transactions),
+      transactions,
       abis,
       transactionsDetail
     );
   } catch (e) {
+    console.log("yes 2", e.toString());
     return notify({
       type: "account3x_ExecuteResponse",
       key,
       exception: e.toString(),
     });
   }
+  console.log("yes notify", executeResponse);
   return notify({
     type: "account3x_ExecuteResponse",
     data: executeResponse,
@@ -189,11 +139,17 @@ export const accountEventHandler = async (type, data, key) => {
   const signer = new Signer(keypair);
   const provider = new Provider({ sequencer: { network: "alpha-goerli" } });
   const account = new Account(provider, address, signer);
+  const sessionAccount = new SessionAccount(
+    provider,
+    address,
+    signer,
+    parsedToken
+  );
   switch (type) {
     case "account3x_EstimateFee":
-      return await estimateFee(account, data, key);
+      return await estimateFee(sessionAccount, data, key);
     case "account3x_Execute":
-      return await execute(account, data, key, parsedToken);
+      return await execute(sessionAccount, data, key, parsedToken);
     case "account3x_SignMessage":
       return await signMessage(account, data, key);
     case "account3x_HashMessage":
