@@ -80,11 +80,6 @@ by it!
 
 # Detailed Analysis
 
-[//]: <> ######################################################################
-[//]: <> ProviderInterface
-[//]: <> ######################################################################
-[//]: <> ######################################################################
-
 ## ProviderInterface
 
 The provide interface does not provide any integration with the account but it
@@ -200,12 +195,11 @@ public abstract getBlock(
    "transaction_hash": "0x538570a3068211d7087d2dfca5456a69977fcaeca05f93c237e23c700dcff4f",
    "max_fee": "0x807cd252b78",
    "type": "INVOKE_FUNCTION"
-  },
-  ...
+  }
  ],
  "starknet_version": "0.10.0"
-}```
-
+}
+```
 
 - v4 
 
@@ -432,13 +426,6 @@ public abstract waitForTransaction(
 ): Promise<void>;
 ```
 
-
-[//]: <> ######################################################################
-[//]: <> SignerInterface
-[//]: <> ######################################################################
-[//]: <> ######################################################################
-
-
 ## SignerInterface
 
 The signer interface provide the basic tools to sign and verify messages and
@@ -501,11 +488,6 @@ public abstract signTransaction(
   abis?: Abi[]
 ): Promise<Signature>;
 ```
-
-[//]: <> ######################################################################
-[//]: <> AccountInterface
-[//]: <> ######################################################################
-[//]: <> ######################################################################
 
 ## AccountInterface
 
@@ -721,11 +703,6 @@ public abstract override deployContract(
   abi?: Abi
 ): Promise<AddTransactionResponse>;
 ```
-
-[//]: <> ######################################################################
-[//]: <> StarknetWindowObject
-[//]: <> ######################################################################
-[//]: <> ######################################################################
 
 ### StarknetWindowObject (get-starknet)
 
