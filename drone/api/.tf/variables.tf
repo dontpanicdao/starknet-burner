@@ -16,7 +16,7 @@ variable "drone" {
 
 variable "drone_test" {
   type    = string
-  default = "http://localhost:5173"
+  default = "http://localhost:5174"
 }
 
 variable "keyring" {

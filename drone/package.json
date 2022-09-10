@@ -15,9 +15,9 @@
 	},
 	"devDependencies": {
 		"@argent/x-sessions": "^4.8.0",
-		"@playwright/test": "^1.24.2",
-		"@sveltejs/adapter-auto": "^1.0.0-next.61",
-		"@sveltejs/kit": "^1.0.0-next.377",
+		"@playwright/test": "^1.25.2",
+		"@sveltejs/adapter-auto": "^1.0.0-next.72",
+		"@sveltejs/kit": "^1.0.0-next.479",
 		"@types/qrcode": "^1.4.2",
 		"@typescript-eslint/eslint-plugin": "^5.31.0",
 		"@typescript-eslint/parser": "^5.31.0",
@@ -30,11 +30,11 @@
 		"prettier-plugin-svelte": "^2.7.0",
 		"qrcode": "^1.5.1",
 		"starknet": "^3.18.2",
-		"svelte": "^3.44.0",
+		"svelte": "^3.50.1",
 		"svelte-check": "^2.7.1",
 		"svelte-preprocess": "^4.10.6",
 		"tslib": "^2.3.1",
-		"typescript": "^4.7.4",
+		"typescript": "^4.8.3",
 		"vite": "^3.0.4"
 	},
 	"type": "module"

@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@starknet-react/core": "^0.13.4",
-    "@starknet/burner": "^0.3.11",
+    "@starknet/burner": "^0.3.12",
     "get-starknet": "^1.5.0",
     "starknet": "^3.18.2"
   }
