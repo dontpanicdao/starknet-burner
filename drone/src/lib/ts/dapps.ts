@@ -1,4 +1,4 @@
-export type websites = 'frenslands';
+export type websites = 'frenslands' | 'demo';
 export type chains = 'mainnet' | 'goerli';
 
 type Policy = {
@@ -40,6 +40,12 @@ export const Policies: Record<websites, Policy[]> = {
 			contractAddress: '0x044b7f706c198629198a4382aa21b71fa7aef5541452e894a1130bab6d3eef42',
 			selector: 'recharge_building'
 		},
+		{
+			contractAddress: '0x00b38e856e62416916645525541c05b85e74972f2d95769e4c89ae2e5f1614f9',
+			selector: 'setApprovalForAll'
+		}
+	],
+	demo: [
 		{
 			contractAddress: '0x00b38e856e62416916645525541c05b85e74972f2d95769e4c89ae2e5f1614f9',
 			selector: 'setApprovalForAll'

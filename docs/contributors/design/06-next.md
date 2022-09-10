@@ -123,7 +123,9 @@ For instance, you can find these resources:
 - [Cairo examples, including Ethereum secp256k1](https://github.com/starkware-libs/cairo-examples/tree/master/secp)
 - [A set of contracts that embed secp256r1 signature](https://github.com/cartridge-gg/contracts)
 - [Sign In With Starkware and Web3Auth](https://github.com/Web3Auth/sign-in-with-starkware)
-
+- [Integrate Web3Auth with the StarkNet Blockchain](https://web3auth.io/docs/connect-blockchain/starknet)
+- [StarkEx Playground for Web3Auth](https://github.com/Web3Auth/web3auth-starkex-playground)
+- 
 ### Even more resources
 
 Then there are a number of additional features that we could target. The list

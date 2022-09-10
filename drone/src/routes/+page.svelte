@@ -7,7 +7,7 @@
 		type PreparedSession
 	} from '@argent/x-sessions';
 	import { connect } from '$lib/ts/utils';
-	import { Policies } from '$lib/ts/dapps';
+	import { Policies, type websites } from '$lib/ts/dapps';
 
 	/** @type {import('./$types').PageData */
 	export let data: PageData;
@@ -47,23 +47,25 @@
 		}
 	};
 
-	const sign = async () => {
-		if (!window) {
-			return;
-		}
-		let account = await connect();
-		if (!account) {
-			errMessage = 'cannot connect to wallet';
-			return;
-		}
-		const requestSession: RequestSession = {
-			key: sessionkey,
-			expires: Math.floor((Date.now() + 1000 * 60 * 60 * 24) / 1000), // 1 day in seconds
-			policies: Policies.frenslands
+	const Signer = (app: websites) => {
+		return async () => {
+			if (!window) {
+				return;
+			}
+			let account = await connect();
+			if (!account) {
+				errMessage = 'cannot connect to wallet';
+				return;
+			}
+			const requestSession: RequestSession = {
+				key: sessionkey,
+				expires: Math.floor((Date.now() + 1000 * 60 * 60 * 24) / 1000), // 1 day in seconds
+				policies: Policies[app]
+			};
+			const signedSession = await createSession(requestSession, account);
+			await save({ ...signedSession, account: account.address });
+			signedKey = { ...signedSession, account: account.address };
 		};
-		const signedSession = await createSession(requestSession, account);
-		await save({ ...signedSession, account: account.address });
-		signedKey = { ...signedSession, account: account.address };
 	};
 </script>
 
@@ -100,16 +102,20 @@
 						errMessage = '';
 					}}>Clear</button
 				>
-				<button on:click={sign}>Sign</button>
+				<button on:click={Signer('demo')}>Sign</button>
 			</div>
 			<h2 class="frenstitle">Frens...</h2>
+			<div class="frens">
+				<img class="frenslands" src="/react.png" alt="demo" />
+				<button on:click={Signer('demo')}>Sign</button>
+			</div>
 			<div class="frens">
 				<img
 					class="frenslands"
 					src="https://www.frenslands.xyz/resources/front/UI_GameTitle.png"
 					alt="frenslands"
 				/>
-				<button on:click={sign}>Sign</button>
+				<button on:click={Signer('frenslands')}>Sign</button>
 			</div>
 		{/if}
 	</div>
