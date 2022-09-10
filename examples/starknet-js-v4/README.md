@@ -1,17 +1,25 @@
 This document captures the changes between starknet.js 3.18.2 and 4.4.2 (v4)
-to help people with the migration. v4 supports the changes from InvokeTXNV0 to
-InvokeTXNV1 in transactions. As a result v4 is required to support the next
-release of starknet that should remove support for InvokeTXNV0. It also
-implies that the payload differs and that you might very well break your app
-if you were not using the right call or if you are checking deep into the
-protocol!
+to help people with the migration.
 
-v4 also introduces support for the JSON-RPC api. That is important to
-enable the permissionless side of Starknet. However, it still not fully
-implemented and requires some efforts from the node like Pathfinder to comply
-to the latest Starknet JSON-RPC API. You can probably delay this part of the
-upgrade. Nevermind, we also anticipate that part might be spicy too. One day
-at a time!
+The motivation for v4 seems to be:
+
+- The introduction of support for the JSON-RPC api. That is important to
+  enable the permissionless side of Starknet. However, it still not fully
+  implemented and requires some efforts from the node like Pathfinder to comply
+  to the latest Starknet JSON-RPC API. So I would say that we probably delay
+  this part as dapp developer.
+- Some optimisation and, for instance, the removal of the 120k of output for
+  every block that are queried with the getBlock of v3.
+
+> We are curious to see how the abstraction will ne maintained, since, for
+> instance JSON-RPC v0.2 introduced different ways to look at the block, like
+> `starknet_getBlockWithTx` and `starknet_getBlockWithTxHashes`...
+
+There is another change to come and that is the removal of the
+`entry_point_selector` field from invoke transaction to move to invokeTxnV1.
+Not sure if/how it will impact dapps but at least starknet-js must have that
+change because wallets are using it. And that is pretty obvious that that feature
+will not be backported. Anyway, one day at a time!
 
 The document is organized in 2 sections:
 
@@ -33,22 +41,24 @@ by it!
 
 > Important:
 > This document does not analyse the changes in the output when the type name
-> did not change. You might very likely be biten here too!
-
-// TODO: - (High/Types) Check the types for Transaction by types
+> did not change except for `GetBlockResponse`. You might very likely be biten 
+> here too!
 
 - (High/General) If you are running 3.18 with a ^3.x rule (18 >= x) in the
   `package.json` then next time you run an npm install from scratch you will
   get 3.19 which is (likely) not compatible. The reason is 3.19 has been
   misslabeled it should have been named `4.0.0-alpha`. A quick fix consists
   in fixing the version to 3.18.2 in your package.json file.
-- (High/Provider) some payloads significantly differ. for instance,
+- (High/Provider) some payloads significantly differ between the 2 versions.
+  [types.test.ts](./src/types.test.ts) and
+  [providers.test.ts](./src/providers.test.ts) provide basic illustrations of
+  that point. For instance:
   - `GetBlockResponse` has removed the details of the transactions and
     returns a simple array of transaction hashes.
-  - `AddTransactionResponse` has been replaced with ``. for instance the `code: "TRANSACTION_RECEIVED"`
-- (Moderate/Provider) `invokeFunction` is now based on the v1 version of
-  transactions that come with starknet v0.10.0. You might not be as
-  impacted but, yet, if you use it, it is very likely to be broken.
+  - `AddTransactionResponse` has been replaced with `InvokeFunctionResponse`
+    and as an other example, `code: "TRANSACTION_RECEIVED"` has been remove
+    which will break @starknet-react/core `useStarknetTransactionManager`
+    hook
 - (Moderate/Provider) `getTransactionStatus` has been removed from the
   interface. You will want to use `getTransactionReceipt`
 - (Low/Account) `deployContract` has been removed from the API. You probably
@@ -432,11 +442,8 @@ public abstract waitForTransaction(
 ## SignerInterface
 
 The signer interface provide the basic tools to sign and verify messages and
-transactions. This class did not change between v0 and v1 which somehow is
-unexpected.
-
-[//]: <> TODO: Check why invocation has the selector in it and if selector
-[//]: <> is empty it changes the signature. It should/could/might?
+transactions. This class did not change probably because the move to v1 is not
+done yet.
 
 ### getPubKey
 
@@ -522,10 +529,7 @@ public abstract signer: SignerInterface;
 
 ### estimateFee
 
-The output has changed between the 2 interface but in could be just a change in
-the name. We need to check.
-
-// TODO: - Investigate the differences
+The output has changed significantly the 2 interfaces.
 
 - v3
 
@@ -534,6 +538,12 @@ public abstract estimateFee(
   calls: Call | Call[],
   estimateFeeDetails?: EstimateFeeDetails
 ): Promise<EstimateFee>;
+
+export interface EstimateFee {
+    amount: BN;
+    unit: string;
+    suggestedMaxFee: BN;
+}
 ```
 
 - v4
@@ -543,15 +553,20 @@ public abstract estimateFee(
   calls: Call | Call[],
   estimateFeeDetails?: EstimateFeeDetails
 ): Promise<EstimateFeeResponse>;
+
+export interface EstimateFeeResponse {
+    overall_fee: BN;
+    gas_consumed?: BN;
+    gas_price?: BN;
+}
 ```
 
 ### execute
 
-This is probably the biggest change in the API. The outpout has moved from
-`AddTransactionResponse` to `InvokeFunctionResponse`, i.e. from InvokeTXv0 to
-InvokeTXv1.
-
-// TODO: - Investigate the differences
+The outpout has moved from `AddTransactionResponse` to
+`InvokeFunctionResponse`. The later only returns the `transaction_hash`
+when the former was sending back more information, including the contract
+and a `code`
 
 - v3
 
@@ -578,14 +593,9 @@ public abstract execute(
   abis?: Abi[],
   transactionsDetail?: InvocationsDetails
 ): Promise<InvokeFunctionResponse>;
-```
 
-```typescript
-type AddTransactionResponse = {
-    code: "TRANSACTION_RECEIVED";
-    transaction_hash: string;
-    address?: string | undefined;
-    class_hash?: string | undefined;
+export interface InvokeFunctionResponse {
+  transaction_hash: string;
 }
 ```
 
@@ -671,10 +681,21 @@ public abstract verifyMessageHash(
 
 ### getNonce
 
-This does not change, at least on the API interface.
+This does not change on the API interface and, neither on the default
+implementation as this is the extract of getNonce that we can assume does not
+query the data from starknet:
 
-// TODO: - check what has changed in the default account implementation.
+```typescript
+public async getNonce(): Promise<string> {
+  const { result } = await this.callContract({
+    contractAddress: this.address,
+    entrypoint: 'get_nonce',
+  });
+  return toHex(toBN(result[0]));
+}
+```
 
+Below are the definition of the 2 interfaces...
 
 - v3
 

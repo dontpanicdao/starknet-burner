@@ -7,6 +7,8 @@ import { Invocation as Invocation3 } from "starknet3";
 import { Invocation as Invocation4 } from "starknet4";
 import { AddTransactionResponse as AddTransactionResponse3 } from "starknet3";
 import { InvokeFunctionResponse as InvokeFunctionResponse4 } from "starknet4";
+import { EstimateFee as EstimateFee3 } from "starknet3";
+import { EstimateFeeResponse as EstimateFeeResponse4 } from "starknet4";
 
 // prettier-ignore
 type IfEquals<T, U, Y=unknown, N=never> =
@@ -41,6 +43,17 @@ describe("evaluating differences between types", () => {
     type EQ = IfEquals<
       AddTransactionResponse3,
       InvokeFunctionResponse4,
+      "equal",
+      "different"
+    >;
+    const eq: EQ = "different";
+    expect(eq).toBe("different");
+  });
+
+  it("EstimateFee and EstimateFeeResponse", async () => {
+    type EQ = IfEquals<
+      EstimateFee3,
+      EstimateFeeResponse4,
       "equal",
       "different"
     >;
