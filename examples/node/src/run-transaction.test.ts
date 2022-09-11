@@ -49,12 +49,17 @@ describe("execute a transaction with that session", () => {
     const SequencerProvider = new Provider({
       sequencer: {
         chainId: StarknetChainId.TESTNET,
-        // https://alpha4.starknet.io
-        baseUrl: "http://localhost:8080",
-        // https://alpha4.starknet.io/feeder_gateway/
-        feederGatewayUrl: "http://localhost:8080/feeder_gateway/",
-        // https://alpha4.starknet.io/gateway/
-        gatewayUrl: "http://localhost:8080/gateway/",
+        // Change those values to capture the payload through a reverse proxy
+        // like mitmproxy
+        // "http://localhost:8080"
+        // "https://alpha4.starknet.io"
+        baseUrl: "https://alpha4.starknet.io",
+        // "http://localhost:8080/feeder_gateway/"
+        // "https://alpha4.starknet.io/feeder_gateway/"
+        feederGatewayUrl: "https://alpha4.starknet.io/feeder_gateway/",
+        // "http://localhost:8080/gateway/"
+        // "https://alpha4.starknet.io/gateway/"
+        gatewayUrl: "https://alpha4.starknet.io/gateway/",
       } as SequencerProviderOptions,
     } as ProviderOptions);
     const sessionAccount = new SessionAccount(

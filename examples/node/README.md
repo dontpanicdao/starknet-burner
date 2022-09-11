@@ -1,4 +1,4 @@
-# An example of session key with NodeJS
+# An example of session key with Node
 
 This project include a number of examples to use session keys from Node. The
 way it works is the following:
@@ -66,5 +66,12 @@ export HASH=0x21a4...a66e
 starknet get_transaction --hash $HASH
 ```
 
-If you like that demo, well, you should thank the Argent-X team and Starkware for
-making it possible. We ❤ them! You can also star the @starknet/burner project 🤣.
+> If you want to understand what is happeing at the protocol level, you might
+> want to install mitmproxy and start it as a reverse proxy on goerli with
+> `mitmweb --mode reverse:https://alpha4.starknet.io`. We have left some
+> comments in the `run-transaction.test.ts` file to help you going through it
+> and capturing the various payloads.
+
+If you like that demo, well..., you should thank the argent-X team at argentlabs
+and Starkware for making it possible. We ❤ them! You might also want to star the
+[@starknet/burner](https://github.com/dontpanicdao/starknet-burner) project 🤣.
