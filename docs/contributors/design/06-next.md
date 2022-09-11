@@ -16,7 +16,7 @@ It implements:
 - availability of @starknet/burner on a CDN via unpkg.com
 - move the account/provider back to starknet-js 3.x to support starknet-react
 - addition of the logo in .png and .svg
-- chaneg for friendly id and name
+- change for friendly id and name
 - restructuration of the code to support multiple version of starknet-js
 - removal of the nextjs api to support static deployment in addition to Vercel
 - the ability to test all the components locally
@@ -26,6 +26,10 @@ It implements:
 - an example with the @starknet/burner package from npmjs.com
 - an example with @starknet/burner and get-starknet
 - an example with @starknet/burner and @starknet-react/core
+- an example with @starknet/burner and nodejs
+- a study of starknet-js v3/v4 gap to support the 2 together
+- update of drone to support more application
+- move to the new plugin schema
 
 It fixes:
 - event leaks between waitForMessages()
