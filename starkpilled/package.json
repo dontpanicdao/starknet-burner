@@ -19,6 +19,6 @@
     "@starknet/burner": "^0.3.11",
     "eslint": "^8.23.0",
     "eslint-config-next": "^12.2.5",
-    "starknet": "^3.18.2"
+    "starknet": "3.18.2"
   }
 }

@@ -28,6 +28,7 @@
     "jest-environment-jsdom": "^29.0.2",
     "next": "^12.2.3",
     "react-jazzicon": "^1.0.4",
-    "starknet": "^3.18.2"
+    "starknet3": "npm:starknet@3.18.2",
+    "starknet4": "npm:starknet@^4.4.2"
   }
 }

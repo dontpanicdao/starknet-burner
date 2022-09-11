@@ -1,5 +1,5 @@
-import { Provider } from "starknet/provider";
-import { toBN } from "starknet/utils/number";
+import { Provider } from "starknet3/provider";
+import { toBN } from "starknet3/utils/number";
 import { notify } from "../shared/message";
 import { newLog } from "../shared/log";
 

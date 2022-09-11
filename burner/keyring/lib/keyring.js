@@ -1,5 +1,5 @@
 import { getLocalStorage, removeLocalStorage } from "lib/storage";
-import { StarknetChainId } from "starknet/constants";
+import { StarknetChainId } from "starknet4/constants";
 import { notify } from "./shared/message";
 import { callbacks } from ".";
 

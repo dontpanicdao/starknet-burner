@@ -21,7 +21,7 @@ import Layout from "components/Layout";
 import AskForDrone from "components/AskForDrone";
 import Connected from "components/Connected";
 import CloseButton from "components/CloseButton";
-import { getKeyPair, getStarkKey } from "starknet/utils/ellipticCurve";
+import { getKeyPair, getStarkKey } from "starknet4/utils/ellipticCurve";
 
 export default function Home() {
   const [state, setState, key, setKey] = useStateContext();
