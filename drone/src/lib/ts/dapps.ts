@@ -47,8 +47,8 @@ export const Policies: Record<websites, Policy[]> = {
 	],
 	demo: [
 		{
-			contractAddress: '0x00b38e856e62416916645525541c05b85e74972f2d95769e4c89ae2e5f1614f9',
-			selector: 'setApprovalForAll'
+			contractAddress: '0x036486801b8f42e950824cba55b2df8cccb0af2497992f807a7e1d9abd2c6ba1',
+			selector: 'incrementCounter'
 		}
 	]
 };
