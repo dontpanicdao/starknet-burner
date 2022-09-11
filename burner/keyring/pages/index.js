@@ -14,9 +14,9 @@ import {
 import { generateKey } from "lib/sessionkey";
 import Loader from "components/Loader";
 import { eventHandler, injectSets } from "lib/index";
-import { newLog } from "../lib/shared/log";
+import { newLog, logModuleDEFAULT } from "../lib/shared/log";
 
-const log = newLog();
+const log = newLog(logModuleDEFAULT);
 import Layout from "components/Layout";
 import AskForDrone from "components/AskForDrone";
 import Connected from "components/Connected";
@@ -48,7 +48,6 @@ export default function Home() {
       }
       const data = await res.json();
       saveLocalStorage("bwsessiontoken", JSON.stringify(data));
-      console.log("session key", data);
       setSessionToken(data);
     } catch (error) {
       setLoading(false);
@@ -69,7 +68,7 @@ export default function Home() {
     injectSets({ setDisplayed, resetSessionKey });
     window.addEventListener("message", eventHandler);
     addEventListener("beforeunload", () => {
-      console.log("unloading onMessage event");
+      log.debug("remove onMessage");
       window.removeEventListener("message", eventHandler);
     });
   }, []);

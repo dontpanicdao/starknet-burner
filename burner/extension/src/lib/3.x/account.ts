@@ -86,6 +86,7 @@ export const execute = async (
   transactionsDetail?: InvocationsDetails
 ): Promise<AddTransactionResponse> => {
   const key = getKey();
+  console.log();
   sendMessage(
     {
       type: "account3x_Execute",
@@ -97,7 +98,8 @@ export const execute = async (
     },
     key
   );
-  return await waitForMessage("account3x_ExecuteResponse", key);
+  const response = await waitForMessage("account3x_ExecuteResponse", key);
+  return response;
 };
 
 export type SignMessageRequest = {

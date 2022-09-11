@@ -26,7 +26,6 @@ export const eventHandler = async (event) => {
   ) {
     return;
   }
-  console.log(event?.data);
   const { type: t, key } = event.data;
   const data = event.data?.data ?? "";
   if (typeof t !== "string") {
@@ -41,7 +40,6 @@ export const eventHandler = async (event) => {
   if (t.startsWith("provider3x")) {
     return await providerEventHandler(t, data, key);
   }
-  console.log(`error, unknow event ${t}`);
 };
 
 export const injectSets = ({ setDisplayed, resetSessionKey }) => {

@@ -46,6 +46,9 @@ const logWithLevel = (writer, l, m, ...args) => {
 export const newLog = (m = logModuleDEFAULT) => {
   const log = {
     _module: m,
+    debug: (...args) => {
+      logWithLevel(console.log, logLevelDEBUG, log._module, ...args);
+    },
     log: (...args) => {
       logWithLevel(console.log, logLevelINFO, log._module, ...args);
     },
@@ -54,9 +57,6 @@ export const newLog = (m = logModuleDEFAULT) => {
     },
     error: (...args) => {
       logWithLevel(console.error, logLevelERROR, log._module, ...args);
-    },
-    debug: (...args) => {
-      logWithLevel(console.debug, logLevelDEBUG, log._module, ...args);
     },
   };
   return log;

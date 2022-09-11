@@ -1,11 +1,11 @@
 import { Account, Signer, Provider, ec } from "starknet3";
 import { notify } from "../shared/message";
 import { getLocalStorage } from "lib/storage";
-import { newLog } from "lib/shared/log";
+import { newLog, logModuleKEYRING } from "lib/shared/log";
 import { StarknetChainId } from "starknet4/constants";
 import { Signer as Signer4, Provider as Provider4, ec as ec4 } from "starknet4";
 import { SessionAccount } from "@argent/x-sessions";
-const log = newLog();
+const log = newLog(logModuleKEYRING);
 
 const signMessage = async (account, data, key) => {
   const typedData = data;
@@ -73,25 +73,20 @@ const getNonce = async (account, data, key) => {
 
 const estimateFee = async (account, data, key) => {
   {
-    console.log("estimate part 1", data);
-    const { calls, estimateFeeDetails } = data;
+    log.debug("estimate/1", data);
+    const { calls } = data;
     let estimateFeeResponse;
     try {
-      estimateFeeResponse = await account.estimateFee(
-        calls,
-        estimateFeeDetails
-      );
+      estimateFeeResponse = await account.estimateFee(calls);
     } catch (e) {
-      console.log("error");
+      log.debug("estimate/1", e.toString());
       return notify({
         type: "account3x_EstimateFeeResponse",
         key,
         exception: e.toString(),
       });
     }
-    console.log("estimate man...", estimateFeeResponse);
-    const { overall_fee, gas_consumed, gas_price, suggestedMaxFee } =
-      estimateFeeResponse;
+    log.debug("estimate/2", estimateFeeResponse);
     return notify({
       type: "account3x_EstimateFeeResponse",
       data: {
@@ -99,10 +94,6 @@ const estimateFee = async (account, data, key) => {
         amount: "0x0000",
         unit: "0x0000",
         gas_price: "0x0000",
-
-        // overall_fee: overall_fee.toString("hex"),
-        // gas_consumed: gas_consumed.toString("hex"),
-        // gas_price: gas_price.toString("hex"),
       },
       key,
     });
@@ -110,30 +101,32 @@ const estimateFee = async (account, data, key) => {
 };
 
 const execute = async (account, data, key) => {
-  console.log("execute - part 1 before", data);
+  log.debug("execute/1", data);
   const { transactions } = data;
-  console.log("execute - part 1 after", transactions);
+  log.debug("execute/2", transactions);
   let executeResponse;
   try {
     executeResponse = await account.execute(transactions);
   } catch (e) {
-    console.log("execute part 2 - failure", e.toString());
+    log.debug("execute/2", "failure", e.toString());
     return notify({
       type: "account3x_ExecuteResponse",
       key,
       exception: e.toString(),
     });
   }
-  console.log("execute part 2 -", executeResponse);
+  log.debug("execute/2", "success", {
+    ...executeResponse,
+    code: "TRANSACTION_RECEIVED",
+  });
   return notify({
     type: "account3x_ExecuteResponse",
-    data: executeResponse,
+    data: { ...executeResponse, code: "TRANSACTION_RECEIVED" },
     key,
   });
 };
 
 const sessionHandler = async (t, data, key) => {
-  console.log("here we are");
   const sessionKey = getLocalStorage("bwsessionkey");
   const token = getLocalStorage("bwsessiontoken");
   const parsedToken = JSON.parse(token);
@@ -141,8 +134,6 @@ const sessionHandler = async (t, data, key) => {
   delete (parsedToken, "account");
   const keypair = ec4.getKeyPair(sessionKey);
   const signer = new Signer4(keypair);
-  console.log("account", address);
-  console.log("account", parsedToken);
   const provider = new Provider4({
     sequencer: { network: StarknetChainId.TESTNET },
   });
@@ -153,27 +144,17 @@ const sessionHandler = async (t, data, key) => {
     parsedToken
   );
   if (t === "account3x_EstimateFee") {
-    console.log("account3x_EstimateFee - start", sessionAccount);
+    log.debug("account3x_EstimateFee", "before", data);
     await estimateFee(sessionAccount, data, key);
-    console.log("account3x_EstimateFee - end", sessionAccount);
+    log.debug("account3x_EstimateFee", "after");
     return;
   }
   if (t === "account3x_Execute") {
-    console.log("account3x_Execute - start", sessionAccount);
+    log.debug("account3x_Execute", "before", data);
     await execute(sessionAccount, data, key);
-    console.log("account3x_Execute - end", sessionAccount);
+    log.debug("account3x_Execute", "after", data);
     return;
   }
-
-  // switch (type) {
-  //   case "account3x_EstimateFee":
-  //     return await estimateFee(sessionAccount, data, key, parsedToken);
-  //   case "account3x_Execute":
-  //     return await execute(sessionAccount, data, key, parsedToken);
-  //   default:
-  //     log.warn("not found", type);
-  //     break;
-  // }
 };
 
 export const accountEventHandler = async (type, data, key) => {
