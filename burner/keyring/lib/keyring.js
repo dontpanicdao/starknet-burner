@@ -6,8 +6,9 @@ import { callbacks } from ".";
 import { newLog, setDebug } from "./shared/log";
 const log = newLog("KEYRING");
 
-export const keyringEventHandler = async (type, data, key) => {
-  switch (type) {
+export const keyringEventHandler = async (t, data, key) => {
+  console.log("t", t);
+  switch (t) {
     case "keyring_Ping":
       notify({ type: "keyring_Pong", data, key });
       break;
@@ -31,6 +32,7 @@ export const keyringEventHandler = async (type, data, key) => {
       break;
     case "keyring_CheckStatus":
       const storageSessionToken = getLocalStorage("bwsessiontoken");
+      console.log("yes", storageSessionToken);
       if (storageSessionToken) {
         const sessionToken = JSON.parse(storageSessionToken);
         if (sessionToken?.account) {

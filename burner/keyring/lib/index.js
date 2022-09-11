@@ -16,24 +16,32 @@ export const callbacks = {
 };
 
 export const eventHandler = async (event) => {
-  if (event?.data?.uuid !== uuid) {
+  if (
+    !event ||
+    !event.data ||
+    !event.data.uuid ||
+    !event.data.key ||
+    !event.data.uuid ||
+    event.data.uuid !== uuid
+  ) {
     return;
   }
-  const { type, key, data } = event.data;
-  if (typeof type !== "string") {
+  console.log(event?.data);
+  const { type: t, key } = event.data;
+  const data = event.data?.data ?? "";
+  if (typeof t !== "string") {
     return;
   }
-  log.debug(type, key, data);
-  switch (type.split("_")[0]) {
-    case "account3x":
-      return await accountEventHandler(type, data, key);
-    case "keyring":
-      return await keyringEventHandler(type, data, key);
-    case "provider3x":
-      return await providerEventHandler(type, data, key);
-    default:
-      break;
+  if (t.startsWith("keyring")) {
+    return await keyringEventHandler(t, data, key);
   }
+  if (t.startsWith("account3x")) {
+    return await accountEventHandler(t, data, key);
+  }
+  if (t.startsWith("provider3x")) {
+    return await providerEventHandler(t, data, key);
+  }
+  console.log(`error, unknow event ${t}`);
 };
 
 export const injectSets = ({ setDisplayed, resetSessionKey }) => {
