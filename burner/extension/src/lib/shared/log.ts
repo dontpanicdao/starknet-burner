@@ -14,11 +14,11 @@ export enum module {
 }
 
 const debugLevel: Record<module, level> = {
-  DEFAULT: level.INFO,
-  PING: level.INFO,
-  KEYRING: level.INFO,
-  PROVIDER3X: level.INFO,
-  ACCOUNT3X: level.INFO,
+  DEFAULT: import.meta.env.DEV ? level.DEBUG : level.INFO,
+  PING: import.meta.env.DEV ? level.DEBUG : level.INFO,
+  KEYRING: import.meta.env.DEV ? level.DEBUG : level.INFO,
+  PROVIDER3X: import.meta.env.DEV ? level.DEBUG : level.INFO,
+  ACCOUNT3X: import.meta.env.DEV ? level.DEBUG : level.INFO,
 };
 
 export const setDebug = (on: boolean | Record<module, level> = true) => {

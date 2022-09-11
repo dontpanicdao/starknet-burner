@@ -8,7 +8,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@starknet/burner": "^0.3.11",
+    "@starknet/burner": "^0.3.12",
     "vite": "^3.0.9"
   }
 }

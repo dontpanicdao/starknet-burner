@@ -97,7 +97,8 @@ export const execute = async (
     },
     key
   );
-  return await waitForMessage("account3x_ExecuteResponse", key);
+  const response = await waitForMessage("account3x_ExecuteResponse", key);
+  return response;
 };
 
 export type SignMessageRequest = {

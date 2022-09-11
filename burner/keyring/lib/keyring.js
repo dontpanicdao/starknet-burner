@@ -6,8 +6,8 @@ import { callbacks } from ".";
 import { newLog, setDebug } from "./shared/log";
 const log = newLog("KEYRING");
 
-export const keyringEventHandler = async (type, data, key) => {
-  switch (type) {
+export const keyringEventHandler = async (t, data, key) => {
+  switch (t) {
     case "keyring_Ping":
       notify({ type: "keyring_Pong", data, key });
       break;

@@ -12,7 +12,6 @@ import Block from "./Block";
 import Call from "./Call";
 import Execute from "./Execute";
 import Invoke from "./Invoke";
-import SignTypedData from "./SignTypedData";
 import TransactionManager from "./TransactionManager";
 import About from "./About";
 
@@ -27,7 +26,6 @@ const App = () => {
         <Link to="/">Home</Link> <Link to="/block">Block</Link>{" "}
         <Link to="/call">Call</Link> <Link to="/execute">Execute</Link>{" "}
         <Link to="/invoke">Invoke</Link>{" "}
-        <Link to="/signtypeddata">SignTypedData</Link>{" "}
         <Link to="/transactions">TransactionManager</Link>{" "}
         <Link to="/about">About</Link>
         <Routes>
@@ -36,7 +34,6 @@ const App = () => {
           <Route path="call" element={<Call />} />
           <Route path="execute" element={<Execute />} />
           <Route path="invoke" element={<Invoke />} />
-          <Route path="signtypeddata" element={<SignTypedData />} />
           <Route path="transactions" element={<TransactionManager />} />
           <Route path="about" element={<About />} />
         </Routes>
