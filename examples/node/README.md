@@ -5,44 +5,20 @@ way it works is the following:
 
 1. We use 0x1 as a private key. Looking for a mnemonic? it is the number right
   after 0... of if you prefer the 1st column for an array in LUA.
+
 2. You must have an account with:
   - The session key plugin installed and enabled
   - Some ETH on Goerli
-3. You should start drone. To do that:
-  - Fork [@starknet/burner](https://github.com/dontpanicdao/starknet-burner)
-  - Star the project also otherwise it will not work (99% of the times)
-  - Run a terminal from the `drone` directory of the project and run the
-    command below:
 
-```shell
-npm install
-npm run dev
-```
-
-> You will see an error because we mix `get-starknet` and `starknet-js` v4. It
-> will be fixed in a few days I guess when `get-starknet` v2 gets out!
-
-4. Open a 2nd terminal in the `examples/node` directory of the project and
-   run:
-
-```shell
-npm install
-npm run test -- request-token
-```
-
-This will give you an URL that should be like
-[http://localhost:5174/?s=0x01ef15c18599971b7beced415a40f0c7deacfd9b0d1819e03d723d8bc943cfca](http://localhost:5174/?s=0x01ef15c18599971b7beced415a40f0c7deacfd9b0d1819e03d723d8bc943cfca). We are pretty
-sure it will because we have hardcoded it!
-
-5. Click on the "Sign" button next to the "NodeJS" logo. It should request you
+3. Click on the "Sign" button next to the "NodeJS" logo. It should request you
    sign the session token. It will display a JSON file that you should copy
 
-6. Copy the content of the JSON file in the `signedSession` and
+4. Copy the content of the JSON file in the `signedSession` and
    `accountAddress` of the `src/run-transaction.test.ts` file of that demo. It
    is the trickiest par of that demo and we should have make that part easier.
    We do not have any excuse, we are just lazy!
 
-7. Run the following script
+5. Run the following script
 
 ```shell
 npm install

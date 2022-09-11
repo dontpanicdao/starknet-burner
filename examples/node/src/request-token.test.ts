@@ -8,6 +8,6 @@ describe("request a token", () => {
     const keypair = ec.getKeyPair(privateKey);
     const publicKey = getStarkKey(keypair);
     console.log(`start drone and get a `);
-    console.log(`http://localhost:5174/?s=${publicKey}`);
+    console.log(`https://drone.blaqkube.io/?s=${publicKey}`);
   });
 });
