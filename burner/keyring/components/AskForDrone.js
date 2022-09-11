@@ -8,9 +8,17 @@ const AskForDrone = ({ accessKey, isLoading, sessionToken }) => {
         <a
           target="_blank"
           rel="noreferrer"
-          href={`https://drone.blaqkube.io/?s=${accessKey}`}
+          href={`${
+            process.env.NEXT_PUBLIC_DRONE_BASE_URL ||
+            "https://drone.blaqkube.io"
+          }?s=${accessKey}`}
         >
-          <QRCode value={`https://drone.blaqkube.io/?s=${accessKey}`} />
+          <QRCode
+            value={`${
+              process.env.NEXT_PUBLIC_DRONE_BASE_URL ||
+              "https://drone.blaqkube.io"
+            }/?s=${accessKey}`}
+          />
         </a>
       </div>
       <div className={styles.choice}>

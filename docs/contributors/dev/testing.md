@@ -27,6 +27,13 @@ npm install
 npm run dev
 ```
 
+- open a terminal session in `drone` and run the command below:
+
+```shell
+npm install
+npm run dev
+```
+
 The 2nd session open a server on port 5173. To test the application, you can
 open your browser on [localhost:5173](http://localhost:5173)
 
@@ -120,3 +127,20 @@ console.log(output);
 
 The output should be an array with 2 strings in it representing Felts in
 hexadecimals.
+
+## testing keyring in standalone mode
+
+To avoid doing unnecessay request, drone autoloading is disable on startup. To
+enable it when you test the application in standalone mode, you can simpley run
+the command below. You should see request going out every 5 seconds:
+
+```javascript
+window.postMessage({
+  type: "keyring_OpenModal",
+  uuid: "589c80c1eb85413d",
+  key: "me"}) 
+```
+
+```.env.local
+NEXT_PUBLIC_DRONE_BASE_URL=http://localhost:5173
+```

@@ -58,7 +58,7 @@
 				return;
 			}
 			const requestSession: RequestSession = {
-				key: sessionkey,
+				key: sessionkey || '',
 				expires: Math.floor((Date.now() + 1000 * 60 * 60 * 24) / 1000), // 1 day in seconds
 				policies: Policies[app]
 			};
@@ -104,11 +104,7 @@
 				>
 				<button on:click={Signer('demo')}>Sign</button>
 			</div>
-			<h2 class="frenstitle">Frens...</h2>
-			<div class="frens">
-				<img class="frenslands" src="/react.png" alt="demo" />
-				<button on:click={Signer('demo')}>Sign</button>
-			</div>
+			<h2 class="frenstitle">Frens and demos...</h2>
 			<div class="frens">
 				<img
 					class="frenslands"
@@ -116,6 +112,14 @@
 					alt="frenslands"
 				/>
 				<button on:click={Signer('frenslands')}>Sign</button>
+			</div>
+			<div class="frens">
+				<img class="frenslands" src="/node.png" alt="nodejs demo" />
+				<button on:click={Signer('demo')}>Sign</button>
+			</div>
+			<div class="frens">
+				<img class="frenslands" src="/react.png" alt="react demo" />
+				<button on:click={Signer('demo')}>Sign</button>
 			</div>
 		{/if}
 	</div>

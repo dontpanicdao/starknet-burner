@@ -1,5 +1,5 @@
-import { ec } from "starknet";
-import { toBN } from "starknet/utils/number";
+import { ec } from "starknet4";
+import { toBN } from "starknet4/utils/number";
 
 const generateKey = () => {
   const sessionKey = `0x${ec.genKeyPair().getPrivate().toString(16)}`;

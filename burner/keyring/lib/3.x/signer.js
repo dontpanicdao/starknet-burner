@@ -1,4 +1,4 @@
-import { Signer, ec } from "starknet";
+import { Signer, ec } from "starknet3";
 import { notify } from "../shared/message";
 import { getLocalStorage } from "lib/storage";
 import { newLog } from "lib/shared/log";
