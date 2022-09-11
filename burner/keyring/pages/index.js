@@ -68,6 +68,10 @@ export default function Home() {
   useEffect(() => {
     injectSets({ setDisplayed, resetSessionKey });
     window.addEventListener("message", eventHandler);
+    addEventListener("beforeunload", () => {
+      console.log("unloading onMessage event");
+      window.removeEventListener("message", eventHandler);
+    });
   }, []);
 
   useEffect(() => {
