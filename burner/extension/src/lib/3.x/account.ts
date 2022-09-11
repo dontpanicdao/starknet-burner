@@ -86,7 +86,6 @@ export const execute = async (
   transactionsDetail?: InvocationsDetails
 ): Promise<AddTransactionResponse> => {
   const key = getKey();
-  console.log();
   sendMessage(
     {
       type: "account3x_Execute",
