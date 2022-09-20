@@ -70,6 +70,7 @@ func (pk *pathKeys) uploadRequest(ctx context.Context, request events.APIGateway
 	}
 	sessionrequest := Request{}
 	err = json.Unmarshal(data, &sessionrequest)
+	fmt.Println("request", sessionrequest.SessionPublicKey, sessionrequest.DappTokenID)
 	if err != nil || sessionrequest.SessionPublicKey == "" || sessionrequest.DappTokenID == "" {
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusBadRequest,
@@ -81,6 +82,7 @@ func (pk *pathKeys) uploadRequest(ctx context.Context, request events.APIGateway
 	nBig, _ := rand.Int(rand.Reader, big.NewInt(899999))
 	sessionrequest.RequestID = nBig.Add(nBig, big.NewInt(100000)).Text(10)
 	item, err := attributevalue.MarshalMap(sessionrequest)
+	fmt.Printf("item %+v", item)
 	if err != nil {
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusInternalServerError,
@@ -162,7 +164,7 @@ func (pk *pathKeys) downloadRequest(ctx context.Context, request events.APIGatew
 	}
 	return events.APIGatewayV2HTTPResponse{
 		StatusCode: http.StatusOK,
-		Body:       fmt.Sprintf(`{"key": "%s"}`, item.SessionPublicKey),
+		Body:       fmt.Sprintf(`{"sessionPublicKey": "%s", "dappTokenID": "%s"}`, item.SessionPublicKey, item.DappTokenID),
 		Headers:    map[string]string{"Content-Type": "application/json"},
 	}, nil
 }
