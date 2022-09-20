@@ -1,0 +1,6 @@
+/.env*
+/lib
+/bin
+/include
+/share
+/pyvenv.cfg

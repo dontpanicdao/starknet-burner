@@ -23,6 +23,7 @@ import (
 type Request struct {
 	RequestID        string `dynamodbav:"requestID" json:"requestID"`
 	SessionPublicKey string `dynamodbav:"sessionPublicKey" json:"sessionPublicKey"`
+	DappTokenID      string `dynamodbav:"dappTokenID" json:"dappTokenID"`
 	TTL              int64  `dynamodbav:"TTL" json:"-"`
 }
 
@@ -69,7 +70,7 @@ func (pk *pathKeys) uploadRequest(ctx context.Context, request events.APIGateway
 	}
 	sessionrequest := Request{}
 	err = json.Unmarshal(data, &sessionrequest)
-	if err != nil || sessionrequest.SessionPublicKey == "" {
+	if err != nil || sessionrequest.SessionPublicKey == "" || sessionrequest.DappTokenID == "" {
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusBadRequest,
 			Body:       `{"message": "BadRequest"}`,

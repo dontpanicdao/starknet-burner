@@ -1,0 +1,8 @@
+argparse
+cairo-lang==0.9.0
+ecdsa
+fastecdsa
+hypothesis
+pytest
+python-dotenv
+sympy
