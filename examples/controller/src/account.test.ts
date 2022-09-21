@@ -6,7 +6,6 @@ import { toBN } from "starknet/utils/number";
 import {
   declareAccount,
   deployAccount,
-  getAccount,
   saveAccount,
   waitForAccountCreation,
 } from "./account";
@@ -43,7 +42,6 @@ describe("deploy account", () => {
     }
     keys = v;
     provider = new SequencerProvider({ baseUrl: "https://alpha4.starknet.io" });
-    getAccount;
   });
 
   it("deploy the account if not already", async () => {
