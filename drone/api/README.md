@@ -50,13 +50,26 @@ The service provides 2 ways of exchanging data:
 ```shell
 export BASEURL=https://...
 export REQUESTID=$(curl -XPOST ${BASEURL}/requests \
-  -d'{"sessionPublicKey": "0xdeadbeef", "dappTokenID": "0xdeadbeef"}' | \
+  -d'{"key": "0xdeadbeef", "dappTokenID": "0xdeadbeef"}' | \
    jq -r '.requestID')
 curl ${BASEURL}/requests/${REQUESTID}
 ```
 
 > Note: to store a request, you should specify both the public key and the
 > dappTokenID.
+
+```shell
+curl https://drone.carnage.sh/requests \
+  -d'{"key": "0x2", "dappTokenID": "0x3"}'
+
+# returns the output below
+# {"requestID":"960958","key":"0x2","dappTokenID":"0x3"}
+
+curl https://drone.carnage.sh/requests/960958
+
+# returns the output below
+# {"key": "0x2", "dappTokenID": "0x3"}
+```
 
 - storing/retrieving a session token
 
