@@ -3,8 +3,8 @@ import type { KeyType } from "./keys";
 
 import {
   CompiledContract,
-  Abi,
-  Contract,
+  ec,
+  Account,
   json,
   SequencerProvider,
 } from "starknet";
@@ -35,13 +35,16 @@ export const declareAccount = async (provider: SequencerProvider) => {
   return contractResponse;
 };
 
-export const getAccount = async (
-  abi: Abi,
-  provider: SequencerProvider,
-  address: string
-) => {
-  const contract = new Contract(abi, address, provider);
-  contract.call;
+export const getAccount = async (provider: SequencerProvider, key: KeyType) => {
+  if (!key || !key.account || !key.privateKey) {
+    throw new Error("account not deployed");
+  }
+  const contract = new Account(
+    provider,
+    key.account,
+    ec.getKeyPair(key.privateKey)
+  );
+  return contract;
 };
 
 export const saveAccount = async (key: KeyType, account: string) => {
