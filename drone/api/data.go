@@ -22,7 +22,7 @@ import (
 
 type Request struct {
 	RequestID        string `dynamodbav:"requestID" json:"requestID"`
-	SessionPublicKey string `dynamodbav:"sessionPublicKey" json:"sessionPublicKey"`
+	SessionPublicKey string `dynamodbav:"sessionPublicKey" json:"key"`
 	DappTokenID      string `dynamodbav:"dappTokenID" json:"dappTokenID"`
 	TTL              int64  `dynamodbav:"TTL" json:"-"`
 }
@@ -164,7 +164,7 @@ func (pk *pathKeys) downloadRequest(ctx context.Context, request events.APIGatew
 	}
 	return events.APIGatewayV2HTTPResponse{
 		StatusCode: http.StatusOK,
-		Body:       fmt.Sprintf(`{"sessionPublicKey": "%s", "dappTokenID": "%s"}`, item.SessionPublicKey, item.DappTokenID),
+		Body:       fmt.Sprintf(`{"key": "%s", "dappTokenID": "%s"}`, item.SessionPublicKey, item.DappTokenID),
 		Headers:    map[string]string{"Content-Type": "application/json"},
 	}, nil
 }
