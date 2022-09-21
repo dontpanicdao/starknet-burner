@@ -28,3 +28,8 @@ variable "test" {
   type    = string
   default = "http://localhost:3000"
 }
+
+variable "dawallet" {
+  type    = string
+  default = "https://da-wallet.blaqkube.io"
+}
