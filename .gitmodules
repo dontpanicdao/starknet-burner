@@ -1,6 +1,3 @@
-[submodule "examples/controller/cairo-contracts"]
-	path = examples/controller/cairo-contracts
-	url = git@github.com:OpenZeppelin/cairo-contracts.git
 [submodule "accounts/cairo-contracts"]
 	path = accounts/cairo-contracts
 	url = git@github.com:OpenZeppelin/cairo-contracts.git
