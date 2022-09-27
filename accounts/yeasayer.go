@@ -12,18 +12,26 @@ import (
 var _ rpc.AccountPlugin = &YeaSayerPlugin{}
 
 type YeaSayerPlugin struct {
-	classHash *big.Int
+	accountAddress types.Hash
+	classHash      *big.Int
+	private        *big.Int
 }
 
-func WithYeaSayerPluginPlugin(pluginClassHash string) func() (rpc.AccountOption, error) {
-	return func() (rpc.AccountOption, error) {
+func WithYeaSayerPlugin(pluginClassHash string) rpc.AccountOptionFunc {
+	return func(private, address string) (rpc.AccountOption, error) {
 		plugin, ok := big.NewInt(0).SetString(pluginClassHash, 0)
+		if !ok {
+			return rpc.AccountOption{}, errors.New("could not convert plugin class hash")
+		}
+		pk, ok := big.NewInt(0).SetString(private, 0)
 		if !ok {
 			return rpc.AccountOption{}, errors.New("could not convert plugin class hash")
 		}
 		return rpc.AccountOption{
 			AccountPlugin: &YeaSayerPlugin{
-				classHash: plugin,
+				accountAddress: types.HexToHash(address),
+				classHash:      plugin,
+				private:        pk,
 			},
 		}, nil
 	}
@@ -42,7 +50,7 @@ func (plugin *YeaSayerPlugin) PluginCall(calls []types.FunctionCall) (types.Func
 		"0x0", // empty (yeasayer), would have been: session_token[1]
 	}
 	return types.FunctionCall{
-		ContractAddress:    types.BigToHash(plugin.classHash),
+		ContractAddress:    plugin.accountAddress,
 		EntryPointSelector: "use_plugin",
 		CallData:           data,
 	}, nil

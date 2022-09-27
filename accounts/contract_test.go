@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"strings"
 	"testing"
+	"time"
 
 	_ "embed"
 
@@ -18,9 +19,6 @@ import (
 	"github.com/dontpanicdao/caigo/rpc"
 	"github.com/dontpanicdao/caigo/rpc/types"
 )
-
-//go:embed artifacts/sessionkey_3fc70024.json
-var sessionkeyCompiled []byte
 
 //go:embed artifacts/yeasayer.json
 var yeasayerCompiled []byte
@@ -32,40 +30,15 @@ var accountCompiled []byte
 var counterCompiled []byte
 
 var (
-	sessionkeyClassHash = "0x05cf07fd427f19b180c125b70975db4caab0ba86c541d5b1ab5264f2daee265d"
-	yeasayerClassHash   = "0x05386fcd71572eb2b8bf725b4ae60c0da59bbfa85398a504fc70ed12f67795e5"
-	privateKey          = "0x1"
+	// sessionkeyClassHash = "0x05cf07fd427f19b180c125b70975db4caab0ba86c541d5b1ab5264f2daee265d"
+	yeasayerClassHash = "0x05bb35d48fa6d3217acaab7774eec42d6aeef32e3f67a5020c1864b6ac3696e"
+	privateKey        = "0x1"
+	sessionPrivateKey = "0x2"
 	// accountSessionKeyAddress = "0x08186a08f85dab49db1256760e840fa9c4c26c5a4c308d3bed3199d82140599"
-	accountYeaSayerAddress = "0x047c15a7835fcaf677609531dd71810cb507ab755418b6fe7e35ee8308a07da6"
+	accountYeaSayerAddress = "0x076c215ccb88b6ec4c3c150d126f70da96a20b6835569dfaa087e6aa4053cc0b"
 	counterAddress         = "0x01bb5b121d95ddb29ea630a1fa6f03e1f998540ca821531c82d8c7e889398b6e"
 	devnetEth              = "0x62230ea046a9a5fbc261ac77d03c8d41e5d442db2284587570ab46455fd2488"
 )
-
-// TestSessionKey_RegisterClass
-func TestSessionKey_RegisterClass(t *testing.T) {
-	provider := beforeEach(t)
-
-	sessionkeyClass := types.ContractClass{}
-	if err := json.Unmarshal(sessionkeyCompiled, &sessionkeyClass); err != nil {
-		t.Fatal(err)
-	}
-	ctx := context.Background()
-	tx, err := provider.AddDeclareTransaction(ctx, sessionkeyClass, "0x0")
-	if err != nil {
-		t.Fatal("declare should succeed, instead:", err)
-	}
-	if tx.ClassHash != sessionkeyClassHash {
-		t.Fatal("declare should return sessionkey class, instead:", tx.ClassHash)
-	}
-	fmt.Println("...")
-	fmt.Println("   verify transaction")
-	fmt.Println("...")
-	fmt.Println("export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount")
-	fmt.Println("export STARKNET_NETWORK=alpha-goerli")
-	fmt.Printf("export HASH=%s\n", tx.TransactionHash)
-	fmt.Println("starknet get_transaction --hash $HASH --feeder_gateway http://localhost:5050/feeder_gateway")
-	fmt.Println("...")
-}
 
 // TestYeaSayer_RegisterClass
 func TestYeaSayer_RegisterClass(t *testing.T) {
@@ -83,14 +56,23 @@ func TestYeaSayer_RegisterClass(t *testing.T) {
 	if tx.ClassHash != yeasayerClassHash {
 		t.Fatal("declare should return yeasayer class, instead:", tx.ClassHash)
 	}
-	fmt.Println("...")
-	fmt.Println("   verify transaction")
-	fmt.Println("...")
-	fmt.Println("export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount")
-	fmt.Println("export STARKNET_NETWORK=alpha-goerli")
-	fmt.Printf("export HASH=%s\n", tx.TransactionHash)
-	fmt.Println("starknet get_transaction --hash $HASH --feeder_gateway http://localhost:5050/feeder_gateway")
-	fmt.Println("...")
+	fmt.Printf("tx hash: %s\n", tx.TransactionHash)
+	status, err := provider.WaitForTransaction(ctx, types.HexToHash(tx.TransactionHash), 8*time.Second)
+	if err != nil {
+		t.Fatal("declare should succeed, instead:", err)
+	}
+	if status != types.TransactionStatus_AcceptedOnL2 {
+		t.Log("unexpected status transaction status, check:", status)
+		t.Log("...")
+		t.Log("   verify transaction")
+		t.Log("...")
+		t.Log("export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount")
+		t.Log("export STARKNET_NETWORK=alpha-goerli")
+		t.Logf("export HASH=%s\n", tx.TransactionHash)
+		t.Log("starknet get_transaction --hash $HASH --feeder_gateway http://localhost:5050/feeder_gateway")
+		t.Log("...")
+		t.Fail()
+	}
 }
 
 // TestYeaSayer_DeployAccount
@@ -123,14 +105,23 @@ func TestYeaSayer_DeployAccount(t *testing.T) {
 	if tx.ContractAddress != accountYeaSayerAddress {
 		t.Fatal("deploy should return account address, instead:", tx.ContractAddress)
 	}
-	fmt.Println("...")
-	fmt.Println("   verify transaction")
-	fmt.Println("...")
-	fmt.Println("export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount")
-	fmt.Println("export STARKNET_NETWORK=alpha-goerli")
-	fmt.Printf("export HASH=%s\n", tx.TransactionHash)
-	fmt.Println("starknet get_transaction --hash $HASH --feeder_gateway http://localhost:5050/feeder_gateway")
-	fmt.Println("...")
+	fmt.Printf("tx hash: %s\n", tx.TransactionHash)
+	status, err := provider.WaitForTransaction(ctx, types.HexToHash(tx.TransactionHash), 8*time.Second)
+	if err != nil {
+		t.Fatal("declare should succeed, instead:", err)
+	}
+	if status != types.TransactionStatus_AcceptedOnL2 {
+		t.Log("unexpected status transaction status, check:", status)
+		t.Log("...")
+		t.Log("   verify transaction")
+		t.Log("...")
+		t.Log("export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount")
+		t.Log("export STARKNET_NETWORK=alpha-goerli")
+		t.Logf("export HASH=%s\n", tx.TransactionHash)
+		t.Log("starknet get_transaction --hash $HASH --feeder_gateway http://localhost:5050/feeder_gateway")
+		t.Log("...")
+		t.Fail()
+	}
 }
 
 // TestYeaSayer_MintEth
@@ -172,6 +163,11 @@ func TestYeaSayer_CheckEth(t *testing.T) {
 		log.Fatal("could not call Eth", err)
 	}
 	fmt.Printf("amount of Eth is %+v\n", output)
+	if len(output) != 2 {
+		log.Fatal("should return an uint256, i.e. 2 felts")
+	}
+	amount, _ := big.NewInt(0).SetString(output[0], 0)
+	fmt.Printf("account has %s wei\n", amount.Text(10))
 }
 
 // TestCounter_DeployContract
@@ -192,20 +188,30 @@ func TestCounter_DeployContract(t *testing.T) {
 	if tx.ContractAddress != counterAddress {
 		t.Fatal("deploy should return counter address, instead:", tx.ContractAddress)
 	}
-	fmt.Println("...")
-	fmt.Println("   verify transaction")
-	fmt.Println("...")
-	fmt.Println("export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount")
-	fmt.Println("export STARKNET_NETWORK=alpha-goerli")
-	fmt.Printf("export HASH=%s\n", tx.TransactionHash)
-	fmt.Println("starknet get_transaction --hash $HASH --feeder_gateway http://localhost:5050/feeder_gateway")
-	fmt.Println("...")
+	status, err := provider.WaitForTransaction(ctx, types.HexToHash(tx.TransactionHash), 8*time.Second)
+	if err != nil {
+		t.Fatal("declare should succeed, instead:", err)
+	}
+	if status != types.TransactionStatus_AcceptedOnL2 {
+		t.Log("unexpected status transaction status, check:", status)
+		t.Log("...")
+		t.Log("   verify transaction")
+		t.Log("...")
+		t.Log("export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount")
+		t.Log("export STARKNET_NETWORK=alpha-goerli")
+		t.Logf("export HASH=%s\n", tx.TransactionHash)
+		t.Log("starknet get_transaction --hash $HASH --feeder_gateway http://localhost:5050/feeder_gateway")
+		t.Log("...")
+		t.Fail()
+	}
+	fmt.Printf("tx hash: %s\n", tx.TransactionHash)
 }
 
 // TestCounter_ExecuteIncrementWithPlugin
 func TestCounter_ExecuteIncrementWithPlugin(t *testing.T) {
 	provider := beforeEach(t)
-	account, err := provider.NewAccount(privateKey, accountYeaSayerAddress)
+	// account, err := provider.NewAccount(privateKey, accountYeaSayerAddress)
+	account, err := provider.NewAccount(sessionPrivateKey, accountYeaSayerAddress, WithYeaSayerPlugin(yeasayerClassHash))
 	if err != nil {
 		t.Fatal("deploy should succeed, instead:", err)
 	}
@@ -224,12 +230,21 @@ func TestCounter_ExecuteIncrementWithPlugin(t *testing.T) {
 	if !strings.HasPrefix(tx.TransactionHash, "0x") {
 		t.Fatal("execute should return transaction hash, instead:", tx.TransactionHash)
 	}
-	fmt.Println("...")
-	fmt.Println("   verify transaction")
-	fmt.Println("...")
-	fmt.Println("export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount")
-	fmt.Println("export STARKNET_NETWORK=alpha-goerli")
-	fmt.Printf("export HASH=%s\n", tx.TransactionHash)
-	fmt.Println("starknet get_transaction --hash $HASH --feeder_gateway http://localhost:5050/feeder_gateway")
-	fmt.Println("...")
+	status, err := provider.WaitForTransaction(ctx, types.HexToHash(tx.TransactionHash), 8*time.Second)
+	if err != nil {
+		t.Fatal("declare should succeed, instead:", err)
+	}
+	if status != types.TransactionStatus_AcceptedOnL2 {
+		t.Log("unexpected status transaction status, check:", status)
+		t.Log("...")
+		t.Log("   verify transaction")
+		t.Log("...")
+		t.Log("export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount")
+		t.Log("export STARKNET_NETWORK=alpha-goerli")
+		t.Logf("export HASH=%s\n", tx.TransactionHash)
+		t.Log("starknet get_transaction --hash $HASH --feeder_gateway http://localhost:5050/feeder_gateway")
+		t.Log("...")
+		t.Fail()
+	}
+	fmt.Printf("tx hash: %s\n", tx.TransactionHash)
 }

@@ -12,7 +12,7 @@ from openzeppelin.account.library import Account, AccountCallArray
 
 from openzeppelin.introspection.erc165.library import ERC165
 
-from contracts.plugin import PluginUtils, USE_PLUGIN
+from plugin import PluginUtils, USE_PLUGIN
 
 #
 # Constructor

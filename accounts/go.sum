@@ -87,6 +87,8 @@ github.com/dontpanicdao/caigo v0.3.1-0.20220925134459-0563d75ed841 h1:avLnqlg4Za
 github.com/dontpanicdao/caigo v0.3.1-0.20220925134459-0563d75ed841/go.mod h1:xLt3Z79hOOzkAnMF3P4FuumV6fWHjdyYnrYS9qNkzLY=
 github.com/dontpanicdao/caigo v0.3.1-0.20220927052141-75639c10ee22 h1:Fa5ZRKQFBSh3jCEyczlMKOHPTMsGeSypxx3/7/8ueOE=
 github.com/dontpanicdao/caigo v0.3.1-0.20220927052141-75639c10ee22/go.mod h1:xLt3Z79hOOzkAnMF3P4FuumV6fWHjdyYnrYS9qNkzLY=
+github.com/dontpanicdao/caigo v0.3.1-0.20220927182323-6b4f3cf25733 h1:XheWYC+eLlg/OJ3Y5bhjO4TU9z9q9bsjlczW1eWGTGI=
+github.com/dontpanicdao/caigo v0.3.1-0.20220927182323-6b4f3cf25733/go.mod h1:xLt3Z79hOOzkAnMF3P4FuumV6fWHjdyYnrYS9qNkzLY=
 github.com/dop251/goja v0.0.0-20211011172007-d99e4b8cbf48/go.mod h1:R9ET47fwRVRPZnOGvHxxhuZcbrMCuiqOz3Rlrh4KSnk=
 github.com/dop251/goja_nodejs v0.0.0-20210225215109-d91c329300e7/go.mod h1:hn7BA7c8pLvoGndExHudxTDKZ84Pyvv+90pbBjbTz0Y=
 github.com/eclipse/paho.mqtt.golang v1.2.0/go.mod h1:H9keYFcgq3Qr5OUJm/JZI/i6U7joQ8SYLhZwfeOo6Ts=
@@ -453,6 +455,8 @@ golang.org/x/sys v0.0.0-20220919091848-fb04ddd9f9c8 h1:h+EGohizhe9XlX18rfpa8k8RA
 golang.org/x/sys v0.0.0-20220919091848-fb04ddd9f9c8/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220926163933-8cfa568d3c25 h1:nwzwVf0l2Y/lkov/+IYgMMbFyI+QypZDds9RxlSmsFQ=
 golang.org/x/sys v0.0.0-20220926163933-8cfa568d3c25/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+golang.org/x/sys v0.0.0-20220927170352-d9d178bc13c6 h1:cy1ko5847T/lJ45eyg/7uLprIE/amW5IXxGtEnQdYMI=
+golang.org/x/sys v0.0.0-20220927170352-d9d178bc13c6/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/term v0.0.0-20201117132131-f5c789dd3221/go.mod h1:Nr5EML6q2oocZ2LXRh80K7BxOlk5/8JxuGnuhpl+muw=
 golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1/go.mod h1:bj7SfCRtBDWHUb9snDiAeCFNEtKQo2Wmx5Cou7ajbmo=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
