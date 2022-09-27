@@ -5,13 +5,13 @@ CAIRO_PATH = ./cairo-contracts/src
 .PHONY: build
 build: artifacts openzeppelin-v0
 	mkdir -p artifacts
-	starknet-compile ./contracts/account.cairo \
+	starknet-compile ./src/account.cairo \
 		--output artifacts/account.json \
 		--abi artifacts/account_abi.json --account_contract
-	starknet-compile ./contracts/counter.cairo \
+	starknet-compile ./src/counter.cairo \
 		--output artifacts/counter.json \
 		--abi artifacts/counter_abi.json
-	starknet-compile ./contracts/yeasayer.cairo \
+	starknet-compile ./src/yeasayer.cairo \
 		--output artifacts/yeasayer.json \
 		--abi artifacts/yeasayer_abi.json
 

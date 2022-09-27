@@ -20,21 +20,5 @@ func validate{
         calldata_len: felt,
         calldata: felt*
     ):
-    alloc_locals
-    
-    # parse the plugin data
-    with_attr error_message("invalid plugin data"):
-        assert_nn(plugin_data_len - 4)
-        let session_key = [plugin_data]
-        let session_expires = [plugin_data + 1]
-        let root = [plugin_data + 2]
-        let proof_len = [plugin_data + 3]
-        let proofs_len = proof_len * call_array_len
-        let proofs = plugin_data + 4
-        let session_token_len = plugin_data_len - 4 - proofs_len
-        assert_nn(session_token_len)
-        let session_token = plugin_data + 4 + proofs_len
-    end
-
     return()
 end
