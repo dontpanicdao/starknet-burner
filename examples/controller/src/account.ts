@@ -11,14 +11,14 @@ import {
 
 const readContract = async (name: string): Promise<CompiledContract> =>
   await json.parse(
-    fs.readFileSync(`./starknet/${name}.json`).toString("ascii")
+    fs.readFileSync(`../../accounts/artifacts/${name}.json`).toString("ascii")
   );
 
 export const deployAccount = async (
   provider: SequencerProvider,
   key: KeyType
 ) => {
-  const accountCode = await readContract("account");
+  const accountCode = await readContract("account_v0.4.0b");
   const contractResponse = await provider.deployContract({
     contract: accountCode,
     constructorCalldata: [key.publicKey],
@@ -28,7 +28,7 @@ export const deployAccount = async (
 };
 
 export const declareAccount = async (provider: SequencerProvider) => {
-  const accountCode = await readContract("account");
+  const accountCode = await readContract("account_v0.4.0b");
   const contractResponse = await provider.declareContract({
     contract: accountCode,
   });

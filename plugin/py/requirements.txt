@@ -1,9 +1,0 @@
-argparse
-cairo-lang
-ecdsa
-fastecdsa
-hypothesis
-pytest
-python-dotenv
-starknet-devnet
-sympy
