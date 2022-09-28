@@ -1,17 +1,22 @@
 
 .EXPORT_ALL_VARIABLES:
-CAIRO_PATH = ./cairo-contracts/src
+CAIRO_PATH = ./cairo-contracts/src:./src
 
 .PHONY: build
-build: artifacts openzeppelin-v0
-	mkdir -p artifacts
-	starknet-compile ./src/account.cairo \
+build: artifacts/account.json artifacts/counter.json artifacts/yeasayer.json openzeppelin-v0
+
+artifacts/account.json: src/account.cairo artifacts
+	starknet-compile src/account.cairo \
 		--output artifacts/account.json \
 		--abi artifacts/account_abi.json --account_contract
-	starknet-compile ./src/counter.cairo \
+
+artifacts/counter.json: src/counter.cairo artifacts
+	starknet-compile src/counter.cairo \
 		--output artifacts/counter.json \
 		--abi artifacts/counter_abi.json
-	starknet-compile ./src/yeasayer.cairo \
+
+artifacts/yeasayer.json: src/yeasayer.cairo artifacts
+	starknet-compile src/yeasayer.cairo \
 		--output artifacts/yeasayer.json \
 		--abi artifacts/yeasayer_abi.json
 
