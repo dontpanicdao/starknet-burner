@@ -6,6 +6,7 @@ import (
 	"math/big"
 	"time"
 
+	"github.com/dontpanicdao/caigo"
 	"github.com/dontpanicdao/caigo/rpc"
 	"github.com/dontpanicdao/caigo/rpc/types"
 )
@@ -37,6 +38,20 @@ func WithYeaSayerPlugin(pluginClassHash string) rpc.AccountOptionFunc {
 		}, nil
 	}
 }
+
+func signMessage(privateKey *big.Int, toSign []*big.Int) ([]*big.Int, error) {
+	hash, err := caigo.Curve.HashElements(toSign)
+	if err != nil {
+		return nil, err
+	}
+	x, y, err := caigo.Curve.Sign(hash, privateKey)
+	if err != nil {
+		return nil, err
+	}
+	return []*big.Int{x, y}, nil
+}
+
+// signature, err := signMessage(privateKey, toSign)
 
 func (plugin *YeaSayerPlugin) PluginCall(calls []types.FunctionCall) (types.FunctionCall, error) {
 	expires := big.NewInt(time.Now().Add(2 * time.Hour).Unix())
