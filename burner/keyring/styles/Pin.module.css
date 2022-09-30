@@ -1,0 +1,26 @@
+.choicesContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  height: 50%;
+}
+
+.choice {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.alert {
+  color: red;
+}
+
+.number {
+  background-color: #ccc;
+  display: inline;
+  padding: 2em;
+  margin-left: 1em;
+}

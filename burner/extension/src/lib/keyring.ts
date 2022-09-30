@@ -11,11 +11,16 @@ import { displayIFrame, hideIFrame } from "../components/iframe";
 import { StarknetChainId } from "starknet3x/constants";
 import { connect, disconnect } from "./window";
 import { infiniteTimeoutMilliseconds } from "./shared/config";
+import { UsePin as usePin } from "..";
 
 export type StatusResponse = {
   connected: boolean;
   network?: StarknetChainId;
   addresses?: string[];
+};
+
+export type UsePinT = {
+  usePin?: boolean;
 };
 
 // KeyringAction defines the actions data and types used to to interact with
@@ -27,7 +32,7 @@ export type KeyringAction =
     }
   | {
       type: "keyring_OpenModal";
-      data?: string;
+      data?: UsePinT;
     }
   | {
       type: "keyring_CloseModal";
@@ -114,7 +119,7 @@ export const keyringOpenModal = async (): Promise<void> => {
   const key = getKey();
   displayModal();
   displayIFrame();
-  sendMessage({ type: "keyring_OpenModal" } as MessageType, key);
+  sendMessage({ type: "keyring_OpenModal", data: { usePin } }, key);
   return await waitForMessage("keyring_OpenModalResponse", key);
 };
 

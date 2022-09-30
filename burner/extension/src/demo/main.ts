@@ -1,3 +1,3 @@
 import { register } from "..";
 
-register();
+register({ usePin: false });

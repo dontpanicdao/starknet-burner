@@ -13,6 +13,7 @@ export const keyringEventHandler = async (t, data, key) => {
       break;
     case "keyring_OpenModal":
       callbacks.setDisplayed(true);
+      callbacks.setUsePin(data.usePin || false);
       notify({ type: "keyring_OpenModalResponse", key });
       break;
     case "keyring_CloseModal":

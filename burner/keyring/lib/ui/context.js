@@ -9,8 +9,9 @@ const Context = createContext();
 export const StateProvider = ({ children }) => {
   const [state, setState] = useState(UNINITIALIZED);
   const [key, setKey] = useState(null);
+  const [usePin, setUsePin] = useState(false);
   return (
-    <Context.Provider value={[state, setState, key, setKey]}>
+    <Context.Provider value={[state, setState, key, setKey, usePin, setUsePin]}>
       {children}
     </Context.Provider>
   );
