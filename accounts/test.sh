@@ -1,5 +1,8 @@
+#!/bin/bash
+
 set -e 
 
+go clean -testcache
 go test -v -run TestYeaSayer_RegisterClass
 go test -v -run TestYeaSayer_DeployAccount
 go test -v -run TestYeaSayer_MintEth

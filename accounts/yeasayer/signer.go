@@ -1,10 +1,11 @@
-package accounts
+package yeasayer
 
 import (
 	"errors"
 	"fmt"
 	"math/big"
 
+	"github.com/dontpanicdao/caigo"
 	"github.com/dontpanicdao/caigo/rpc"
 	"github.com/dontpanicdao/caigo/rpc/types"
 )
@@ -41,16 +42,69 @@ func WithYeaSayerPlugin(pluginClassHash string, token *YeaSayerToken) rpc.Accoun
 	}
 }
 
+// TODO: write get merkle proof
+func getMerkleProof(policies []Policy, call types.FunctionCall) ([]string, error) {
+	leaves := []*big.Int{}
+	for _, policy := range policies {
+		leave, err := caigo.Curve.ComputeHashOnElements([]*big.Int{
+			STARKNET_DOMAIN_TYPE_HASH,
+			caigo.HexToBN(policy.ContractAddress),
+			caigo.GetSelectorFromName(policy.Selector),
+		})
+		if err != nil {
+			return nil, err
+		}
+		leaves = append(leaves, leave)
+	}
+	tree, err := caigo.NewFixedSizeMerkleTree(leaves...)
+	if err != nil {
+		return nil, err
+	}
+	callkey, err := caigo.Curve.ComputeHashOnElements([]*big.Int{
+		STARKNET_DOMAIN_TYPE_HASH,
+		call.ContractAddress.Big(),
+		caigo.GetSelectorFromName(call.EntryPointSelector),
+	})
+	if err != nil {
+		return nil, err
+	}
+	res, err := tree.GetProof(callkey, 0, []*big.Int{})
+	if err != nil {
+		return nil, err
+	}
+	output := []string{}
+	for _, r := range res {
+		output = append(output, fmt.Sprintf("0x%v", r.Text(16)))
+	}
+	return output, nil
+}
+
 func (plugin *YeaSayerPlugin) PluginCall(calls []types.FunctionCall) (types.FunctionCall, error) {
 	data := []string{
 		fmt.Sprintf("0x%s", plugin.classHash.Text(16)),
 		plugin.token.session.Key,                                   // empty (yeasayer), would have been: session_key
 		fmt.Sprintf("0x%s", plugin.token.session.Expires.Text(16)), // empty (yeasayer), would have been: session_expires
 		plugin.token.signedSession.Root,                            // empty (yeasayer), would have been: merkle_root
-		"0x1",                                                      // empty (yeasayer), would have been: proof_len
-		"0x1",                                                      // empty (yeasayer), would have been: proofs with size = prool_len * call_array_len, i.e. 1
-		fmt.Sprintf("0x%s", plugin.token.signedSession.Signature[0].Text(16)), // empty (yeasayer), would have been: session_token[0]
-		fmt.Sprintf("0x%s", plugin.token.signedSession.Signature[1].Text(16)), // empty (yeasayer), would have been: session_token[1]
+	}
+
+	length := 0
+	for _, call := range calls {
+		proof, err := getMerkleProof(plugin.token.session.Policies, call)
+		if err != nil {
+			return types.FunctionCall{}, err
+		}
+		if length == 0 {
+			length := len(proof)
+			data = append(data, fmt.Sprintf("0x%s", big.NewInt(int64(length)).Text(16)))
+		}
+		if len(proof) != length {
+			return types.FunctionCall{}, errors.New("proof size error")
+		}
+		data = append(data, proof...)
+	}
+
+	for _, signature := range plugin.token.signedSession.Signature {
+		data = append(data, fmt.Sprintf("0x%s", signature.Text(16)))
 	}
 	return types.FunctionCall{
 		ContractAddress:    plugin.accountAddress,

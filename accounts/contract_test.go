@@ -18,6 +18,7 @@ import (
 	"github.com/dontpanicdao/caigo"
 	"github.com/dontpanicdao/caigo/rpc"
 	"github.com/dontpanicdao/caigo/rpc/types"
+	"github.com/dontpanicdao/starknet-burner/accounts/yeasayer"
 )
 
 //go:embed artifacts/yeasayer.json
@@ -31,26 +32,26 @@ var counterCompiled []byte
 
 const (
 	// sessionkeyClassHash = "0x05cf07fd427f19b180c125b70975db4caab0ba86c541d5b1ab5264f2daee265d"
-	yeasayerClassHash = "0x05ea0aadbad8a4bcbfc65acbf4a5dee6241f7a07ba56482cb729b49d3ed60176"
+	yeasayerClassHash = "0x03f3d1efc312b3a4472a37658bcfc8935602a1297d407f6922b7a2795a16b04d"
 	privateKey        = "0x1"
 	sessionPrivateKey = "0x2"
 	// accountSessionKeyAddress = "0x08186a08f85dab49db1256760e840fa9c4c26c5a4c308d3bed3199d82140599"
-	accountYeaSayerAddress = "0x01cad95949c9ae5291fcaf92fcb987445f882c7f4172d684c5cadfc07e4c119f"
+	accountYeaSayerAddress = "0x075e6b512d7837f87f744aca18a65641aec500f7348a5068cc4aac7f35ed1fb8"
 	counterAddress         = "0x01bb5b121d95ddb29ea630a1fa6f03e1f998540ca821531c82d8c7e889398b6e"
 	devnetEth              = "0x62230ea046a9a5fbc261ac77d03c8d41e5d442db2284587570ab46455fd2488"
 )
 
-var sessionKeyToken = func() *YeaSayerToken {
+var sessionKeyToken = func() *yeasayer.YeaSayerToken {
 	sessionPrivateKeyInt, _ := big.NewInt(0).SetString(sessionPrivateKey, 0)
 	sessionKeyInt, _, _ := caigo.Curve.PrivateToPoint(sessionPrivateKeyInt)
 	sessionKey := fmt.Sprintf("0x%s", sessionKeyInt.Text(16))
-	token, _ := signToken(
+	token, _ := yeasayer.SignToken(
 		privateKey,
 		caigo.UTF8StrToBig("SN_GOERLI").Text(16),
 		sessionKey,
 		accountYeaSayerAddress,
 		2*time.Hour,
-		[]Policy{{ContractAddress: "0x01bb5b121d95ddb29ea630a1fa6f03e1f998540ca821531c82d8c7e889398b6e", Selector: "increment"}},
+		[]yeasayer.Policy{{ContractAddress: "0x01bb5b121d95ddb29ea630a1fa6f03e1f998540ca821531c82d8c7e889398b6e", Selector: "increment"}},
 	)
 	return token
 }()
@@ -226,7 +227,13 @@ func TestCounter_DeployContract(t *testing.T) {
 func TestCounter_ExecuteIncrementWithPlugin(t *testing.T) {
 	provider := beforeEach(t)
 	// account, err := provider.NewAccount(privateKey, accountYeaSayerAddress)
-	account, err := provider.NewAccount(sessionPrivateKey, accountYeaSayerAddress, WithYeaSayerPlugin(yeasayerClassHash, sessionKeyToken))
+	account, err := provider.NewAccount(
+		sessionPrivateKey,
+		accountYeaSayerAddress,
+		yeasayer.WithYeaSayerPlugin(
+			yeasayerClassHash,
+			sessionKeyToken,
+		))
 	if err != nil {
 		t.Fatal("deploy should succeed, instead:", err)
 	}

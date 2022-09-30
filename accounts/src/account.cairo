@@ -73,7 +73,7 @@ end
 func isValidSignature{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr, ecdsa_ptr : SignatureBuiltin*
 }(hash : felt, signature_len : felt, signature : felt*) -> (is_valid : felt):
-    let (is_valid) = Account.isValidSignature(hash, signature_len, signature)
+    let (is_valid) = Account.is_valid_signature(hash, signature_len, signature)
     return (is_valid=is_valid)
 end
 
@@ -117,9 +117,7 @@ func execute{
     let (__fp__, _) = get_fp_and_pc()
     let (tx_info) = get_tx_info()
 
-    if
-        (call_array[0].to - tx_info.account_contract_address) + (call_array[0].selector - USE_PLUGIN) ==
-        0:
+    if (call_array[0].to - tx_info.account_contract_address) + (call_array[0].selector - USE_PLUGIN) == 0:
         with_attr error_message("Account: invalid plugin verification"):
             PluginUtils.validate(call_array_len, call_array, calldata_len, calldata)
         end
