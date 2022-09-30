@@ -29,7 +29,7 @@ var accountCompiled []byte
 //go:embed artifacts/counter.json
 var counterCompiled []byte
 
-var (
+const (
 	// sessionkeyClassHash = "0x05cf07fd427f19b180c125b70975db4caab0ba86c541d5b1ab5264f2daee265d"
 	yeasayerClassHash = "0x05ea0aadbad8a4bcbfc65acbf4a5dee6241f7a07ba56482cb729b49d3ed60176"
 	privateKey        = "0x1"
@@ -39,6 +39,21 @@ var (
 	counterAddress         = "0x01bb5b121d95ddb29ea630a1fa6f03e1f998540ca821531c82d8c7e889398b6e"
 	devnetEth              = "0x62230ea046a9a5fbc261ac77d03c8d41e5d442db2284587570ab46455fd2488"
 )
+
+var sessionKeyToken = func() *YeaSayerToken {
+	sessionPrivateKeyInt, _ := big.NewInt(0).SetString(sessionPrivateKey, 0)
+	sessionKeyInt, _, _ := caigo.Curve.PrivateToPoint(sessionPrivateKeyInt)
+	sessionKey := fmt.Sprintf("0x%s", sessionKeyInt.Text(16))
+	token, _ := signToken(
+		privateKey,
+		caigo.UTF8StrToBig("SN_GOERLI").Text(16),
+		sessionKey,
+		accountYeaSayerAddress,
+		2*time.Hour,
+		[]Policy{{ContractAddress: "0x01bb5b121d95ddb29ea630a1fa6f03e1f998540ca821531c82d8c7e889398b6e", Selector: "increment"}},
+	)
+	return token
+}()
 
 // TestYeaSayer_RegisterClass
 func TestYeaSayer_RegisterClass(t *testing.T) {
@@ -211,7 +226,7 @@ func TestCounter_DeployContract(t *testing.T) {
 func TestCounter_ExecuteIncrementWithPlugin(t *testing.T) {
 	provider := beforeEach(t)
 	// account, err := provider.NewAccount(privateKey, accountYeaSayerAddress)
-	account, err := provider.NewAccount(sessionPrivateKey, accountYeaSayerAddress, WithYeaSayerPlugin(yeasayerClassHash))
+	account, err := provider.NewAccount(sessionPrivateKey, accountYeaSayerAddress, WithYeaSayerPlugin(yeasayerClassHash, sessionKeyToken))
 	if err != nil {
 		t.Fatal("deploy should succeed, instead:", err)
 	}
