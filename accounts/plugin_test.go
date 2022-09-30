@@ -15,7 +15,6 @@ import (
 
 	"github.com/dontpanicdao/caigo/rpc"
 	"github.com/dontpanicdao/caigo/rpc/types"
-	"github.com/dontpanicdao/starknet-burner/accounts/yeasayer"
 )
 
 // RegisterClass
@@ -137,51 +136,4 @@ func CheckEth(t *testing.T, accountAddress string) string {
 	amount, _ := big.NewInt(0).SetString(output[0], 0)
 	fmt.Printf("account has %s wei\n", amount.Text(10))
 	return output[0]
-}
-
-// IncrementWithPlugin
-func IncrementWithPlugin(t *testing.T, accountAddress string, pluginClass string, token *yeasayer.YeaSayerToken, counterAddress string) {
-	provider := beforeEach(t)
-	account, err := provider.NewAccount(
-		sessionPrivateKey,
-		accountAddress,
-		yeasayer.WithYeaSayerPlugin(
-			pluginClass,
-			token,
-		))
-	if err != nil {
-		t.Fatal("deploy should succeed, instead:", err)
-	}
-	calls := []types.FunctionCall{
-		{
-			ContractAddress:    types.HexToHash(counterAddress),
-			EntryPointSelector: "increment",
-			CallData:           []string{},
-		},
-	}
-	ctx := context.Background()
-	tx, err := account.Execute(ctx, calls, types.ExecuteDetails{})
-	if err != nil {
-		t.Fatal("execute should succeed, instead:", err)
-	}
-	if !strings.HasPrefix(tx.TransactionHash, "0x") {
-		t.Fatal("execute should return transaction hash, instead:", tx.TransactionHash)
-	}
-	status, err := provider.WaitForTransaction(ctx, types.HexToHash(tx.TransactionHash), 8*time.Second)
-	if err != nil {
-		t.Fatal("declare should succeed, instead:", err)
-	}
-	if status != types.TransactionStatus_AcceptedOnL2 {
-		t.Log("unexpected status transaction status, check:", status)
-		t.Log("...")
-		t.Log("   verify transaction")
-		t.Log("...")
-		t.Log("export STARKNET_WALLET=starkware.starknet.wallets.open_zeppelin.OpenZeppelinAccount")
-		t.Log("export STARKNET_NETWORK=alpha-goerli")
-		t.Logf("export HASH=%s\n", tx.TransactionHash)
-		t.Log("starknet get_transaction --hash $HASH --feeder_gateway http://localhost:5050/feeder_gateway")
-		t.Log("...")
-		t.Fail()
-	}
-	fmt.Printf("tx hash: %s\n", tx.TransactionHash)
 }

@@ -1,2 +1,4 @@
 /artifacts
 /.env
+/.sessionkey.json
+/.yeasayer.json

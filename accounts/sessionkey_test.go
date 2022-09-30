@@ -13,38 +13,38 @@ import (
 	"github.com/dontpanicdao/caigo"
 	"github.com/dontpanicdao/caigo/rpc/types"
 
-	"github.com/dontpanicdao/starknet-burner/accounts/yeasayer"
+	"github.com/dontpanicdao/starknet-burner/accounts/sessionkey"
 )
 
-//go:embed artifacts/yeasayer.json
-var yeasayerPluginCompiled []byte
+//go:embed artifacts/sessionkey_3fc70024.json
+var sessionPluginCompiled []byte
 
-func yeasayerToken(privateKey, accountAddress, sessionPublicKey string) *yeasayer.YeaSayerToken {
-	token, _ := yeasayer.SignToken(
+func sessionToken(privateKey, accountAddress, sessionPublicKey string) *sessionkey.SessionKeyToken {
+	token, _ := sessionkey.SignToken(
 		privateKey,
 		caigo.UTF8StrToBig("SN_GOERLI").Text(16),
 		sessionPublicKey,
 		accountAddress,
 		2*time.Hour,
-		[]yeasayer.Policy{{ContractAddress: counterAddress, Selector: "increment"}},
+		[]sessionkey.Policy{{ContractAddress: counterAddress, Selector: "increment"}},
 	)
 	return token
 }
 
-// TestYeaSayer_RegisterPlugin
-func TestYeaSayer_RegisterPlugin(t *testing.T) {
-	pluginHash := RegisterClass(t, yeasayerPluginCompiled)
+// TestSessionKey_RegisterPlugin
+func TestSessionKey_RegisterPlugin(t *testing.T) {
+	pluginHash := RegisterClass(t, sessionPluginCompiled)
 	v := &accountPlugin{
 		PluginHash: pluginHash,
 	}
-	err := v.Write(".yeasayer.json")
+	err := v.Write(".sessionkey.json")
 	if err != nil {
 		t.Fatal("should be able to save pluginHash, instead:", err)
 	}
 }
 
-// TestYeaSayer_DeployAccount
-func TestYeaSayer_DeployAccount(t *testing.T) {
+// TestSessionKey_DeployAccount
+func TestSessionKey_DeployAccount(t *testing.T) {
 	pk, ok := big.NewInt(0).SetString(privateKey, 0)
 	if !ok {
 		t.Fatal("could not match *big.Int private key with current value")
@@ -55,7 +55,7 @@ func TestYeaSayer_DeployAccount(t *testing.T) {
 	}
 	publicKeyString := fmt.Sprintf("0x%s", publicKey.Text(16))
 	v := &accountPlugin{}
-	err = v.Read(".yeasayer.json")
+	err = v.Read(".sessionkey.json")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -65,39 +65,39 @@ func TestYeaSayer_DeployAccount(t *testing.T) {
 	}
 	accountAddress := DeployContract(t, accountCompiled, inputs)
 	v.AccountAddress = accountAddress
-	err = v.Write(".yeasayer.json")
+	err = v.Write(".sessionkey.json")
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
-// TestYeaSayer_MintEth
-func TestYeaSayer_MintEth(t *testing.T) {
+// TestSessionKey_MintEth
+func TestSessionKey_MintEth(t *testing.T) {
 	v := &accountPlugin{}
-	err := v.Read(".yeasayer.json")
+	err := v.Read(".sessionkey.json")
 	if err != nil {
 		t.Fatal(err)
 	}
 	MintEth(t, v.AccountAddress)
 }
 
-// TestYeaSayer_CheckEth
-func TestYeaSayer_CheckEth(t *testing.T) {
+// TestSessionKey_CheckEth
+func TestSessionKey_CheckEth(t *testing.T) {
 	v := &accountPlugin{}
-	err := v.Read(".yeasayer.json")
+	err := v.Read(".sessionkey.json")
 	if err != nil {
 		t.Fatal(err)
 	}
 	CheckEth(t, v.AccountAddress)
 }
 
-// IncrementWithYeaSayerPlugin
-func IncrementWithYeaSayerPlugin(t *testing.T, accountAddress string, pluginClass string, token *yeasayer.YeaSayerToken, counterAddress string) {
+// IncrementWithSessionKeyPlugin
+func IncrementWithSessionKeyPlugin(t *testing.T, accountAddress string, pluginClass string, token *sessionkey.SessionKeyToken, counterAddress string) {
 	provider := beforeEach(t)
 	account, err := provider.NewAccount(
 		sessionPrivateKey,
 		accountAddress,
-		yeasayer.WithYeaSayerPlugin(
+		sessionkey.WithSessionKeyPlugin(
 			pluginClass,
 			token,
 		))
@@ -138,10 +138,10 @@ func IncrementWithYeaSayerPlugin(t *testing.T, accountAddress string, pluginClas
 	fmt.Printf("tx hash: %s\n", tx.TransactionHash)
 }
 
-// TestCounter_IncrementWithYeaSayerPlugin
-func TestCounter_IncrementWithYeaSayerPlugin(t *testing.T) {
+// TestCounter_IncrementWithSessionKeyPlugin
+func TestCounter_IncrementWithSessionKeyPlugin(t *testing.T) {
 	v := &accountPlugin{}
-	err := v.Read(".yeasayer.json")
+	err := v.Read(".sessionkey.json")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -154,6 +154,6 @@ func TestCounter_IncrementWithYeaSayerPlugin(t *testing.T) {
 		t.Fatal(err)
 	}
 	sessionPublicKey := fmt.Sprintf("0x%s", sessionPublicKeyInt.Text(16))
-	token := yeasayerToken(privateKey, v.AccountAddress, sessionPublicKey)
-	IncrementWithYeaSayerPlugin(t, v.AccountAddress, v.PluginHash, token, counterAddress)
+	token := sessionToken(privateKey, v.AccountAddress, sessionPublicKey)
+	IncrementWithSessionKeyPlugin(t, v.AccountAddress, v.PluginHash, token, counterAddress)
 }
