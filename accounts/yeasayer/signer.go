@@ -68,7 +68,7 @@ func getMerkleProof(policies []Policy, call types.FunctionCall) ([]string, error
 	if err != nil {
 		return nil, err
 	}
-	res, err := tree.GetProof(callkey, 0, []*big.Int{})
+	res, err := tree.Proof(callkey)
 	if err != nil {
 		return nil, err
 	}

@@ -3,7 +3,7 @@ module github.com/dontpanicdao/starknet-burner/accounts
 go 1.19
 
 require (
-	github.com/dontpanicdao/caigo v0.3.1-0.20220927182323-6b4f3cf25733
+	github.com/dontpanicdao/caigo v0.3.1-0.20220930200341-7cf59c86839b
 	github.com/ethereum/go-ethereum v1.10.17
 	github.com/joho/godotenv v1.4.0
 )
@@ -18,6 +18,6 @@ require (
 	github.com/tklauser/go-sysconf v0.3.5 // indirect
 	github.com/tklauser/numcpus v0.2.2 // indirect
 	golang.org/x/crypto v0.0.0-20220926161630-eccd6366d1be // indirect
-	golang.org/x/sys v0.0.0-20220927170352-d9d178bc13c6 // indirect
+	golang.org/x/sys v0.0.0-20220928140112-f11e5e49a4ec // indirect
 	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect
 )
