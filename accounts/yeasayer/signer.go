@@ -47,7 +47,7 @@ func getMerkleProof(policies []Policy, call types.FunctionCall) ([]string, error
 	leaves := []*big.Int{}
 	for _, policy := range policies {
 		leave, err := caigo.Curve.ComputeHashOnElements([]*big.Int{
-			STARKNET_DOMAIN_TYPE_HASH,
+			POLICY_TYPE_HASH,
 			caigo.HexToBN(policy.ContractAddress),
 			caigo.GetSelectorFromName(policy.Selector),
 		})
@@ -61,7 +61,7 @@ func getMerkleProof(policies []Policy, call types.FunctionCall) ([]string, error
 		return nil, err
 	}
 	callkey, err := caigo.Curve.ComputeHashOnElements([]*big.Int{
-		STARKNET_DOMAIN_TYPE_HASH,
+		POLICY_TYPE_HASH,
 		call.ContractAddress.Big(),
 		caigo.GetSelectorFromName(call.EntryPointSelector),
 	})
@@ -87,18 +87,16 @@ func (plugin *YeaSayerPlugin) PluginCall(calls []types.FunctionCall) (types.Func
 		plugin.token.signedSession.Root,                            // empty (yeasayer), would have been: merkle_root
 	}
 
-	length := 0
+	firstIteration := true
 	for _, call := range calls {
 		proof, err := getMerkleProof(plugin.token.session.Policies, call)
 		if err != nil {
 			return types.FunctionCall{}, err
 		}
-		if length == 0 {
+		if firstIteration {
 			length := len(proof)
 			data = append(data, fmt.Sprintf("0x%s", big.NewInt(int64(length)).Text(16)))
-		}
-		if len(proof) != length {
-			return types.FunctionCall{}, errors.New("proof size error")
+			firstIteration = false
 		}
 		data = append(data, proof...)
 	}

@@ -32,11 +32,11 @@ var counterCompiled []byte
 
 const (
 	// sessionkeyClassHash = "0x05cf07fd427f19b180c125b70975db4caab0ba86c541d5b1ab5264f2daee265d"
-	yeasayerClassHash = "0x03f3d1efc312b3a4472a37658bcfc8935602a1297d407f6922b7a2795a16b04d"
+	yeasayerClassHash = "0x05b989b0e5b21d6ee72d532f741de374257512a5c6e9e1247b49b2838485794d"
 	privateKey        = "0x1"
 	sessionPrivateKey = "0x2"
 	// accountSessionKeyAddress = "0x08186a08f85dab49db1256760e840fa9c4c26c5a4c308d3bed3199d82140599"
-	accountYeaSayerAddress = "0x075e6b512d7837f87f744aca18a65641aec500f7348a5068cc4aac7f35ed1fb8"
+	accountYeaSayerAddress = "0x03a44a6129668fa3e786f279f0499c33ad3289ed67469d55442929ffaac61e30"
 	counterAddress         = "0x01bb5b121d95ddb29ea630a1fa6f03e1f998540ca821531c82d8c7e889398b6e"
 	devnetEth              = "0x62230ea046a9a5fbc261ac77d03c8d41e5d442db2284587570ab46455fd2488"
 )
