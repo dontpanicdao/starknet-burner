@@ -19,11 +19,9 @@ from plugin import PluginUtils, USE_PLUGIN
 #
 
 @constructor
-func constructor{
-        syscall_ptr : felt*,
-        pedersen_ptr : HashBuiltin*,
-        range_check_ptr
-    }(public_key: felt, plugin: felt):
+func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    public_key : felt, plugin : felt
+):
     Account.initializer(public_key)
     PluginUtils.initializer(plugin)
     return ()
@@ -34,31 +32,23 @@ end
 #
 
 @view
-func get_public_key{
-        syscall_ptr : felt*,
-        pedersen_ptr : HashBuiltin*,
-        range_check_ptr
-    }() -> (res: felt):
+func get_public_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
+    res : felt
+):
     let (res) = Account.get_public_key()
     return (res=res)
 end
 
 @view
-func get_nonce{
-        syscall_ptr : felt*,
-        pedersen_ptr : HashBuiltin*,
-        range_check_ptr
-    }() -> (res: felt):
+func get_nonce{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (res : felt):
     let (res) = Account.get_nonce()
     return (res=res)
 end
 
 @view
-func supportsInterface{
-        syscall_ptr: felt*,
-        pedersen_ptr: HashBuiltin*,
-        range_check_ptr
-    } (interfaceId: felt) -> (success: felt):
+func supportsInterface{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    interfaceId : felt
+) -> (success : felt):
     let (success) = ERC165.supports_interface(interfaceId)
     return (success)
 end
@@ -68,11 +58,9 @@ end
 #
 
 @external
-func set_public_key{
-        syscall_ptr : felt*,
-        pedersen_ptr : HashBuiltin*,
-        range_check_ptr
-    }(new_public_key: felt):
+func set_public_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    new_public_key : felt
+):
     Account.set_public_key(new_public_key)
     return ()
 end
@@ -82,59 +70,48 @@ end
 #
 
 @view
-func is_valid_signature{
-        syscall_ptr : felt*,
-        pedersen_ptr : HashBuiltin*,
-        range_check_ptr,
-        ecdsa_ptr: SignatureBuiltin*
-    }(
-        hash: felt,
-        signature_len: felt,
-        signature: felt*
-    ) -> (is_valid: felt):
+func isValidSignature{
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr, ecdsa_ptr : SignatureBuiltin*
+}(hash : felt, signature_len : felt, signature : felt*) -> (is_valid : felt):
     let (is_valid) = Account.is_valid_signature(hash, signature_len, signature)
     return (is_valid=is_valid)
 end
 
 @external
 func __execute__{
-        syscall_ptr : felt*,
-        pedersen_ptr : HashBuiltin*,
-        range_check_ptr,
-        ecdsa_ptr: SignatureBuiltin*,
-        bitwise_ptr: BitwiseBuiltin*
-    }(
-        call_array_len: felt,
-        call_array: AccountCallArray*,
-        calldata_len: felt,
-        calldata: felt*,
-        nonce: felt
-    ) -> (response_len: felt, response: felt*):
+    syscall_ptr : felt*,
+    pedersen_ptr : HashBuiltin*,
+    range_check_ptr,
+    ecdsa_ptr : SignatureBuiltin*,
+    bitwise_ptr : BitwiseBuiltin*,
+}(
+    call_array_len : felt,
+    call_array : AccountCallArray*,
+    calldata_len : felt,
+    calldata : felt*,
+    nonce : felt,
+) -> (response_len : felt, response : felt*):
     let (response_len, response) = execute(
-        call_array_len,
-        call_array,
-        calldata_len,
-        calldata,
-        nonce
+        call_array_len, call_array, calldata_len, calldata, nonce
     )
     return (response_len=response_len, response=response)
 end
 
-## Helpers
+# # Helpers
 
 func execute{
-        syscall_ptr : felt*,
-        pedersen_ptr : HashBuiltin*,
-        range_check_ptr,
-        ecdsa_ptr: SignatureBuiltin*,
-        bitwise_ptr: BitwiseBuiltin*
-    }(
-        call_array_len: felt,
-        call_array: AccountCallArray*,
-        calldata_len: felt,
-        calldata: felt*,
-        nonce: felt
-    ) -> (response_len: felt, response: felt*):
+    syscall_ptr : felt*,
+    pedersen_ptr : HashBuiltin*,
+    range_check_ptr,
+    ecdsa_ptr : SignatureBuiltin*,
+    bitwise_ptr : BitwiseBuiltin*,
+}(
+    call_array_len : felt,
+    call_array : AccountCallArray*,
+    calldata_len : felt,
+    calldata : felt*,
+    nonce : felt,
+) -> (response_len : felt, response : felt*):
     alloc_locals
 
     let (__fp__, _) = get_fp_and_pc()
@@ -144,12 +121,20 @@ func execute{
         with_attr error_message("Account: invalid plugin verification"):
             PluginUtils.validate(call_array_len, call_array, calldata_len, calldata)
         end
-        return Account._unsafe_execute(call_array_len - 1, call_array + AccountCallArray.SIZE, calldata_len - call_array[0].data_len, calldata + call_array[0].data_offset, nonce)
+        return Account._unsafe_execute(
+            call_array_len - 1,
+            call_array + AccountCallArray.SIZE,
+            calldata_len - call_array[0].data_len,
+            calldata + call_array[0].data_offset,
+            nonce,
+        )
     end
 
     # validate transaction
     with_attr error_message("Account: invalid signature"):
-        let (is_valid) = is_valid_signature(tx_info.transaction_hash, tx_info.signature_len, tx_info.signature)
+        let (is_valid) = isValidSignature(
+            tx_info.transaction_hash, tx_info.signature_len, tx_info.signature
+        )
         assert is_valid = TRUE
     end
 

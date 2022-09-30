@@ -6,3 +6,4 @@ hypothesis
 pytest
 python-dotenv
 sympy
+starknet-devnet
