@@ -77,14 +77,14 @@ func getMerkleRoot(policies []Policy) (string, error) {
 	return fmt.Sprintf("0x%s", tree.Root.Text(16)), nil
 }
 
-func SignToken(privateKey, chainId, sessionKey, accountAddress string, duration time.Duration, policies []Policy) (*YeaSayerToken, error) {
+func SignToken(privateKey, chainId, sessionPublicKey, accountAddress string, duration time.Duration, policies []Policy) (*YeaSayerToken, error) {
 	root, err := getMerkleRoot(policies)
 	if err != nil {
 		return nil, err
 	}
 	expires := big.NewInt(time.Now().Add(duration).Unix())
 	res, err := computeSessionHash(
-		sessionKey,
+		sessionPublicKey,
 		fmt.Sprintf("0x%s", expires.Text(16)),
 		root,
 		chainId,
@@ -99,7 +99,7 @@ func SignToken(privateKey, chainId, sessionKey, accountAddress string, duration 
 	}
 	return &YeaSayerToken{
 		session: Session{
-			Key:      sessionKey,
+			Key:      sessionPublicKey,
 			Expires:  expires,
 			Policies: policies,
 		},
