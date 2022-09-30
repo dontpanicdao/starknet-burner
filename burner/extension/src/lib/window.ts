@@ -117,11 +117,12 @@ export const registerWindow = (version: string = "3.x") => {
   if (version !== "3.x") {
     throw "@burner/wallet only supports starknet-js 3.x";
   }
-  if (window) {
-    window.addEventListener("message", eventHandler);
-    Object.defineProperty(window, "starknet-burner", {
-      value: starknetWindow,
-      writable: false,
-    });
+  if (!window) {
+    return;
   }
+  window.addEventListener("message", eventHandler);
+  Object.defineProperty(window, "starknet-burner", {
+    value: starknetWindow,
+    writable: false,
+  });
 };
