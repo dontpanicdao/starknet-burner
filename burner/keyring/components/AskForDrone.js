@@ -4,7 +4,7 @@ import Pin from "components/Pin";
 
 function Validator({ accessKey, usePin }) {
   if (usePin) {
-    return <Pin />;
+    return <Pin pin={123456} />;
   }
   return (
     <QRCode
