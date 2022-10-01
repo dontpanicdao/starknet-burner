@@ -2,9 +2,9 @@ import styles from "styles/AskForDrone.module.css";
 import QRCode from "components/QRCode";
 import Pin from "components/Pin";
 
-function Validator({ accessKey, usePin }) {
-  if (usePin) {
-    return <Pin pin={123456} />;
+function Validator({ accessKey, modalProperties }) {
+  if (modalProperties.usePin) {
+    return <Pin accessKey={accessKey} modalProperties={modalProperties} />;
   }
   return (
     <QRCode
@@ -15,7 +15,12 @@ function Validator({ accessKey, usePin }) {
   );
 }
 
-const AskForDrone = ({ accessKey, isLoading, sessionToken, usePin }) => {
+const AskForDrone = ({
+  accessKey,
+  isLoading,
+  sessionToken,
+  modalProperties,
+}) => {
   return (
     <div className={styles.choicesContainer}>
       <div className={styles.choice}>
@@ -27,7 +32,7 @@ const AskForDrone = ({ accessKey, isLoading, sessionToken, usePin }) => {
             "https://drone.blaqkube.io"
           }?s=${accessKey}`}
         >
-          <Validator accessKey={accessKey} usePin={usePin} />
+          <Validator accessKey={accessKey} modalProperties={modalProperties} />
         </a>
       </div>
       <div className={styles.choice}>

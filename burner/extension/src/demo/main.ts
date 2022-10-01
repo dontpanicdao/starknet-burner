@@ -1,3 +1,3 @@
 import { register } from "..";
 
-register({ usePin: false });
+register({ tokenId: "0x1", usePin: true });

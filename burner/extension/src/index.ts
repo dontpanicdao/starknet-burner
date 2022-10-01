@@ -1,10 +1,16 @@
 import { hideIFrame } from "./components/iframe";
 import { hideModal } from "./components/modal";
 import { registerWindow } from "./lib/window";
-export let UsePin = false;
+export let UsePin;
+export let TokenId;
 
-export const register = ({ version = "3.x", usePin = false }) => {
+export const register = ({
+  tokenId = "0x0",
+  usePin = false,
+  version = "3.x",
+}) => {
   UsePin = usePin;
+  TokenId = tokenId;
   registerWindow(version);
   const element = document.querySelector<HTMLDivElement>("#starknetburner");
   if (!element) {
