@@ -7,11 +7,20 @@ export const CONNECTED = "CONNECTED";
 const Context = createContext();
 
 export const StateProvider = ({ children }) => {
-  const [state, setState] = useState(UNINITIALIZED);
   const [key, setKey] = useState(null);
-  const [usePin, setUsePin] = useState(false);
+  const [modalProperties, setModalProperties] = useState({});
+  const [state, setState] = useState(UNINITIALIZED);
   return (
-    <Context.Provider value={[state, setState, key, setKey, usePin, setUsePin]}>
+    <Context.Provider
+      value={{
+        state,
+        setState,
+        key,
+        setKey,
+        modalProperties,
+        setModalProperties,
+      }}
+    >
       {children}
     </Context.Provider>
   );

@@ -24,7 +24,8 @@ import CloseButton from "components/CloseButton";
 import { getKeyPair, getStarkKey } from "starknet4/utils/ellipticCurve";
 
 export default function Home() {
-  const [state, setState, key, setKey, usePin, setUsePin] = useStateContext();
+  const { state, setState, key, setKey, modalProperties, setModalProperties } =
+    useStateContext();
   const [sessionToken, setSessionToken] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [displayed, setDisplayed] = useState(false);
@@ -65,7 +66,7 @@ export default function Home() {
   }, [key, sessionToken, displayed]);
 
   useEffect(() => {
-    injectSets({ setDisplayed, resetSessionKey, setUsePin });
+    injectSets({ setDisplayed, resetSessionKey, setModalProperties });
     window.addEventListener("message", eventHandler);
     addEventListener("beforeunload", () => {
       log.debug("remove onMessage");
@@ -107,8 +108,8 @@ export default function Home() {
           <AskForDrone
             accessKey={key}
             isLoading={isLoading}
+            modalProperties={modalProperties}
             sessionToken={sessionToken}
-            usePin={usePin}
           />
         )}
         {state === CONNECTED && <Connected sessionToken={sessionToken} />}

@@ -42,8 +42,12 @@ export const eventHandler = async (event) => {
   }
 };
 
-export const injectSets = ({ setDisplayed, resetSessionKey, setUsePin }) => {
+export const injectSets = ({
+  resetSessionKey,
+  setDisplayed,
+  setModalProperties,
+}) => {
   callbacks.resetSessionKey = resetSessionKey;
   callbacks.setDisplayed = setDisplayed;
-  callbacks.setUsePin = setUsePin;
+  callbacks.setModalProperties = setModalProperties;
 };

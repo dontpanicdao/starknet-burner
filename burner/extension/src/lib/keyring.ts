@@ -11,7 +11,7 @@ import { displayIFrame, hideIFrame } from "../components/iframe";
 import { StarknetChainId } from "starknet3x/constants";
 import { connect, disconnect } from "./window";
 import { infiniteTimeoutMilliseconds } from "./shared/config";
-import { UsePin as usePin } from "..";
+import { TokenId as tokenId, UsePin as usePin } from "..";
 
 export type StatusResponse = {
   connected: boolean;
@@ -19,7 +19,8 @@ export type StatusResponse = {
   addresses?: string[];
 };
 
-export type UsePinT = {
+export type OpenModal = {
+  tokenId?: string;
   usePin?: boolean;
 };
 
@@ -32,7 +33,7 @@ export type KeyringAction =
     }
   | {
       type: "keyring_OpenModal";
-      data?: UsePinT;
+      data?: OpenModal;
     }
   | {
       type: "keyring_CloseModal";
@@ -119,7 +120,7 @@ export const keyringOpenModal = async (): Promise<void> => {
   const key = getKey();
   displayModal();
   displayIFrame();
-  sendMessage({ type: "keyring_OpenModal", data: { usePin } }, key);
+  sendMessage({ type: "keyring_OpenModal", data: { tokenId, usePin } }, key);
   return await waitForMessage("keyring_OpenModalResponse", key);
 };
 
