@@ -17,23 +17,23 @@ import (
 	"github.com/dontpanicdao/caigo/rpc/types"
 )
 
-// RegisterClass
-func RegisterClass(t *testing.T, pluginCompiled []byte) string {
+// DeclareClass
+func DeclareClass(t *testing.T, compiledClass []byte) string {
 	provider := beforeEach(t)
 
-	yeasayerClass := types.ContractClass{}
-	if err := json.Unmarshal(pluginCompiled, &yeasayerClass); err != nil {
+	class := types.ContractClass{}
+	if err := json.Unmarshal(compiledClass, &class); err != nil {
 		t.Fatal(err)
 	}
 	ctx := context.Background()
-	tx, err := provider.AddDeclareTransaction(ctx, yeasayerClass, "0x0")
+	tx, err := provider.AddDeclareTransaction(ctx, class, "0x0")
 	if err != nil {
 		t.Fatal("declare should succeed, instead:", err)
 	}
 	if !strings.HasPrefix(tx.ClassHash, "0x") {
 		t.Fatal("declare should return classHash, instead:", tx.ClassHash)
 	}
-	fmt.Printf("plugin Class: %s\n", tx.ClassHash)
+	fmt.Printf("class Hash: %s\n", tx.ClassHash)
 	fmt.Printf("transaction Hash: %s\n", tx.TransactionHash)
 	status, err := provider.WaitForTransaction(ctx, types.HexToHash(tx.TransactionHash), 8*time.Second)
 	if err != nil {
@@ -55,7 +55,7 @@ func RegisterClass(t *testing.T, pluginCompiled []byte) string {
 }
 
 // DeployContract
-func DeployContract(t *testing.T, contractCompiled []byte, inputs []string) string {
+func DeployContract(t *testing.T, salt string, contractCompiled []byte, inputs []string) string {
 	provider := beforeEach(t)
 	contractClass := types.ContractClass{}
 
@@ -63,7 +63,7 @@ func DeployContract(t *testing.T, contractCompiled []byte, inputs []string) stri
 		t.Fatal(err)
 	}
 	ctx := context.Background()
-	tx, err := provider.AddDeployTransaction(ctx, inputs[0], inputs, contractClass)
+	tx, err := provider.AddDeployTransaction(ctx, salt, inputs, contractClass)
 	if err != nil {
 		t.Fatal("deploy should succeed, instead:", err)
 	}

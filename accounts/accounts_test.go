@@ -18,8 +18,8 @@ const (
 	devnetEth         = "0x62230ea046a9a5fbc261ac77d03c8d41e5d442db2284587570ab46455fd2488"
 )
 
-//go:embed artifacts/account.json
-var accountCompiled []byte
+//go:embed artifacts/proxy.json
+var proxyAccountCompiled []byte
 
 //go:embed artifacts/counter.json
 var counterCompiled []byte

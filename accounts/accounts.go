@@ -6,8 +6,9 @@ import (
 )
 
 type accountPlugin struct {
-	PluginHash     string `json:"pluginHash"`
-	AccountAddress string `json:"accountAddress"`
+	PluginHash          string `json:"pluginHash"`
+	ImplAccountAddress  string `json:"ImplAccountAddress"`
+	ProxyAccountAddress string `json:"ProxyAccountAddress"`
 }
 
 func (ap *accountPlugin) Read(filename string) error {
