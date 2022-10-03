@@ -19,6 +19,9 @@ import (
 //go:embed artifacts/yeasayer.json
 var yeasayerPluginCompiled []byte
 
+//go:embed artifacts/account.json
+var pluginAccountCompiled []byte
+
 func yeasayerToken(privateKey, accountAddress, sessionPublicKey string) *yeasayer.YeaSayerToken {
 	token, _ := yeasayer.SignToken(
 		privateKey,
@@ -33,7 +36,7 @@ func yeasayerToken(privateKey, accountAddress, sessionPublicKey string) *yeasaye
 
 // TestYeaSayer_RegisterPlugin
 func TestYeaSayer_RegisterPlugin(t *testing.T) {
-	pluginHash := RegisterClass(t, yeasayerPluginCompiled)
+	pluginHash := DeclareClass(t, yeasayerPluginCompiled)
 	v := &accountPlugin{
 		PluginHash: pluginHash,
 	}
@@ -43,8 +46,23 @@ func TestYeaSayer_RegisterPlugin(t *testing.T) {
 	}
 }
 
-// TestYeaSayer_DeployAccount
-func TestYeaSayer_DeployAccount(t *testing.T) {
+// TestYeaSayer_DeclareImplAccount
+func TestYeaSayer_DeclareImplAccount(t *testing.T) {
+	v := &accountPlugin{}
+	err := v.Read(".yeasayer.json")
+	if err != nil {
+		t.Fatal("should be able to read pluginHash, instead:", err)
+	}
+	accountHash := DeclareClass(t, pluginAccountCompiled)
+	v.ImplAccountAddress = accountHash
+	err = v.Write(".yeasayer.json")
+	if err != nil {
+		t.Fatal("should be able to save pluginHash, instead:", err)
+	}
+}
+
+// TestYeaSayer_DeployProxyAccount
+func TestYeaSayer_DeployProxyAccount(t *testing.T) {
 	pk, ok := big.NewInt(0).SetString(privateKey, 0)
 	if !ok {
 		t.Fatal("could not match *big.Int private key with current value")
@@ -60,11 +78,12 @@ func TestYeaSayer_DeployAccount(t *testing.T) {
 		t.Fatal(err)
 	}
 	inputs := []string{
+		v.ImplAccountAddress,
 		publicKeyString,
 		v.PluginHash,
 	}
-	accountAddress := DeployContract(t, accountCompiled, inputs)
-	v.AccountAddress = accountAddress
+	proxyAccountAddress := DeployContract(t, publicKeyString, proxyAccountCompiled, inputs)
+	v.ProxyAccountAddress = proxyAccountAddress
 	err = v.Write(".yeasayer.json")
 	if err != nil {
 		t.Fatal(err)
@@ -78,7 +97,7 @@ func TestYeaSayer_MintEth(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	MintEth(t, v.AccountAddress)
+	MintEth(t, v.ProxyAccountAddress)
 }
 
 // TestYeaSayer_CheckEth
@@ -88,7 +107,7 @@ func TestYeaSayer_CheckEth(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	CheckEth(t, v.AccountAddress)
+	CheckEth(t, v.ProxyAccountAddress)
 }
 
 // IncrementWithYeaSayerPlugin
@@ -119,6 +138,7 @@ func IncrementWithYeaSayerPlugin(t *testing.T, accountAddress string, pluginClas
 	if !strings.HasPrefix(tx.TransactionHash, "0x") {
 		t.Fatal("execute should return transaction hash, instead:", tx.TransactionHash)
 	}
+	fmt.Printf("tx hash: %s\n", tx.TransactionHash)
 	status, err := provider.WaitForTransaction(ctx, types.HexToHash(tx.TransactionHash), 8*time.Second)
 	if err != nil {
 		t.Fatal("declare should succeed, instead:", err)
@@ -135,7 +155,6 @@ func IncrementWithYeaSayerPlugin(t *testing.T, accountAddress string, pluginClas
 		t.Log("...")
 		t.Fail()
 	}
-	fmt.Printf("tx hash: %s\n", tx.TransactionHash)
 }
 
 // TestCounter_IncrementWithYeaSayerPlugin
@@ -154,6 +173,6 @@ func TestCounter_IncrementWithYeaSayerPlugin(t *testing.T) {
 		t.Fatal(err)
 	}
 	sessionPublicKey := fmt.Sprintf("0x%s", sessionPublicKeyInt.Text(16))
-	token := yeasayerToken(privateKey, v.AccountAddress, sessionPublicKey)
-	IncrementWithYeaSayerPlugin(t, v.AccountAddress, v.PluginHash, token, counterAddress)
+	token := yeasayerToken(privateKey, v.ProxyAccountAddress, sessionPublicKey)
+	IncrementWithYeaSayerPlugin(t, v.ProxyAccountAddress, v.PluginHash, token, counterAddress)
 }

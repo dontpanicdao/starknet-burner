@@ -3,7 +3,7 @@
 CAIRO_PATH = ./cairo-contracts/src:./src
 
 .PHONY: build
-build: artifacts/account.json artifacts/counter.json artifacts/yeasayer.json openzeppelin-v0
+build: syncopenzeppelinv0 artifacts/account.json artifacts/counter.json artifacts/yeasayer.json artifacts/proxy.json
 
 artifacts/account.json: src/account.cairo artifacts
 	starknet-compile src/account.cairo \
@@ -23,6 +23,12 @@ artifacts/yeasayer.json: src/yeasayer.cairo artifacts
 		--abi artifacts/yeasayer_abi.json || \
 		rm -f artifacts/yeasayer.json
 
+artifacts/proxy.json: artifacts
+		starknet-compile src/proxy.cairo \
+			--output artifacts/proxy.json \
+			--abi artifacts/proxy_abi.json || \
+			rm -f artifacts/proxy.json
+
 .PHONY: openzeppelinv0
 openzeppelinv0: artifacts/account_v0.3.2.json artifacts/erc20.json
 
@@ -32,7 +38,6 @@ artifacts/account_v0.3.2.json: artifacts syncopenzeppelinv0
 			--output ../../artifacts/account_v0.3.2.json \
 			--abi ../../artifacts/account_v0.3.2_abi.json --account_contract || \
 			rm -f ../../artifactsaccount_v0.3.2.json
-
 
 artifacts/erc20.json: artifacts syncopenzeppelinv0
 	cd cairo-contracts/src && \

@@ -9,6 +9,7 @@ from starkware.cairo.common.registers import get_fp_and_pc
 from starkware.starknet.common.syscalls import get_tx_info
 
 from openzeppelin.account.library import Account, AccountCallArray
+from openzeppelin.upgrades.library import Proxy
 
 from openzeppelin.introspection.erc165.library import ERC165
 
@@ -19,11 +20,7 @@ from plugin import PluginUtils, USE_PLUGIN
 #
 
 @constructor
-func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    public_key : felt, plugin : felt
-):
-    Account.initializer(public_key)
-    PluginUtils.initializer(plugin)
+func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():
     return ()
 end
 
@@ -65,6 +62,27 @@ func set_public_key{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_chec
     return ()
 end
 
+@external
+func initialize{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    public_key : felt, plugin : felt
+):
+    Account.initializer(public_key)
+    PluginUtils.initializer(plugin)
+    return ()
+end
+
+@external
+func upgrade{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    implementation: felt
+):
+    Account.assert_only_self()
+    # TODO: make sure the new implementation is compliant with account
+    
+    # Upgrade
+    Proxy._set_implementation_hash(implementation)
+    return ()
+end
+
 #
 # Business logic
 #
@@ -97,7 +115,7 @@ func __execute__{
     return (response_len=response_len, response=response)
 end
 
-# # Helpers
+# Helpers
 
 func execute{
     syscall_ptr : felt*,
