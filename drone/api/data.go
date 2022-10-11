@@ -21,9 +21,9 @@ import (
 )
 
 type Request struct {
-	RequestID        string `dynamodbav:"requestID" json:"requestID"`
-	SessionPublicKey string `dynamodbav:"sessionPublicKey" json:"key"`
-	DappTokenID      string `dynamodbav:"dappTokenID" json:"dappTokenID"`
+	RequestID        string `dynamodbav:"requestID" json:"requestID" form:"requestID"`
+	SessionPublicKey string `dynamodbav:"sessionPublicKey" json:"key" form:"key" binding:"required"`
+	DappTokenID      string `dynamodbav:"dappTokenID" json:"dappTokenID" form:"dappTokenID" binding:"required"`
 	TTL              int64  `dynamodbav:"TTL" json:"-"`
 }
 
