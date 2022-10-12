@@ -3,13 +3,15 @@ package main
 import (
 	"context"
 	"net/http"
+	"os"
 	"regexp"
 
 	"github.com/gin-gonic/gin"
 )
 
 type App struct {
-	Store *store
+	Router *gin.Engine
+	Store  *store
 }
 
 func NewApp() (*App, error) {
@@ -17,14 +19,24 @@ func NewApp() (*App, error) {
 	if err != nil {
 		return nil, err
 	}
+	router := NewRouter(store, os.Getenv("route_prefix"))
 	return &App{
-		Store: store,
+		Router: router,
+		Store:  store,
 	}, nil
 }
 
-func NewRouter(store *store) *gin.Engine {
+func NewRouter(store IStore, prefix string) *gin.Engine {
 	r := gin.Default()
+	if prefix != "" {
+		routes(r.Group(prefix), store)
+	} else {
+		routes(r, store)
+	}
+	return r
+}
 
+func routes(r gin.IRouter, store IStore) {
 	r.OPTIONS("/*path", func(c *gin.Context) {
 		c.JSON(http.StatusNoContent, nil)
 	})
@@ -36,12 +48,12 @@ func NewRouter(store *store) *gin.Engine {
 	r.POST("/requests", func(c *gin.Context) {
 		var req Request
 		if err := c.ShouldBind(&req); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"message": err})
+			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 			return
 		}
 		err := store.uploadRequest(&req)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err})
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
 		}
 		c.JSON(http.StatusCreated, req)
@@ -57,7 +69,7 @@ func NewRouter(store *store) *gin.Engine {
 
 		req, err := store.downloadRequest(pin)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err})
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
 		}
 
@@ -72,12 +84,12 @@ func NewRouter(store *store) *gin.Engine {
 		})
 	})
 
-	r.GET("/0x:key", func(c *gin.Context) {
+	r.GET("/0x:pk", func(c *gin.Context) {
 		pk := c.Params.ByName("pk")
 		st, err := store.downloadSessionToken(pk)
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err})
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
 		}
 
@@ -89,7 +101,26 @@ func NewRouter(store *store) *gin.Engine {
 		c.JSON(http.StatusOK, st)
 	})
 
-	r.PUT("/0x:key", func(c *gin.Context) {})
-
-	return r
+	r.PUT("/0x:pk", func(c *gin.Context) {
+		pk := c.Params.ByName("pk")
+		sessionKey := SessionKey{}
+		err := c.ShouldBind(&sessionKey)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			return
+		}
+		if sessionKey.SessionPublicKey != pk {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "bad request"})
+			return
+		}
+		err = store.uploadSessionToken(&sessionKey)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			return
+		}
+		c.JSON(http.StatusCreated, gin.H{
+			"message": "Created",
+			"key":     pk,
+		})
+	})
 }

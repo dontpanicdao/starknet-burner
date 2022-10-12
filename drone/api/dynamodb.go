@@ -101,3 +101,20 @@ func (s *store) downloadSessionToken(pk string) (*SessionKey, error) {
 	}
 	return &item, nil
 }
+
+func (s *store) uploadSessionToken(sessionKey *SessionKey) error {
+	sessionKey.TTL = time.Now().Add(time.Second * 300).Unix()
+	item, err := attributevalue.MarshalMap(sessionKey)
+	if err != nil {
+		return err
+	}
+	input := &dynamodb.PutItemInput{
+		TableName: aws.String(os.Getenv("table_session")),
+		Item:      item,
+	}
+	_, err = s.client.PutItem(context.TODO(), input)
+	if err != nil {
+		return err
+	}
+	return nil
+}

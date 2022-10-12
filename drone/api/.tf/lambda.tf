@@ -31,9 +31,10 @@ resource "aws_lambda_function" "lambda" {
 
   environment {
     variables = {
-      version       = data.external.version.result["version"]
-      table_session = "${terraform.workspace}BurnerSession"
+      route_prefix  = "/${terraform.workspace}"
       table_request = "${terraform.workspace}BurnerRequest"
+      table_session = "${terraform.workspace}BurnerSession"
+      version       = data.external.version.result["version"]
     }
   }
 }
