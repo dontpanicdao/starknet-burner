@@ -58,10 +58,12 @@ func NewRouter(store *store) *gin.Engine {
 		req, err := store.downloadRequest(pin)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err})
+			return
 		}
 
 		if req == nil {
 			c.JSON(http.StatusNotFound, gin.H{"message": "not found"})
+			return
 		}
 
 		c.JSON(http.StatusOK, gin.H{
@@ -69,6 +71,25 @@ func NewRouter(store *store) *gin.Engine {
 			"key":         req.SessionPublicKey,
 		})
 	})
+
+	r.GET("/0x:key", func(c *gin.Context) {
+		pk := c.Params.ByName("pk")
+		st, err := store.downloadSessionToken(pk)
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err})
+			return
+		}
+
+		if st == nil {
+			c.JSON(http.StatusNotFound, gin.H{"message": "not found"})
+			return
+		}
+
+		c.JSON(http.StatusOK, st)
+	})
+
+	r.PUT("/0x:key", func(c *gin.Context) {})
 
 	return r
 }

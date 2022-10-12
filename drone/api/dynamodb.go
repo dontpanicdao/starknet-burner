@@ -3,8 +3,10 @@ package main
 import (
 	"context"
 	"crypto/rand"
+	"log"
 	"math/big"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -69,4 +71,33 @@ func (s *store) downloadRequest(pin string) (*Request, error) {
 	item := Request{}
 	err = attributevalue.UnmarshalMap(output.Item, &item)
 	return &item, err
+}
+
+func (s *store) downloadSessionToken(pk string) (*SessionKey, error) {
+	pk = strings.ToLower(pk)
+	input := &dynamodb.GetItemInput{
+		TableName: aws.String(os.Getenv("table_session")),
+		Key: map[string]types.AttributeValue{
+			"sessionPublicKey": &types.AttributeValueMemberS{
+				Value: pk,
+			},
+		},
+	}
+	output, err := s.client.GetItem(context.TODO(), input)
+	if err != nil {
+		return nil, err
+	}
+	if output.Item == nil {
+		return nil, nil
+	}
+	item := SessionKey{}
+	err = attributevalue.UnmarshalMap(output.Item, &item)
+	if err != nil {
+		log.Println("could not convert data", err)
+		return nil, err
+	}
+	if item.SessionPublicKey == "" {
+		return nil, nil
+	}
+	return &item, nil
 }
