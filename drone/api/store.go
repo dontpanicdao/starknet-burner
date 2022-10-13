@@ -22,7 +22,7 @@ type Authorization struct {
 	TTL              int64    `dynamodbav:"TTL" json:"-"`
 }
 
-type IStore interface {
+type Storer interface {
 	createAuthorization(*Authorization) error
 	createRequest(*Request) error
 	findAuthorization(string) (*Authorization, error)

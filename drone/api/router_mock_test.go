@@ -9,7 +9,7 @@ import (
 
 // Ensure, that IStoreMock does implement IStore.
 // If this is not the case, regenerate this file with moq.
-var _ IStore = &IStoreMock{}
+var _ Storer = &IStoreMock{}
 
 // IStoreMock is a mock implementation of IStore.
 //

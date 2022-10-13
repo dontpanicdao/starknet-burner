@@ -30,7 +30,7 @@ type Key = map[string]types.AttributeValue
 
 var (
 	// ensure `dynStore` implements `IStore` interface
-	_ IStore = &dynStore{}
+	_ Storer = &dynStore{}
 )
 
 func NewStore(ctx context.Context) (*dynStore, error) {

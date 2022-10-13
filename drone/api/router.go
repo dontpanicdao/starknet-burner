@@ -12,7 +12,7 @@ import (
 
 type App struct {
 	Router *gin.Engine
-	Store  IStore
+	Store  Storer
 }
 
 func NewApp(ctx context.Context) (*App, error) {
@@ -27,7 +27,7 @@ func NewApp(ctx context.Context) (*App, error) {
 	}, nil
 }
 
-func NewRouter(store IStore, prefix string) *gin.Engine {
+func NewRouter(store Storer, prefix string) *gin.Engine {
 	r := gin.Default()
 	if prefix == "" {
 		routes(r, store)
@@ -37,7 +37,7 @@ func NewRouter(store IStore, prefix string) *gin.Engine {
 	return r
 }
 
-func routes(r gin.IRouter, store IStore) {
+func routes(r gin.IRouter, store Storer) {
 	r.OPTIONS("/*path", func(c *gin.Context) {
 		c.JSON(http.StatusNoContent, nil)
 	})
