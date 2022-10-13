@@ -20,7 +20,7 @@ type dynamoClient interface {
 	GetItem(ctx context.Context, params *dynamodb.GetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error)
 }
 
-type store struct {
+type dynStore struct {
 	client       dynamoClient
 	requestTable *string
 	sessionTable *string
@@ -29,24 +29,24 @@ type store struct {
 type Key = map[string]types.AttributeValue
 
 var (
-	// ensure `store` implements `IStore` interface
-	_ IStore = &store{}
+	// ensure `dynStore` implements `IStore` interface
+	_ IStore = &dynStore{}
 )
 
-func NewStore(ctx context.Context) (*store, error) {
+func NewStore(ctx context.Context) (*dynStore, error) {
 	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
 		return nil, err
 	}
 	client := dynamodb.NewFromConfig(cfg)
-	return &store{
+	return &dynStore{
 		client:       client,
 		requestTable: aws.String(os.Getenv("table_request")),
 		sessionTable: aws.String(os.Getenv("table_session")),
 	}, nil
 }
 
-func (s *store) createRequest(req *Request) error {
+func (s *dynStore) createRequest(req *Request) error {
 	req.TTL = time.Now().Add(time.Second * 120).Unix()
 	nBig, _ := rand.Int(rand.Reader, big.NewInt(899999))
 	req.ID = nBig.Add(nBig, big.NewInt(100000)).Text(10)
@@ -59,7 +59,7 @@ func (s *store) createRequest(req *Request) error {
 	return err
 }
 
-func (s *store) findRequest(id string) (*Request, error) {
+func (s *dynStore) findRequest(id string) (*Request, error) {
 	input := &dynamodb.GetItemInput{
 		TableName: s.requestTable,
 		Key:       Key{"requestID": &types.AttributeValueMemberS{Value: id}},
@@ -76,7 +76,7 @@ func (s *store) findRequest(id string) (*Request, error) {
 	return &item, err
 }
 
-func (s *store) findAuthorization(pk string) (*Authorization, error) {
+func (s *dynStore) findAuthorization(pk string) (*Authorization, error) {
 	pk = strings.ToLower(pk)
 	input := &dynamodb.GetItemInput{
 		TableName: s.sessionTable,
@@ -99,7 +99,7 @@ func (s *store) findAuthorization(pk string) (*Authorization, error) {
 	return &auth, nil
 }
 
-func (s *store) createAuthorization(auth *Authorization) error {
+func (s *dynStore) createAuthorization(auth *Authorization) error {
 	auth.TTL = time.Now().Add(time.Second * 300).Unix()
 	item, err := attributevalue.MarshalMap(auth)
 	if err != nil {
