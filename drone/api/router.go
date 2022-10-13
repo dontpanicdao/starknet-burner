@@ -82,7 +82,7 @@ func routes(r gin.IRouter, store IStore) {
 	})
 
 	r.GET("/0x:pk", func(c *gin.Context) {
-		pk := c.Params.ByName("pk")
+		pk := "0x" + c.Params.ByName("pk")
 		st, err := store.downloadSessionToken(pk)
 
 		if err != nil {
@@ -99,11 +99,11 @@ func routes(r gin.IRouter, store IStore) {
 	})
 
 	r.PUT("/0x:pk", func(c *gin.Context) {
-		pk := c.Params.ByName("pk")
+		pk := "0x" + c.Params.ByName("pk")
 		sessionKey := SessionKey{}
 		err := c.ShouldBind(&sessionKey)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
 		}
 		if sessionKey.SessionPublicKey != pk {
@@ -115,9 +115,6 @@ func routes(r gin.IRouter, store IStore) {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
 		}
-		c.JSON(http.StatusCreated, gin.H{
-			"message": "Created",
-			"key":     pk,
-		})
+		c.JSON(http.StatusOK, sessionKey)
 	})
 }

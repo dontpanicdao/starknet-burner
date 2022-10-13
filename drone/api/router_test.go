@@ -3,17 +3,18 @@ package main
 //go:generate bin/moq -out router_mock_test.go . IStore
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
 type testRouterSuite struct {
 	body    string
+	desc    string
 	method  string
 	path    string
 	resBody string
@@ -23,22 +24,26 @@ type testRouterSuite struct {
 
 func TestRouter(t *testing.T) {
 	testRouterSuites := []testRouterSuite{{
+		desc:    "getting version",
 		method:  "GET",
 		path:    "/version",
 		resCode: http.StatusOK,
 		resBody: `{"version":"dev"}`,
 	}, {
+		desc:    "creating a request: no body provided",
 		method:  "POST",
 		path:    "/requests",
 		resCode: http.StatusBadRequest,
 		resBody: `{"message":"invalid request"}`,
 	}, {
+		desc:    "creating a request: with bad body",
 		method:  "POST",
 		path:    "/requests",
 		body:    `{}`,
 		resCode: http.StatusBadRequest,
 		resBody: `{"message":"Key: 'Request.SessionPublicKey' Error:Field validation for 'SessionPublicKey' failed on the 'required' tag\nKey: 'Request.DappTokenID' Error:Field validation for 'DappTokenID' failed on the 'required' tag"}`,
 	}, {
+		desc:    "creating a request: all is good",
 		method:  "POST",
 		path:    "/requests",
 		body:    `{"key":"foo", "dappTokenID": "bar"}`,
@@ -51,11 +56,13 @@ func TestRouter(t *testing.T) {
 			},
 		},
 	}, {
+		desc:    "getting pin: bad format",
 		method:  "GET",
 		path:    "/requests/1234",
 		resCode: http.StatusBadRequest,
 		resBody: `{"message":"unsupported pin format"}`,
 	}, {
+		desc:    "getting pin: store function returns an error",
 		method:  "GET",
 		path:    "/requests/123456",
 		resCode: http.StatusInternalServerError,
@@ -64,6 +71,7 @@ func TestRouter(t *testing.T) {
 			downloadRequestFunc: func(pin string) (*Request, error) { return nil, errors.New("foo") },
 		},
 	}, {
+		desc:    "getting pin: not found",
 		method:  "GET",
 		path:    "/requests/123456",
 		resCode: http.StatusNotFound,
@@ -72,6 +80,7 @@ func TestRouter(t *testing.T) {
 			downloadRequestFunc: func(pin string) (*Request, error) { return nil, nil },
 		},
 	}, {
+		desc:    "getting pin: store all is good",
 		method:  "GET",
 		path:    "/requests/123456",
 		resCode: http.StatusOK,
@@ -86,6 +95,7 @@ func TestRouter(t *testing.T) {
 			},
 		},
 	}, {
+		desc:    "getting session token: store function returns an error",
 		method:  "GET",
 		path:    "/0xdeadbeef",
 		resCode: http.StatusInternalServerError,
@@ -94,6 +104,7 @@ func TestRouter(t *testing.T) {
 			downloadSessionTokenFunc: func(pk string) (*SessionKey, error) { return nil, errors.New("foo") },
 		},
 	}, {
+		desc:    "getting session token: not found",
 		method:  "GET",
 		path:    "/0xdeadbeef",
 		resCode: http.StatusNotFound,
@@ -102,6 +113,7 @@ func TestRouter(t *testing.T) {
 			downloadSessionTokenFunc: func(pk string) (*SessionKey, error) { return nil, nil },
 		},
 	}, {
+		desc:    "getting session token: all is good",
 		method:  "GET",
 		path:    "/0xdeadbeef",
 		resCode: http.StatusOK,
@@ -117,11 +129,41 @@ func TestRouter(t *testing.T) {
 				}, nil
 			},
 		},
+	}, {
+		desc:    "updating session token: no body provided",
+		method:  "PUT",
+		path:    "/0xdeadbeef",
+		resCode: http.StatusInternalServerError,
+		resBody: `{"message":"invalid request"}`,
+	}, {
+		desc:    "updating session token: store function returns an error",
+		method:  "PUT",
+		path:    "/0xdeadbeef",
+		body:    `{"key":"0xdeadbeef"}`,
+		resCode: http.StatusInternalServerError,
+		resBody: `{"message":"foo"}`,
+		store: &IStoreMock{
+			uploadSessionTokenFunc: func(s *SessionKey) error { return errors.New("foo") },
+		},
+	}, {
+		desc:    "updating session token: all is good",
+		method:  "PUT",
+		path:    "/0xdeadbeef",
+		body:    `{"key":"0xdeadbeef"}`,
+		resCode: http.StatusOK,
+		resBody: `{"key":"0xdeadbeef","policies":null,"expires":0,"root":"foo","account":"","signature":null}`,
+		store: &IStoreMock{
+			uploadSessionTokenFunc: func(s *SessionKey) error {
+				s.Root = "foo"
+				return nil
+			},
+		},
 	}}
 	for _, test := range testRouterSuites {
+		fmt.Println(test.desc)
 		var body io.Reader
 		if test.body != "" {
-			body = bytes.NewBuffer([]byte(test.body))
+			body = strings.NewReader(test.body)
 		}
 		router := NewRouter(test.store, "")
 		w := httptest.NewRecorder()
