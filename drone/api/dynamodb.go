@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"crypto/rand"
-	"log"
 	"math/big"
 	"os"
 	"strings"
@@ -32,8 +31,6 @@ type Key = map[string]types.AttributeValue
 var (
 	// ensure `store` implements `IStore` interface
 	_ IStore = &store{}
-
-	validityDuration = time.Second * 300
 )
 
 func NewStore(ctx context.Context) (*store, error) {
@@ -92,28 +89,23 @@ func (s *store) findAuthorization(pk string) (*Authorization, error) {
 	if output.Item == nil {
 		return nil, nil
 	}
-	item := Authorization{}
-	err = attributevalue.UnmarshalMap(output.Item, &item)
-	if err != nil {
-		log.Println("could not convert data", err)
+	var auth Authorization
+	if err := attributevalue.UnmarshalMap(output.Item, &auth); err != nil {
 		return nil, err
 	}
-	if item.SessionPublicKey == "" {
+	if auth.SessionPublicKey == "" {
 		return nil, nil
 	}
-	return &item, nil
+	return &auth, nil
 }
 
-func (s *store) createAuthorization(sessionKey *Authorization) error {
-	sessionKey.TTL = time.Now().Add(validityDuration).Unix()
-	item, err := attributevalue.MarshalMap(sessionKey)
+func (s *store) createAuthorization(auth *Authorization) error {
+	auth.TTL = time.Now().Add(time.Second * 300).Unix()
+	item, err := attributevalue.MarshalMap(auth)
 	if err != nil {
 		return err
 	}
 	input := &dynamodb.PutItemInput{TableName: s.sessionTable, Item: item}
 	_, err = s.client.PutItem(context.TODO(), input)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }

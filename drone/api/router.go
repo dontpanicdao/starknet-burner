@@ -6,16 +6,17 @@ import (
 	"os"
 	"regexp"
 
+	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
 	"github.com/gin-gonic/gin"
 )
 
 type App struct {
 	Router *gin.Engine
-	Store  *store
+	Store  IStore
 }
 
-func NewApp() (*App, error) {
-	store, err := NewStore(context.TODO())
+func NewApp(ctx context.Context) (*App, error) {
+	store, err := NewStore(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -28,10 +29,10 @@ func NewApp() (*App, error) {
 
 func NewRouter(store IStore, prefix string) *gin.Engine {
 	r := gin.Default()
-	if prefix != "" {
-		routes(r.Group(prefix), store)
-	} else {
+	if prefix == "" {
 		routes(r, store)
+	} else {
+		routes(r.Group(prefix), store)
 	}
 	return r
 }
@@ -63,7 +64,7 @@ func routes(r gin.IRouter, store IStore) {
 		id := c.Params.ByName("id")
 		re := regexp.MustCompile("[0-9]{6}")
 		if !re.MatchString(id) {
-			c.JSON(http.StatusBadRequest, gin.H{"message": "unsupported pin format"})
+			c.JSON(http.StatusBadRequest, gin.H{"message": "unsupported format"})
 			return
 		}
 
@@ -83,32 +84,35 @@ func routes(r gin.IRouter, store IStore) {
 
 	r.GET("/authorizations/0x:pk", func(c *gin.Context) {
 		pk := "0x" + c.Params.ByName("pk")
-		st, err := store.findAuthorization(pk)
+		auth, err := store.findAuthorization(pk)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
 		}
-
-		if st == nil {
+		if auth == nil {
 			c.JSON(http.StatusNotFound, gin.H{"message": "not found"})
 			return
 		}
 
-		c.JSON(http.StatusOK, st)
+		c.JSON(http.StatusOK, auth)
 	})
 
 	r.POST("/authorizations", func(c *gin.Context) {
 		var auth Authorization
-		err := c.ShouldBind(&auth)
-		if err != nil {
+		if err := c.ShouldBind(&auth); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
 		}
-		err = store.createAuthorization(&auth)
-		if err != nil {
+
+		if err := store.createAuthorization(&auth); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, auth)
+
+		c.JSON(http.StatusCreated, auth)
 	})
+}
+
+func (app *App) Proxy() *ginadapter.GinLambdaV2 {
+	return ginadapter.NewV2(app.Router)
 }

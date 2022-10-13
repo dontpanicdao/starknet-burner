@@ -40,7 +40,7 @@ func TestRouter(t *testing.T) {
 		path:    "/requests",
 		body:    `{}`,
 		resCode: http.StatusBadRequest,
-		resBody: `{"message":"Key: 'AuthorizationRequest.DappTokenID' Error:Field validation for 'DappTokenID' failed on the 'required' tag\nKey: 'AuthorizationRequest.SessionPublicKey' Error:Field validation for 'SessionPublicKey' failed on the 'required' tag"}`,
+		resBody: `{"message":"Key: 'Request.DappTokenID' Error:Field validation for 'DappTokenID' failed on the 'required' tag\nKey: 'Request.SessionPublicKey' Error:Field validation for 'SessionPublicKey' failed on the 'required' tag"}`,
 	}, {
 		desc:    "creating a request: all is good",
 		method:  "POST",
@@ -55,11 +55,11 @@ func TestRouter(t *testing.T) {
 			},
 		},
 	}, {
-		desc:    "getting a request: bad format",
+		desc:    "getting a request: unsupported format",
 		method:  "GET",
 		path:    "/requests/1234",
 		resCode: http.StatusBadRequest,
-		resBody: `{"message":"unsupported pin format"}`,
+		resBody: `{"message":"unsupported format"}`,
 	}, {
 		desc:    "getting a request: store function returns an error",
 		method:  "GET",
@@ -149,7 +149,7 @@ func TestRouter(t *testing.T) {
 		method:  "POST",
 		path:    "/authorizations",
 		body:    `{"key":"0xdeadbeef"}`,
-		resCode: http.StatusOK,
+		resCode: http.StatusCreated,
 		resBody: `{"account":"","expires":0,"root":"foo","policies":null,"key":"0xdeadbeef","signature":null}`,
 		store: &IStoreMock{
 			createAuthorizationFunc: func(s *Authorization) error {

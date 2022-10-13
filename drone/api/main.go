@@ -1,10 +1,9 @@
 package main
 
 import (
-	"github.com/aws/aws-lambda-go/lambda"
+	"context"
 
-	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
-	"github.com/gin-gonic/gin"
+	"github.com/aws/aws-lambda-go/lambda"
 )
 
 var (
@@ -12,7 +11,9 @@ var (
 )
 
 func main() {
-	r := gin.Default()
-	adapter := ginadapter.NewV2(r)
-	lambda.Start(adapter.Proxy)
+	app, err := NewApp(context.Background())
+	if err != nil {
+		panic(err)
+	}
+	lambda.Start(app.Proxy())
 }
