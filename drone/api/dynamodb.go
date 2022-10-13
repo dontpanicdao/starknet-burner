@@ -38,9 +38,8 @@ func NewStore(ctx context.Context) (*dynStore, error) {
 	if err != nil {
 		return nil, err
 	}
-	client := dynamodb.NewFromConfig(cfg)
 	return &dynStore{
-		client:       client,
+		client:       dynamodb.NewFromConfig(cfg),
 		requestTable: aws.String(os.Getenv("table_request")),
 		sessionTable: aws.String(os.Getenv("table_session")),
 	}, nil
