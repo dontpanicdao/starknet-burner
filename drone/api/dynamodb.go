@@ -22,8 +22,17 @@ type dynamoClient interface {
 }
 
 type store struct {
-	client dynamoClient
+	client       dynamoClient
+	requestTable *string
+	sessionTable *string
 }
+
+var (
+	// ensure `store` implements `IStore` interface
+	_ IStore = &store{}
+
+	validityDuration = time.Second * 300
+)
 
 func NewStore(ctx context.Context) (*store, error) {
 	cfg, err := config.LoadDefaultConfig(ctx)
@@ -32,11 +41,13 @@ func NewStore(ctx context.Context) (*store, error) {
 	}
 	client := dynamodb.NewFromConfig(cfg)
 	return &store{
-		client: client,
+		client:       client,
+		requestTable: aws.String(os.Getenv("table_request")),
+		sessionTable: aws.String(os.Getenv("table_session")),
 	}, nil
 }
 
-func (s *store) uploadRequest(req *Request) error {
+func (s *store) createRequest(req *Request) error {
 	req.TTL = time.Now().Add(time.Second * 120).Unix()
 	nBig, _ := rand.Int(rand.Reader, big.NewInt(899999))
 	req.RequestID = nBig.Add(nBig, big.NewInt(100000)).Text(10)
@@ -44,21 +55,16 @@ func (s *store) uploadRequest(req *Request) error {
 	if err != nil {
 		return err
 	}
-	input := &dynamodb.PutItemInput{
-		TableName: aws.String(os.Getenv("table_request")),
-		Item:      item,
-	}
+	input := &dynamodb.PutItemInput{TableName: s.requestTable, Item: item}
 	_, err = s.client.PutItem(context.TODO(), input)
 	return err
 }
 
-func (s *store) downloadRequest(pin string) (*Request, error) {
+func (s *store) readRequest(pin string) (*Request, error) {
 	input := &dynamodb.GetItemInput{
-		TableName: aws.String(os.Getenv("table_request")),
+		TableName: s.requestTable,
 		Key: map[string]types.AttributeValue{
-			"requestID": &types.AttributeValueMemberS{
-				Value: pin,
-			},
+			"requestID": &types.AttributeValueMemberS{Value: pin},
 		},
 	}
 	output, err := s.client.GetItem(context.TODO(), input)
@@ -73,14 +79,12 @@ func (s *store) downloadRequest(pin string) (*Request, error) {
 	return &item, err
 }
 
-func (s *store) downloadSessionToken(pk string) (*SessionKey, error) {
+func (s *store) readSessionToken(pk string) (*SessionKey, error) {
 	pk = strings.ToLower(pk)
 	input := &dynamodb.GetItemInput{
-		TableName: aws.String(os.Getenv("table_session")),
+		TableName: s.sessionTable,
 		Key: map[string]types.AttributeValue{
-			"sessionPublicKey": &types.AttributeValueMemberS{
-				Value: pk,
-			},
+			"sessionPublicKey": &types.AttributeValueMemberS{Value: pk},
 		},
 	}
 	output, err := s.client.GetItem(context.TODO(), input)
@@ -102,16 +106,13 @@ func (s *store) downloadSessionToken(pk string) (*SessionKey, error) {
 	return &item, nil
 }
 
-func (s *store) uploadSessionToken(sessionKey *SessionKey) error {
-	sessionKey.TTL = time.Now().Add(time.Second * 300).Unix()
+func (s *store) updateSessionToken(sessionKey *SessionKey) error {
+	sessionKey.TTL = time.Now().Add(validityDuration).Unix()
 	item, err := attributevalue.MarshalMap(sessionKey)
 	if err != nil {
 		return err
 	}
-	input := &dynamodb.PutItemInput{
-		TableName: aws.String(os.Getenv("table_session")),
-		Item:      item,
-	}
+	input := &dynamodb.PutItemInput{TableName: s.sessionTable, Item: item}
 	_, err = s.client.PutItem(context.TODO(), input)
 	if err != nil {
 		return err

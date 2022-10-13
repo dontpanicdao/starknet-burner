@@ -17,17 +17,17 @@ var _ IStore = &IStoreMock{}
 //
 //		// make and configure a mocked IStore
 //		mockedIStore := &IStoreMock{
-//			downloadRequestFunc: func(s string) (*Request, error) {
-//				panic("mock out the downloadRequest method")
+//			createRequestFunc: func(request *Request) error {
+//				panic("mock out the createRequest method")
 //			},
-//			downloadSessionTokenFunc: func(s string) (*SessionKey, error) {
-//				panic("mock out the downloadSessionToken method")
+//			readRequestFunc: func(s string) (*Request, error) {
+//				panic("mock out the readRequest method")
 //			},
-//			uploadRequestFunc: func(request *Request) error {
-//				panic("mock out the uploadRequest method")
+//			readSessionTokenFunc: func(s string) (*SessionKey, error) {
+//				panic("mock out the readSessionToken method")
 //			},
-//			uploadSessionTokenFunc: func(sessionKey *SessionKey) error {
-//				panic("mock out the uploadSessionToken method")
+//			updateSessionTokenFunc: func(sessionKey *SessionKey) error {
+//				panic("mock out the updateSessionToken method")
 //			},
 //		}
 //
@@ -36,171 +36,171 @@ var _ IStore = &IStoreMock{}
 //
 //	}
 type IStoreMock struct {
-	// downloadRequestFunc mocks the downloadRequest method.
-	downloadRequestFunc func(s string) (*Request, error)
+	// createRequestFunc mocks the createRequest method.
+	createRequestFunc func(request *Request) error
 
-	// downloadSessionTokenFunc mocks the downloadSessionToken method.
-	downloadSessionTokenFunc func(s string) (*SessionKey, error)
+	// readRequestFunc mocks the readRequest method.
+	readRequestFunc func(s string) (*Request, error)
 
-	// uploadRequestFunc mocks the uploadRequest method.
-	uploadRequestFunc func(request *Request) error
+	// readSessionTokenFunc mocks the readSessionToken method.
+	readSessionTokenFunc func(s string) (*SessionKey, error)
 
-	// uploadSessionTokenFunc mocks the uploadSessionToken method.
-	uploadSessionTokenFunc func(sessionKey *SessionKey) error
+	// updateSessionTokenFunc mocks the updateSessionToken method.
+	updateSessionTokenFunc func(sessionKey *SessionKey) error
 
 	// calls tracks calls to the methods.
 	calls struct {
-		// downloadRequest holds details about calls to the downloadRequest method.
-		downloadRequest []struct {
-			// S is the s argument value.
-			S string
-		}
-		// downloadSessionToken holds details about calls to the downloadSessionToken method.
-		downloadSessionToken []struct {
-			// S is the s argument value.
-			S string
-		}
-		// uploadRequest holds details about calls to the uploadRequest method.
-		uploadRequest []struct {
+		// createRequest holds details about calls to the createRequest method.
+		createRequest []struct {
 			// Request is the request argument value.
 			Request *Request
 		}
-		// uploadSessionToken holds details about calls to the uploadSessionToken method.
-		uploadSessionToken []struct {
+		// readRequest holds details about calls to the readRequest method.
+		readRequest []struct {
+			// S is the s argument value.
+			S string
+		}
+		// readSessionToken holds details about calls to the readSessionToken method.
+		readSessionToken []struct {
+			// S is the s argument value.
+			S string
+		}
+		// updateSessionToken holds details about calls to the updateSessionToken method.
+		updateSessionToken []struct {
 			// SessionKey is the sessionKey argument value.
 			SessionKey *SessionKey
 		}
 	}
-	lockdownloadRequest      sync.RWMutex
-	lockdownloadSessionToken sync.RWMutex
-	lockuploadRequest        sync.RWMutex
-	lockuploadSessionToken   sync.RWMutex
+	lockcreateRequest      sync.RWMutex
+	lockreadRequest        sync.RWMutex
+	lockreadSessionToken   sync.RWMutex
+	lockupdateSessionToken sync.RWMutex
 }
 
-// downloadRequest calls downloadRequestFunc.
-func (mock *IStoreMock) downloadRequest(s string) (*Request, error) {
-	if mock.downloadRequestFunc == nil {
-		panic("IStoreMock.downloadRequestFunc: method is nil but IStore.downloadRequest was just called")
-	}
-	callInfo := struct {
-		S string
-	}{
-		S: s,
-	}
-	mock.lockdownloadRequest.Lock()
-	mock.calls.downloadRequest = append(mock.calls.downloadRequest, callInfo)
-	mock.lockdownloadRequest.Unlock()
-	return mock.downloadRequestFunc(s)
-}
-
-// downloadRequestCalls gets all the calls that were made to downloadRequest.
-// Check the length with:
-//
-//	len(mockedIStore.downloadRequestCalls())
-func (mock *IStoreMock) downloadRequestCalls() []struct {
-	S string
-} {
-	var calls []struct {
-		S string
-	}
-	mock.lockdownloadRequest.RLock()
-	calls = mock.calls.downloadRequest
-	mock.lockdownloadRequest.RUnlock()
-	return calls
-}
-
-// downloadSessionToken calls downloadSessionTokenFunc.
-func (mock *IStoreMock) downloadSessionToken(s string) (*SessionKey, error) {
-	if mock.downloadSessionTokenFunc == nil {
-		panic("IStoreMock.downloadSessionTokenFunc: method is nil but IStore.downloadSessionToken was just called")
-	}
-	callInfo := struct {
-		S string
-	}{
-		S: s,
-	}
-	mock.lockdownloadSessionToken.Lock()
-	mock.calls.downloadSessionToken = append(mock.calls.downloadSessionToken, callInfo)
-	mock.lockdownloadSessionToken.Unlock()
-	return mock.downloadSessionTokenFunc(s)
-}
-
-// downloadSessionTokenCalls gets all the calls that were made to downloadSessionToken.
-// Check the length with:
-//
-//	len(mockedIStore.downloadSessionTokenCalls())
-func (mock *IStoreMock) downloadSessionTokenCalls() []struct {
-	S string
-} {
-	var calls []struct {
-		S string
-	}
-	mock.lockdownloadSessionToken.RLock()
-	calls = mock.calls.downloadSessionToken
-	mock.lockdownloadSessionToken.RUnlock()
-	return calls
-}
-
-// uploadRequest calls uploadRequestFunc.
-func (mock *IStoreMock) uploadRequest(request *Request) error {
-	if mock.uploadRequestFunc == nil {
-		panic("IStoreMock.uploadRequestFunc: method is nil but IStore.uploadRequest was just called")
+// createRequest calls createRequestFunc.
+func (mock *IStoreMock) createRequest(request *Request) error {
+	if mock.createRequestFunc == nil {
+		panic("IStoreMock.createRequestFunc: method is nil but IStore.createRequest was just called")
 	}
 	callInfo := struct {
 		Request *Request
 	}{
 		Request: request,
 	}
-	mock.lockuploadRequest.Lock()
-	mock.calls.uploadRequest = append(mock.calls.uploadRequest, callInfo)
-	mock.lockuploadRequest.Unlock()
-	return mock.uploadRequestFunc(request)
+	mock.lockcreateRequest.Lock()
+	mock.calls.createRequest = append(mock.calls.createRequest, callInfo)
+	mock.lockcreateRequest.Unlock()
+	return mock.createRequestFunc(request)
 }
 
-// uploadRequestCalls gets all the calls that were made to uploadRequest.
+// createRequestCalls gets all the calls that were made to createRequest.
 // Check the length with:
 //
-//	len(mockedIStore.uploadRequestCalls())
-func (mock *IStoreMock) uploadRequestCalls() []struct {
+//	len(mockedIStore.createRequestCalls())
+func (mock *IStoreMock) createRequestCalls() []struct {
 	Request *Request
 } {
 	var calls []struct {
 		Request *Request
 	}
-	mock.lockuploadRequest.RLock()
-	calls = mock.calls.uploadRequest
-	mock.lockuploadRequest.RUnlock()
+	mock.lockcreateRequest.RLock()
+	calls = mock.calls.createRequest
+	mock.lockcreateRequest.RUnlock()
 	return calls
 }
 
-// uploadSessionToken calls uploadSessionTokenFunc.
-func (mock *IStoreMock) uploadSessionToken(sessionKey *SessionKey) error {
-	if mock.uploadSessionTokenFunc == nil {
-		panic("IStoreMock.uploadSessionTokenFunc: method is nil but IStore.uploadSessionToken was just called")
+// readRequest calls readRequestFunc.
+func (mock *IStoreMock) readRequest(s string) (*Request, error) {
+	if mock.readRequestFunc == nil {
+		panic("IStoreMock.readRequestFunc: method is nil but IStore.readRequest was just called")
+	}
+	callInfo := struct {
+		S string
+	}{
+		S: s,
+	}
+	mock.lockreadRequest.Lock()
+	mock.calls.readRequest = append(mock.calls.readRequest, callInfo)
+	mock.lockreadRequest.Unlock()
+	return mock.readRequestFunc(s)
+}
+
+// readRequestCalls gets all the calls that were made to readRequest.
+// Check the length with:
+//
+//	len(mockedIStore.readRequestCalls())
+func (mock *IStoreMock) readRequestCalls() []struct {
+	S string
+} {
+	var calls []struct {
+		S string
+	}
+	mock.lockreadRequest.RLock()
+	calls = mock.calls.readRequest
+	mock.lockreadRequest.RUnlock()
+	return calls
+}
+
+// readSessionToken calls readSessionTokenFunc.
+func (mock *IStoreMock) readSessionToken(s string) (*SessionKey, error) {
+	if mock.readSessionTokenFunc == nil {
+		panic("IStoreMock.readSessionTokenFunc: method is nil but IStore.readSessionToken was just called")
+	}
+	callInfo := struct {
+		S string
+	}{
+		S: s,
+	}
+	mock.lockreadSessionToken.Lock()
+	mock.calls.readSessionToken = append(mock.calls.readSessionToken, callInfo)
+	mock.lockreadSessionToken.Unlock()
+	return mock.readSessionTokenFunc(s)
+}
+
+// readSessionTokenCalls gets all the calls that were made to readSessionToken.
+// Check the length with:
+//
+//	len(mockedIStore.readSessionTokenCalls())
+func (mock *IStoreMock) readSessionTokenCalls() []struct {
+	S string
+} {
+	var calls []struct {
+		S string
+	}
+	mock.lockreadSessionToken.RLock()
+	calls = mock.calls.readSessionToken
+	mock.lockreadSessionToken.RUnlock()
+	return calls
+}
+
+// updateSessionToken calls updateSessionTokenFunc.
+func (mock *IStoreMock) updateSessionToken(sessionKey *SessionKey) error {
+	if mock.updateSessionTokenFunc == nil {
+		panic("IStoreMock.updateSessionTokenFunc: method is nil but IStore.updateSessionToken was just called")
 	}
 	callInfo := struct {
 		SessionKey *SessionKey
 	}{
 		SessionKey: sessionKey,
 	}
-	mock.lockuploadSessionToken.Lock()
-	mock.calls.uploadSessionToken = append(mock.calls.uploadSessionToken, callInfo)
-	mock.lockuploadSessionToken.Unlock()
-	return mock.uploadSessionTokenFunc(sessionKey)
+	mock.lockupdateSessionToken.Lock()
+	mock.calls.updateSessionToken = append(mock.calls.updateSessionToken, callInfo)
+	mock.lockupdateSessionToken.Unlock()
+	return mock.updateSessionTokenFunc(sessionKey)
 }
 
-// uploadSessionTokenCalls gets all the calls that were made to uploadSessionToken.
+// updateSessionTokenCalls gets all the calls that were made to updateSessionToken.
 // Check the length with:
 //
-//	len(mockedIStore.uploadSessionTokenCalls())
-func (mock *IStoreMock) uploadSessionTokenCalls() []struct {
+//	len(mockedIStore.updateSessionTokenCalls())
+func (mock *IStoreMock) updateSessionTokenCalls() []struct {
 	SessionKey *SessionKey
 } {
 	var calls []struct {
 		SessionKey *SessionKey
 	}
-	mock.lockuploadSessionToken.RLock()
-	calls = mock.calls.uploadSessionToken
-	mock.lockuploadSessionToken.RUnlock()
+	mock.lockupdateSessionToken.RLock()
+	calls = mock.calls.updateSessionToken
+	mock.lockupdateSessionToken.RUnlock()
 	return calls
 }

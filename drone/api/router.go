@@ -51,7 +51,7 @@ func routes(r gin.IRouter, store IStore) {
 			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 			return
 		}
-		err := store.uploadRequest(&req)
+		err := store.createRequest(&req)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
@@ -67,7 +67,7 @@ func routes(r gin.IRouter, store IStore) {
 			return
 		}
 
-		req, err := store.downloadRequest(pin)
+		req, err := store.readRequest(pin)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
@@ -83,7 +83,7 @@ func routes(r gin.IRouter, store IStore) {
 
 	r.GET("/0x:pk", func(c *gin.Context) {
 		pk := "0x" + c.Params.ByName("pk")
-		st, err := store.downloadSessionToken(pk)
+		st, err := store.readSessionToken(pk)
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
@@ -110,7 +110,7 @@ func routes(r gin.IRouter, store IStore) {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "bad request"})
 			return
 		}
-		err = store.uploadSessionToken(&sessionKey)
+		err = store.updateSessionToken(&sessionKey)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return

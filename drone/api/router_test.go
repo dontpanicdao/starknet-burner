@@ -50,7 +50,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusCreated,
 		resBody: `{"requestID":"baz","key":"foo","dappTokenID":"bar"}`,
 		store: &IStoreMock{
-			uploadRequestFunc: func(r *Request) error {
+			createRequestFunc: func(r *Request) error {
 				r.RequestID = "baz"
 				return nil
 			},
@@ -68,7 +68,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusInternalServerError,
 		resBody: `{"message":"foo"}`,
 		store: &IStoreMock{
-			downloadRequestFunc: func(pin string) (*Request, error) { return nil, errors.New("foo") },
+			readRequestFunc: func(pin string) (*Request, error) { return nil, errors.New("foo") },
 		},
 	}, {
 		desc:    "getting pin: not found",
@@ -77,7 +77,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusNotFound,
 		resBody: `{"message":"not found"}`,
 		store: &IStoreMock{
-			downloadRequestFunc: func(pin string) (*Request, error) { return nil, nil },
+			readRequestFunc: func(pin string) (*Request, error) { return nil, nil },
 		},
 	}, {
 		desc:    "getting pin: store all is good",
@@ -86,7 +86,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusOK,
 		resBody: `{"requestID":"123456","key":"bar","dappTokenID":"baz"}`,
 		store: &IStoreMock{
-			downloadRequestFunc: func(pin string) (*Request, error) {
+			readRequestFunc: func(pin string) (*Request, error) {
 				return &Request{
 					RequestID:        "123456",
 					SessionPublicKey: "bar",
@@ -101,7 +101,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusInternalServerError,
 		resBody: `{"message":"foo"}`,
 		store: &IStoreMock{
-			downloadSessionTokenFunc: func(pk string) (*SessionKey, error) { return nil, errors.New("foo") },
+			readSessionTokenFunc: func(pk string) (*SessionKey, error) { return nil, errors.New("foo") },
 		},
 	}, {
 		desc:    "getting session token: not found",
@@ -110,7 +110,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusNotFound,
 		resBody: `{"message":"not found"}`,
 		store: &IStoreMock{
-			downloadSessionTokenFunc: func(pk string) (*SessionKey, error) { return nil, nil },
+			readSessionTokenFunc: func(pk string) (*SessionKey, error) { return nil, nil },
 		},
 	}, {
 		desc:    "getting session token: all is good",
@@ -119,7 +119,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusOK,
 		resBody: `{"key":"foo","policies":[],"expires":0,"root":"bar","account":"baz","signature":["qux"]}`,
 		store: &IStoreMock{
-			downloadSessionTokenFunc: func(pk string) (*SessionKey, error) {
+			readSessionTokenFunc: func(pk string) (*SessionKey, error) {
 				return &SessionKey{
 					SessionPublicKey: "foo",
 					Policies:         []Policy{},
@@ -143,7 +143,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusInternalServerError,
 		resBody: `{"message":"foo"}`,
 		store: &IStoreMock{
-			uploadSessionTokenFunc: func(s *SessionKey) error { return errors.New("foo") },
+			updateSessionTokenFunc: func(s *SessionKey) error { return errors.New("foo") },
 		},
 	}, {
 		desc:    "updating session token: all is good",
@@ -153,7 +153,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusOK,
 		resBody: `{"key":"0xdeadbeef","policies":null,"expires":0,"root":"foo","account":"","signature":null}`,
 		store: &IStoreMock{
-			uploadSessionTokenFunc: func(s *SessionKey) error {
+			updateSessionTokenFunc: func(s *SessionKey) error {
 				s.Root = "foo"
 				return nil
 			},
