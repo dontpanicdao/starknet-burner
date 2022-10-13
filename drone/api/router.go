@@ -46,7 +46,7 @@ func routes(r gin.IRouter, store IStore) {
 	})
 
 	r.POST("/requests", func(c *gin.Context) {
-		var req AuthorizationRequest
+		var req Request
 		if err := c.ShouldBind(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 			return
@@ -67,7 +67,7 @@ func routes(r gin.IRouter, store IStore) {
 			return
 		}
 
-		req, err := store.readRequest(id)
+		req, err := store.findRequest(id)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
@@ -83,7 +83,7 @@ func routes(r gin.IRouter, store IStore) {
 
 	r.GET("/authorizations/0x:pk", func(c *gin.Context) {
 		pk := "0x" + c.Params.ByName("pk")
-		st, err := store.readSignedAuthorization(pk)
+		st, err := store.findAuthorization(pk)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
@@ -98,13 +98,13 @@ func routes(r gin.IRouter, store IStore) {
 	})
 
 	r.POST("/authorizations", func(c *gin.Context) {
-		auth := SignedAuthorization{}
+		var auth Authorization
 		err := c.ShouldBind(&auth)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
 		}
-		err = store.createSignedAuthorization(&auth)
+		err = store.createAuthorization(&auth)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return

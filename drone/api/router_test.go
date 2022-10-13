@@ -49,7 +49,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusCreated,
 		resBody: `{"requestID":"baz","dappTokenID":"bar","key":"foo"}`,
 		store: &IStoreMock{
-			createRequestFunc: func(r *AuthorizationRequest) error {
+			createRequestFunc: func(r *Request) error {
 				r.ID = "baz"
 				return nil
 			},
@@ -67,7 +67,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusInternalServerError,
 		resBody: `{"message":"foo"}`,
 		store: &IStoreMock{
-			readRequestFunc: func(pin string) (*AuthorizationRequest, error) { return nil, errors.New("foo") },
+			findRequestFunc: func(pin string) (*Request, error) { return nil, errors.New("foo") },
 		},
 	}, {
 		desc:    "getting a request: not found",
@@ -76,7 +76,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusNotFound,
 		resBody: `{"message":"not found"}`,
 		store: &IStoreMock{
-			readRequestFunc: func(pin string) (*AuthorizationRequest, error) { return nil, nil },
+			findRequestFunc: func(pin string) (*Request, error) { return nil, nil },
 		},
 	}, {
 		desc:    "getting a request: store all is good",
@@ -85,8 +85,8 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusOK,
 		resBody: `{"requestID":"123456","dappTokenID":"baz","key":"bar"}`,
 		store: &IStoreMock{
-			readRequestFunc: func(pin string) (*AuthorizationRequest, error) {
-				return &AuthorizationRequest{
+			findRequestFunc: func(pin string) (*Request, error) {
+				return &Request{
 					ID:               "123456",
 					SessionPublicKey: "bar",
 					DappTokenID:      "baz",
@@ -100,7 +100,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusInternalServerError,
 		resBody: `{"message":"foo"}`,
 		store: &IStoreMock{
-			readSignedAuthorizationFunc: func(pk string) (*SignedAuthorization, error) { return nil, errors.New("foo") },
+			findAuthorizationFunc: func(pk string) (*Authorization, error) { return nil, errors.New("foo") },
 		},
 	}, {
 		desc:    "getting signed authorization: not found",
@@ -109,7 +109,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusNotFound,
 		resBody: `{"message":"not found"}`,
 		store: &IStoreMock{
-			readSignedAuthorizationFunc: func(pk string) (*SignedAuthorization, error) { return nil, nil },
+			findAuthorizationFunc: func(pk string) (*Authorization, error) { return nil, nil },
 		},
 	}, {
 		desc:    "getting signed authorization: all is good",
@@ -118,8 +118,8 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusOK,
 		resBody: `{"account":"baz","expires":0,"root":"bar","policies":[],"key":"foo","signature":["qux"]}`,
 		store: &IStoreMock{
-			readSignedAuthorizationFunc: func(pk string) (*SignedAuthorization, error) {
-				return &SignedAuthorization{
+			findAuthorizationFunc: func(pk string) (*Authorization, error) {
+				return &Authorization{
 					SessionPublicKey: "foo",
 					Policies:         []Policy{},
 					MerkleRoot:       "bar",
@@ -142,7 +142,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusInternalServerError,
 		resBody: `{"message":"foo"}`,
 		store: &IStoreMock{
-			createSignedAuthorizationFunc: func(s *SignedAuthorization) error { return errors.New("foo") },
+			createAuthorizationFunc: func(s *Authorization) error { return errors.New("foo") },
 		},
 	}, {
 		desc:    "create signed authorization: all is good",
@@ -152,7 +152,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusOK,
 		resBody: `{"account":"","expires":0,"root":"foo","policies":null,"key":"0xdeadbeef","signature":null}`,
 		store: &IStoreMock{
-			createSignedAuthorizationFunc: func(s *SignedAuthorization) error {
+			createAuthorizationFunc: func(s *Authorization) error {
 				s.MerkleRoot = "foo"
 				return nil
 			},

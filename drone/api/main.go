@@ -7,6 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var (
+	version = "dev"
+)
+
 func main() {
 	r := gin.Default()
 	adapter := ginadapter.NewV2(r)

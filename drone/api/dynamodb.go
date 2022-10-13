@@ -27,6 +27,8 @@ type store struct {
 	sessionTable *string
 }
 
+type Key = map[string]types.AttributeValue
+
 var (
 	// ensure `store` implements `IStore` interface
 	_ IStore = &store{}
@@ -47,7 +49,7 @@ func NewStore(ctx context.Context) (*store, error) {
 	}, nil
 }
 
-func (s *store) createRequest(req *AuthorizationRequest) error {
+func (s *store) createRequest(req *Request) error {
 	req.TTL = time.Now().Add(time.Second * 120).Unix()
 	nBig, _ := rand.Int(rand.Reader, big.NewInt(899999))
 	req.ID = nBig.Add(nBig, big.NewInt(100000)).Text(10)
@@ -60,12 +62,10 @@ func (s *store) createRequest(req *AuthorizationRequest) error {
 	return err
 }
 
-func (s *store) readRequest(pin string) (*AuthorizationRequest, error) {
+func (s *store) findRequest(id string) (*Request, error) {
 	input := &dynamodb.GetItemInput{
 		TableName: s.requestTable,
-		Key: map[string]types.AttributeValue{
-			"requestID": &types.AttributeValueMemberS{Value: pin},
-		},
+		Key:       Key{"requestID": &types.AttributeValueMemberS{Value: id}},
 	}
 	output, err := s.client.GetItem(context.TODO(), input)
 	if err != nil {
@@ -74,18 +74,16 @@ func (s *store) readRequest(pin string) (*AuthorizationRequest, error) {
 	if output.Item == nil {
 		return nil, nil
 	}
-	item := AuthorizationRequest{}
+	item := Request{}
 	err = attributevalue.UnmarshalMap(output.Item, &item)
 	return &item, err
 }
 
-func (s *store) readSignedAuthorization(pk string) (*SignedAuthorization, error) {
+func (s *store) findAuthorization(pk string) (*Authorization, error) {
 	pk = strings.ToLower(pk)
 	input := &dynamodb.GetItemInput{
 		TableName: s.sessionTable,
-		Key: map[string]types.AttributeValue{
-			"sessionPublicKey": &types.AttributeValueMemberS{Value: pk},
-		},
+		Key:       Key{"sessionPublicKey": &types.AttributeValueMemberS{Value: pk}},
 	}
 	output, err := s.client.GetItem(context.TODO(), input)
 	if err != nil {
@@ -94,7 +92,7 @@ func (s *store) readSignedAuthorization(pk string) (*SignedAuthorization, error)
 	if output.Item == nil {
 		return nil, nil
 	}
-	item := SignedAuthorization{}
+	item := Authorization{}
 	err = attributevalue.UnmarshalMap(output.Item, &item)
 	if err != nil {
 		log.Println("could not convert data", err)
@@ -106,7 +104,7 @@ func (s *store) readSignedAuthorization(pk string) (*SignedAuthorization, error)
 	return &item, nil
 }
 
-func (s *store) createSignedAuthorization(sessionKey *SignedAuthorization) error {
+func (s *store) createAuthorization(sessionKey *Authorization) error {
 	sessionKey.TTL = time.Now().Add(validityDuration).Unix()
 	item, err := attributevalue.MarshalMap(sessionKey)
 	if err != nil {
