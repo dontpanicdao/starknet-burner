@@ -67,7 +67,7 @@ func TestRouter(t *testing.T) {
 		method:  "GET",
 		path:    "/requests/123456",
 		resCode: http.StatusNotFound,
-		resBody: `{"message":"request not found"}`,
+		resBody: `{"message":"not found"}`,
 		store: &IStoreMock{
 			downloadRequestFunc: func(pin string) (*Request, error) { return nil, nil },
 		},
@@ -82,6 +82,38 @@ func TestRouter(t *testing.T) {
 					RequestID:        "123456",
 					SessionPublicKey: "bar",
 					DappTokenID:      "baz",
+				}, nil
+			},
+		},
+	}, {
+		method:  "GET",
+		path:    "/0xdeadbeef",
+		resCode: http.StatusInternalServerError,
+		resBody: `{"message":"foo"}`,
+		store: &IStoreMock{
+			downloadSessionTokenFunc: func(pk string) (*SessionKey, error) { return nil, errors.New("foo") },
+		},
+	}, {
+		method:  "GET",
+		path:    "/0xdeadbeef",
+		resCode: http.StatusNotFound,
+		resBody: `{"message":"not found"}`,
+		store: &IStoreMock{
+			downloadSessionTokenFunc: func(pk string) (*SessionKey, error) { return nil, nil },
+		},
+	}, {
+		method:  "GET",
+		path:    "/0xdeadbeef",
+		resCode: http.StatusOK,
+		resBody: `{"key":"foo","policies":[],"expires":0,"root":"bar","account":"baz","signature":["qux"]}`,
+		store: &IStoreMock{
+			downloadSessionTokenFunc: func(pk string) (*SessionKey, error) {
+				return &SessionKey{
+					SessionPublicKey: "foo",
+					Policies:         []Policy{},
+					Root:             "bar",
+					Account:          "baz",
+					Signature:        []string{"qux"},
 				}, nil
 			},
 		},

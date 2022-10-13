@@ -28,9 +28,6 @@ func NewApp() (*App, error) {
 
 func NewRouter(store IStore, prefix string) *gin.Engine {
 	r := gin.Default()
-	r.NoRoute(func(c *gin.Context) {
-		c.JSON(http.StatusNotFound, gin.H{"message": "page not found"})
-	})
 	if prefix != "" {
 		routes(r.Group(prefix), store)
 	} else {
@@ -77,7 +74,7 @@ func routes(r gin.IRouter, store IStore) {
 		}
 
 		if req == nil {
-			c.JSON(http.StatusNotFound, gin.H{"message": "request not found"})
+			c.JSON(http.StatusNotFound, gin.H{"message": "not found"})
 			return
 		}
 
