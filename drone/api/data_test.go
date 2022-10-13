@@ -31,10 +31,10 @@ func TestIntegrationUploadJSONMessage(t *testing.T) {
 	if os.Getenv("INTEGRATION") != "true" {
 		t.Skip("Run only in integration...")
 	}
-	token := SessionKey{
+	token := SignedAuthorization{
 		SessionPublicKey: "0xdeadbeef",
 		Policies:         []Policy{{ContractAddress: "0xdeadbeef", Selector: "0xdeadbeef"}},
-		Root:             "0xdeadbeef",
+		MerkleRoot:       "0xdeadbeef",
 		Expires:          1659210039,
 		Signature:        []string{"0x01", "0x02"},
 	}
@@ -122,7 +122,7 @@ func TestIntegrationSimpleJSONMessage(t *testing.T) {
 	if err != nil {
 		t.Fatal("error:", err)
 	}
-	item := SessionKey{}
+	item := SignedAuthorization{}
 	err = attributevalue.UnmarshalMap(output.Item, &item)
 	if err != nil {
 		t.Fatal("client should be connect, instead:", err)

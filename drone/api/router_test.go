@@ -12,17 +12,16 @@ import (
 	"testing"
 )
 
-type testRouterSuite struct {
-	body    string
-	desc    string
-	method  string
-	path    string
-	resBody string
-	resCode int
-	store   *IStoreMock
-}
-
 func TestRouter(t *testing.T) {
+	type testRouterSuite struct {
+		body    string
+		desc    string
+		method  string
+		path    string
+		resBody string
+		resCode int
+		store   *IStoreMock
+	}
 	testRouterSuites := []testRouterSuite{{
 		desc:    "getting version",
 		method:  "GET",
@@ -41,120 +40,120 @@ func TestRouter(t *testing.T) {
 		path:    "/requests",
 		body:    `{}`,
 		resCode: http.StatusBadRequest,
-		resBody: `{"message":"Key: 'Request.SessionPublicKey' Error:Field validation for 'SessionPublicKey' failed on the 'required' tag\nKey: 'Request.DappTokenID' Error:Field validation for 'DappTokenID' failed on the 'required' tag"}`,
+		resBody: `{"message":"Key: 'AuthorizationRequest.DappTokenID' Error:Field validation for 'DappTokenID' failed on the 'required' tag\nKey: 'AuthorizationRequest.SessionPublicKey' Error:Field validation for 'SessionPublicKey' failed on the 'required' tag"}`,
 	}, {
 		desc:    "creating a request: all is good",
 		method:  "POST",
 		path:    "/requests",
 		body:    `{"key":"foo", "dappTokenID": "bar"}`,
 		resCode: http.StatusCreated,
-		resBody: `{"requestID":"baz","key":"foo","dappTokenID":"bar"}`,
+		resBody: `{"requestID":"baz","dappTokenID":"bar","key":"foo"}`,
 		store: &IStoreMock{
-			createRequestFunc: func(r *Request) error {
-				r.RequestID = "baz"
+			createRequestFunc: func(r *AuthorizationRequest) error {
+				r.ID = "baz"
 				return nil
 			},
 		},
 	}, {
-		desc:    "getting pin: bad format",
+		desc:    "getting a request: bad format",
 		method:  "GET",
 		path:    "/requests/1234",
 		resCode: http.StatusBadRequest,
 		resBody: `{"message":"unsupported pin format"}`,
 	}, {
-		desc:    "getting pin: store function returns an error",
+		desc:    "getting a request: store function returns an error",
 		method:  "GET",
 		path:    "/requests/123456",
 		resCode: http.StatusInternalServerError,
 		resBody: `{"message":"foo"}`,
 		store: &IStoreMock{
-			readRequestFunc: func(pin string) (*Request, error) { return nil, errors.New("foo") },
+			readRequestFunc: func(pin string) (*AuthorizationRequest, error) { return nil, errors.New("foo") },
 		},
 	}, {
-		desc:    "getting pin: not found",
+		desc:    "getting a request: not found",
 		method:  "GET",
 		path:    "/requests/123456",
 		resCode: http.StatusNotFound,
 		resBody: `{"message":"not found"}`,
 		store: &IStoreMock{
-			readRequestFunc: func(pin string) (*Request, error) { return nil, nil },
+			readRequestFunc: func(pin string) (*AuthorizationRequest, error) { return nil, nil },
 		},
 	}, {
-		desc:    "getting pin: store all is good",
+		desc:    "getting a request: store all is good",
 		method:  "GET",
 		path:    "/requests/123456",
 		resCode: http.StatusOK,
-		resBody: `{"requestID":"123456","key":"bar","dappTokenID":"baz"}`,
+		resBody: `{"requestID":"123456","dappTokenID":"baz","key":"bar"}`,
 		store: &IStoreMock{
-			readRequestFunc: func(pin string) (*Request, error) {
-				return &Request{
-					RequestID:        "123456",
+			readRequestFunc: func(pin string) (*AuthorizationRequest, error) {
+				return &AuthorizationRequest{
+					ID:               "123456",
 					SessionPublicKey: "bar",
 					DappTokenID:      "baz",
 				}, nil
 			},
 		},
 	}, {
-		desc:    "getting session token: store function returns an error",
+		desc:    "getting signed authorization: store function returns an error",
 		method:  "GET",
-		path:    "/0xdeadbeef",
+		path:    "/authorizations/0xdeadbeef",
 		resCode: http.StatusInternalServerError,
 		resBody: `{"message":"foo"}`,
 		store: &IStoreMock{
-			readSessionTokenFunc: func(pk string) (*SessionKey, error) { return nil, errors.New("foo") },
+			readSignedAuthorizationFunc: func(pk string) (*SignedAuthorization, error) { return nil, errors.New("foo") },
 		},
 	}, {
-		desc:    "getting session token: not found",
+		desc:    "getting signed authorization: not found",
 		method:  "GET",
-		path:    "/0xdeadbeef",
+		path:    "/authorizations/0xdeadbeef",
 		resCode: http.StatusNotFound,
 		resBody: `{"message":"not found"}`,
 		store: &IStoreMock{
-			readSessionTokenFunc: func(pk string) (*SessionKey, error) { return nil, nil },
+			readSignedAuthorizationFunc: func(pk string) (*SignedAuthorization, error) { return nil, nil },
 		},
 	}, {
-		desc:    "getting session token: all is good",
+		desc:    "getting signed authorization: all is good",
 		method:  "GET",
-		path:    "/0xdeadbeef",
+		path:    "/authorizations/0xdeadbeef",
 		resCode: http.StatusOK,
-		resBody: `{"key":"foo","policies":[],"expires":0,"root":"bar","account":"baz","signature":["qux"]}`,
+		resBody: `{"account":"baz","expires":0,"root":"bar","policies":[],"key":"foo","signature":["qux"]}`,
 		store: &IStoreMock{
-			readSessionTokenFunc: func(pk string) (*SessionKey, error) {
-				return &SessionKey{
+			readSignedAuthorizationFunc: func(pk string) (*SignedAuthorization, error) {
+				return &SignedAuthorization{
 					SessionPublicKey: "foo",
 					Policies:         []Policy{},
-					Root:             "bar",
+					MerkleRoot:       "bar",
 					Account:          "baz",
 					Signature:        []string{"qux"},
 				}, nil
 			},
 		},
 	}, {
-		desc:    "updating session token: no body provided",
-		method:  "PUT",
-		path:    "/0xdeadbeef",
+		desc:    "create signed authorization: no body provided",
+		method:  "POST",
+		path:    "/authorizations",
 		resCode: http.StatusInternalServerError,
 		resBody: `{"message":"invalid request"}`,
 	}, {
-		desc:    "updating session token: store function returns an error",
-		method:  "PUT",
-		path:    "/0xdeadbeef",
+		desc:    "create signed authorization: store function returns an error",
+		method:  "POST",
+		path:    "/authorizations",
 		body:    `{"key":"0xdeadbeef"}`,
 		resCode: http.StatusInternalServerError,
 		resBody: `{"message":"foo"}`,
 		store: &IStoreMock{
-			updateSessionTokenFunc: func(s *SessionKey) error { return errors.New("foo") },
+			createSignedAuthorizationFunc: func(s *SignedAuthorization) error { return errors.New("foo") },
 		},
 	}, {
-		desc:    "updating session token: all is good",
-		method:  "PUT",
-		path:    "/0xdeadbeef",
+		desc:    "create signed authorization: all is good",
+		method:  "POST",
+		path:    "/authorizations",
 		body:    `{"key":"0xdeadbeef"}`,
 		resCode: http.StatusOK,
-		resBody: `{"key":"0xdeadbeef","policies":null,"expires":0,"root":"foo","account":"","signature":null}`,
+		resBody: `{"account":"","expires":0,"root":"foo","policies":null,"key":"0xdeadbeef","signature":null}`,
 		store: &IStoreMock{
-			updateSessionTokenFunc: func(s *SessionKey) error {
-				s.Root = "foo"
+			createSignedAuthorizationFunc: func(s *SignedAuthorization) error {
+				s.MerkleRoot = "foo"
 				return nil
 			},
 		},

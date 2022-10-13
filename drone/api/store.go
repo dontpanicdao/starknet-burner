@@ -1,8 +1,8 @@
 package main
 
 type IStore interface {
-	createRequest(*Request) error
-	readRequest(string) (*Request, error)
-	readSessionToken(string) (*SessionKey, error)
-	updateSessionToken(sessionKey *SessionKey) error
+	createRequest(*AuthorizationRequest) error
+	readRequest(string) (*AuthorizationRequest, error)
+	readSignedAuthorization(string) (*SignedAuthorization, error)
+	createSignedAuthorization(sessionKey *SignedAuthorization) error
 }

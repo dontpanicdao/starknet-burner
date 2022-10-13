@@ -46,7 +46,7 @@ func routes(r gin.IRouter, store IStore) {
 	})
 
 	r.POST("/requests", func(c *gin.Context) {
-		var req Request
+		var req AuthorizationRequest
 		if err := c.ShouldBind(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 			return
@@ -59,15 +59,15 @@ func routes(r gin.IRouter, store IStore) {
 		c.JSON(http.StatusCreated, req)
 	})
 
-	r.GET("/requests/:pin", func(c *gin.Context) {
-		pin := c.Params.ByName("pin")
+	r.GET("/requests/:id", func(c *gin.Context) {
+		id := c.Params.ByName("id")
 		re := regexp.MustCompile("[0-9]{6}")
-		if !re.MatchString(pin) {
+		if !re.MatchString(id) {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "unsupported pin format"})
 			return
 		}
 
-		req, err := store.readRequest(pin)
+		req, err := store.readRequest(id)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
@@ -81,10 +81,9 @@ func routes(r gin.IRouter, store IStore) {
 		c.JSON(http.StatusOK, req)
 	})
 
-	r.GET("/0x:pk", func(c *gin.Context) {
+	r.GET("/authorizations/0x:pk", func(c *gin.Context) {
 		pk := "0x" + c.Params.ByName("pk")
-		st, err := store.readSessionToken(pk)
-
+		st, err := store.readSignedAuthorization(pk)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
@@ -98,23 +97,18 @@ func routes(r gin.IRouter, store IStore) {
 		c.JSON(http.StatusOK, st)
 	})
 
-	r.PUT("/0x:pk", func(c *gin.Context) {
-		pk := "0x" + c.Params.ByName("pk")
-		sessionKey := SessionKey{}
-		err := c.ShouldBind(&sessionKey)
+	r.POST("/authorizations", func(c *gin.Context) {
+		auth := SignedAuthorization{}
+		err := c.ShouldBind(&auth)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
 		}
-		if sessionKey.SessionPublicKey != pk {
-			c.JSON(http.StatusBadRequest, gin.H{"message": "bad request"})
-			return
-		}
-		err = store.updateSessionToken(&sessionKey)
+		err = store.createSignedAuthorization(&auth)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, sessionKey)
+		c.JSON(http.StatusOK, auth)
 	})
 }

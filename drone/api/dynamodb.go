@@ -47,10 +47,10 @@ func NewStore(ctx context.Context) (*store, error) {
 	}, nil
 }
 
-func (s *store) createRequest(req *Request) error {
+func (s *store) createRequest(req *AuthorizationRequest) error {
 	req.TTL = time.Now().Add(time.Second * 120).Unix()
 	nBig, _ := rand.Int(rand.Reader, big.NewInt(899999))
-	req.RequestID = nBig.Add(nBig, big.NewInt(100000)).Text(10)
+	req.ID = nBig.Add(nBig, big.NewInt(100000)).Text(10)
 	item, err := attributevalue.MarshalMap(req)
 	if err != nil {
 		return err
@@ -60,7 +60,7 @@ func (s *store) createRequest(req *Request) error {
 	return err
 }
 
-func (s *store) readRequest(pin string) (*Request, error) {
+func (s *store) readRequest(pin string) (*AuthorizationRequest, error) {
 	input := &dynamodb.GetItemInput{
 		TableName: s.requestTable,
 		Key: map[string]types.AttributeValue{
@@ -74,12 +74,12 @@ func (s *store) readRequest(pin string) (*Request, error) {
 	if output.Item == nil {
 		return nil, nil
 	}
-	item := Request{}
+	item := AuthorizationRequest{}
 	err = attributevalue.UnmarshalMap(output.Item, &item)
 	return &item, err
 }
 
-func (s *store) readSessionToken(pk string) (*SessionKey, error) {
+func (s *store) readSignedAuthorization(pk string) (*SignedAuthorization, error) {
 	pk = strings.ToLower(pk)
 	input := &dynamodb.GetItemInput{
 		TableName: s.sessionTable,
@@ -94,7 +94,7 @@ func (s *store) readSessionToken(pk string) (*SessionKey, error) {
 	if output.Item == nil {
 		return nil, nil
 	}
-	item := SessionKey{}
+	item := SignedAuthorization{}
 	err = attributevalue.UnmarshalMap(output.Item, &item)
 	if err != nil {
 		log.Println("could not convert data", err)
@@ -106,7 +106,7 @@ func (s *store) readSessionToken(pk string) (*SessionKey, error) {
 	return &item, nil
 }
 
-func (s *store) updateSessionToken(sessionKey *SessionKey) error {
+func (s *store) createSignedAuthorization(sessionKey *SignedAuthorization) error {
 	sessionKey.TTL = time.Now().Add(validityDuration).Unix()
 	item, err := attributevalue.MarshalMap(sessionKey)
 	if err != nil {

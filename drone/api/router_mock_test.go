@@ -17,17 +17,17 @@ var _ IStore = &IStoreMock{}
 //
 //		// make and configure a mocked IStore
 //		mockedIStore := &IStoreMock{
-//			createRequestFunc: func(request *Request) error {
+//			createRequestFunc: func(authorizationRequest *AuthorizationRequest) error {
 //				panic("mock out the createRequest method")
 //			},
-//			readRequestFunc: func(s string) (*Request, error) {
+//			createSignedAuthorizationFunc: func(sessionKey *SignedAuthorization) error {
+//				panic("mock out the createSignedAuthorization method")
+//			},
+//			readRequestFunc: func(s string) (*AuthorizationRequest, error) {
 //				panic("mock out the readRequest method")
 //			},
-//			readSessionTokenFunc: func(s string) (*SessionKey, error) {
-//				panic("mock out the readSessionToken method")
-//			},
-//			updateSessionTokenFunc: func(sessionKey *SessionKey) error {
-//				panic("mock out the updateSessionToken method")
+//			readSignedAuthorizationFunc: func(s string) (*SignedAuthorization, error) {
+//				panic("mock out the readSignedAuthorization method")
 //			},
 //		}
 //
@@ -37,60 +37,60 @@ var _ IStore = &IStoreMock{}
 //	}
 type IStoreMock struct {
 	// createRequestFunc mocks the createRequest method.
-	createRequestFunc func(request *Request) error
+	createRequestFunc func(authorizationRequest *AuthorizationRequest) error
+
+	// createSignedAuthorizationFunc mocks the createSignedAuthorization method.
+	createSignedAuthorizationFunc func(sessionKey *SignedAuthorization) error
 
 	// readRequestFunc mocks the readRequest method.
-	readRequestFunc func(s string) (*Request, error)
+	readRequestFunc func(s string) (*AuthorizationRequest, error)
 
-	// readSessionTokenFunc mocks the readSessionToken method.
-	readSessionTokenFunc func(s string) (*SessionKey, error)
-
-	// updateSessionTokenFunc mocks the updateSessionToken method.
-	updateSessionTokenFunc func(sessionKey *SessionKey) error
+	// readSignedAuthorizationFunc mocks the readSignedAuthorization method.
+	readSignedAuthorizationFunc func(s string) (*SignedAuthorization, error)
 
 	// calls tracks calls to the methods.
 	calls struct {
 		// createRequest holds details about calls to the createRequest method.
 		createRequest []struct {
-			// Request is the request argument value.
-			Request *Request
+			// AuthorizationRequest is the authorizationRequest argument value.
+			AuthorizationRequest *AuthorizationRequest
+		}
+		// createSignedAuthorization holds details about calls to the createSignedAuthorization method.
+		createSignedAuthorization []struct {
+			// SessionKey is the sessionKey argument value.
+			SessionKey *SignedAuthorization
 		}
 		// readRequest holds details about calls to the readRequest method.
 		readRequest []struct {
 			// S is the s argument value.
 			S string
 		}
-		// readSessionToken holds details about calls to the readSessionToken method.
-		readSessionToken []struct {
+		// readSignedAuthorization holds details about calls to the readSignedAuthorization method.
+		readSignedAuthorization []struct {
 			// S is the s argument value.
 			S string
 		}
-		// updateSessionToken holds details about calls to the updateSessionToken method.
-		updateSessionToken []struct {
-			// SessionKey is the sessionKey argument value.
-			SessionKey *SessionKey
-		}
 	}
-	lockcreateRequest      sync.RWMutex
-	lockreadRequest        sync.RWMutex
-	lockreadSessionToken   sync.RWMutex
-	lockupdateSessionToken sync.RWMutex
+	lockcreateRequest             sync.RWMutex
+	lockcreateSignedAuthorization sync.RWMutex
+	lockreadRequest               sync.RWMutex
+	lockreadSignedAuthorization   sync.RWMutex
 }
 
 // createRequest calls createRequestFunc.
-func (mock *IStoreMock) createRequest(request *Request) error {
+func (mock *IStoreMock) createRequest(authorizationRequest *AuthorizationRequest) error {
 	if mock.createRequestFunc == nil {
 		panic("IStoreMock.createRequestFunc: method is nil but IStore.createRequest was just called")
 	}
 	callInfo := struct {
-		Request *Request
+		AuthorizationRequest *AuthorizationRequest
 	}{
-		Request: request,
+		AuthorizationRequest: authorizationRequest,
 	}
 	mock.lockcreateRequest.Lock()
 	mock.calls.createRequest = append(mock.calls.createRequest, callInfo)
 	mock.lockcreateRequest.Unlock()
-	return mock.createRequestFunc(request)
+	return mock.createRequestFunc(authorizationRequest)
 }
 
 // createRequestCalls gets all the calls that were made to createRequest.
@@ -98,10 +98,10 @@ func (mock *IStoreMock) createRequest(request *Request) error {
 //
 //	len(mockedIStore.createRequestCalls())
 func (mock *IStoreMock) createRequestCalls() []struct {
-	Request *Request
+	AuthorizationRequest *AuthorizationRequest
 } {
 	var calls []struct {
-		Request *Request
+		AuthorizationRequest *AuthorizationRequest
 	}
 	mock.lockcreateRequest.RLock()
 	calls = mock.calls.createRequest
@@ -109,8 +109,40 @@ func (mock *IStoreMock) createRequestCalls() []struct {
 	return calls
 }
 
+// createSignedAuthorization calls createSignedAuthorizationFunc.
+func (mock *IStoreMock) createSignedAuthorization(sessionKey *SignedAuthorization) error {
+	if mock.createSignedAuthorizationFunc == nil {
+		panic("IStoreMock.createSignedAuthorizationFunc: method is nil but IStore.createSignedAuthorization was just called")
+	}
+	callInfo := struct {
+		SessionKey *SignedAuthorization
+	}{
+		SessionKey: sessionKey,
+	}
+	mock.lockcreateSignedAuthorization.Lock()
+	mock.calls.createSignedAuthorization = append(mock.calls.createSignedAuthorization, callInfo)
+	mock.lockcreateSignedAuthorization.Unlock()
+	return mock.createSignedAuthorizationFunc(sessionKey)
+}
+
+// createSignedAuthorizationCalls gets all the calls that were made to createSignedAuthorization.
+// Check the length with:
+//
+//	len(mockedIStore.createSignedAuthorizationCalls())
+func (mock *IStoreMock) createSignedAuthorizationCalls() []struct {
+	SessionKey *SignedAuthorization
+} {
+	var calls []struct {
+		SessionKey *SignedAuthorization
+	}
+	mock.lockcreateSignedAuthorization.RLock()
+	calls = mock.calls.createSignedAuthorization
+	mock.lockcreateSignedAuthorization.RUnlock()
+	return calls
+}
+
 // readRequest calls readRequestFunc.
-func (mock *IStoreMock) readRequest(s string) (*Request, error) {
+func (mock *IStoreMock) readRequest(s string) (*AuthorizationRequest, error) {
 	if mock.readRequestFunc == nil {
 		panic("IStoreMock.readRequestFunc: method is nil but IStore.readRequest was just called")
 	}
@@ -141,66 +173,34 @@ func (mock *IStoreMock) readRequestCalls() []struct {
 	return calls
 }
 
-// readSessionToken calls readSessionTokenFunc.
-func (mock *IStoreMock) readSessionToken(s string) (*SessionKey, error) {
-	if mock.readSessionTokenFunc == nil {
-		panic("IStoreMock.readSessionTokenFunc: method is nil but IStore.readSessionToken was just called")
+// readSignedAuthorization calls readSignedAuthorizationFunc.
+func (mock *IStoreMock) readSignedAuthorization(s string) (*SignedAuthorization, error) {
+	if mock.readSignedAuthorizationFunc == nil {
+		panic("IStoreMock.readSignedAuthorizationFunc: method is nil but IStore.readSignedAuthorization was just called")
 	}
 	callInfo := struct {
 		S string
 	}{
 		S: s,
 	}
-	mock.lockreadSessionToken.Lock()
-	mock.calls.readSessionToken = append(mock.calls.readSessionToken, callInfo)
-	mock.lockreadSessionToken.Unlock()
-	return mock.readSessionTokenFunc(s)
+	mock.lockreadSignedAuthorization.Lock()
+	mock.calls.readSignedAuthorization = append(mock.calls.readSignedAuthorization, callInfo)
+	mock.lockreadSignedAuthorization.Unlock()
+	return mock.readSignedAuthorizationFunc(s)
 }
 
-// readSessionTokenCalls gets all the calls that were made to readSessionToken.
+// readSignedAuthorizationCalls gets all the calls that were made to readSignedAuthorization.
 // Check the length with:
 //
-//	len(mockedIStore.readSessionTokenCalls())
-func (mock *IStoreMock) readSessionTokenCalls() []struct {
+//	len(mockedIStore.readSignedAuthorizationCalls())
+func (mock *IStoreMock) readSignedAuthorizationCalls() []struct {
 	S string
 } {
 	var calls []struct {
 		S string
 	}
-	mock.lockreadSessionToken.RLock()
-	calls = mock.calls.readSessionToken
-	mock.lockreadSessionToken.RUnlock()
-	return calls
-}
-
-// updateSessionToken calls updateSessionTokenFunc.
-func (mock *IStoreMock) updateSessionToken(sessionKey *SessionKey) error {
-	if mock.updateSessionTokenFunc == nil {
-		panic("IStoreMock.updateSessionTokenFunc: method is nil but IStore.updateSessionToken was just called")
-	}
-	callInfo := struct {
-		SessionKey *SessionKey
-	}{
-		SessionKey: sessionKey,
-	}
-	mock.lockupdateSessionToken.Lock()
-	mock.calls.updateSessionToken = append(mock.calls.updateSessionToken, callInfo)
-	mock.lockupdateSessionToken.Unlock()
-	return mock.updateSessionTokenFunc(sessionKey)
-}
-
-// updateSessionTokenCalls gets all the calls that were made to updateSessionToken.
-// Check the length with:
-//
-//	len(mockedIStore.updateSessionTokenCalls())
-func (mock *IStoreMock) updateSessionTokenCalls() []struct {
-	SessionKey *SessionKey
-} {
-	var calls []struct {
-		SessionKey *SessionKey
-	}
-	mock.lockupdateSessionToken.RLock()
-	calls = mock.calls.updateSessionToken
-	mock.lockupdateSessionToken.RUnlock()
+	mock.lockreadSignedAuthorization.RLock()
+	calls = mock.calls.readSignedAuthorization
+	mock.lockreadSignedAuthorization.RUnlock()
 	return calls
 }

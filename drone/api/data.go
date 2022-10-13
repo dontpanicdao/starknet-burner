@@ -20,10 +20,10 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
-type Request struct {
-	RequestID        string `dynamodbav:"requestID" json:"requestID" form:"requestID"`
-	SessionPublicKey string `dynamodbav:"sessionPublicKey" json:"key" form:"key" binding:"required"`
+type AuthorizationRequest struct {
+	ID               string `dynamodbav:"requestID" json:"requestID" form:"requestID"`
 	DappTokenID      string `dynamodbav:"dappTokenID" json:"dappTokenID" form:"dappTokenID" binding:"required"`
+	SessionPublicKey string `dynamodbav:"sessionPublicKey" json:"key" form:"key" binding:"required"`
 	TTL              int64  `dynamodbav:"TTL" json:"-"`
 }
 
@@ -32,12 +32,12 @@ type Policy struct {
 	Selector        string `dynamodbav:"selector" json:"selector"`
 }
 
-type SessionKey struct {
-	SessionPublicKey string   `dynamodbav:"sessionPublicKey" json:"key"`
-	Policies         []Policy `dynamodbav:"policies" json:"policies"`
-	Expires          int      `dynamodbav:"expires" json:"expires"`
-	Root             string   `dynamodbav:"root" json:"root"`
+type SignedAuthorization struct {
 	Account          string   `dynamodbav:"account" json:"account"`
+	Expires          int      `dynamodbav:"expires" json:"expires"`
+	MerkleRoot       string   `dynamodbav:"root" json:"root"`
+	Policies         []Policy `dynamodbav:"policies" json:"policies"`
+	SessionPublicKey string   `dynamodbav:"sessionPublicKey" json:"key"`
 	Signature        []string `dynamodbav:"signature" json:"signature"`
 	TTL              int64    `dynamodbav:"TTL" json:"-"`
 }
@@ -68,7 +68,7 @@ func (pk *pathKeys) uploadRequest(ctx context.Context, request events.APIGateway
 			}, nil
 		}
 	}
-	sessionrequest := Request{}
+	sessionrequest := AuthorizationRequest{}
 	err = json.Unmarshal(data, &sessionrequest)
 	fmt.Println("request", sessionrequest.SessionPublicKey, sessionrequest.DappTokenID)
 	if err != nil || sessionrequest.SessionPublicKey == "" || sessionrequest.DappTokenID == "" {
@@ -80,7 +80,7 @@ func (pk *pathKeys) uploadRequest(ctx context.Context, request events.APIGateway
 	}
 	sessionrequest.TTL = time.Now().Add(time.Second * 120).Unix()
 	nBig, _ := rand.Int(rand.Reader, big.NewInt(899999))
-	sessionrequest.RequestID = nBig.Add(nBig, big.NewInt(100000)).Text(10)
+	sessionrequest.ID = nBig.Add(nBig, big.NewInt(100000)).Text(10)
 	item, err := attributevalue.MarshalMap(sessionrequest)
 	fmt.Printf("item %+v", item)
 	if err != nil {
@@ -145,7 +145,7 @@ func (pk *pathKeys) downloadRequest(ctx context.Context, request events.APIGatew
 			Headers:    map[string]string{"Content-Type": "application/json"},
 		}, nil
 	}
-	item := Request{}
+	item := AuthorizationRequest{}
 	err = attributevalue.UnmarshalMap(output.Item, &item)
 	if err != nil {
 		log.Println("could not convert data", err)
@@ -190,7 +190,7 @@ func (pk *pathKeys) uploadSessionToken(ctx context.Context, request events.APIGa
 			}, nil
 		}
 	}
-	sessionKey := SessionKey{}
+	sessionKey := SignedAuthorization{}
 	err = json.Unmarshal(data, &sessionKey)
 	if err != nil || sessionKey.SessionPublicKey != pk.keys["sessionPublicKey"] {
 		return events.APIGatewayV2HTTPResponse{
@@ -262,7 +262,7 @@ func (pk *pathKeys) downloadSessionToken(ctx context.Context, request events.API
 			Headers:    map[string]string{"Content-Type": "application/json"},
 		}, nil
 	}
-	item := SessionKey{}
+	item := SignedAuthorization{}
 	err = attributevalue.UnmarshalMap(output.Item, &item)
 	if err != nil {
 		log.Println("could not convert data", err)
