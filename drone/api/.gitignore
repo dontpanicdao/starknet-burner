@@ -1,4 +1,5 @@
 /.env
+/bin/moq
 /build/*
 !/build/.gitkeep
 /vendor
