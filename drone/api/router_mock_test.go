@@ -7,40 +7,40 @@ import (
 	"sync"
 )
 
-// Ensure, that IStoreMock does implement IStore.
+// Ensure, that StorerMock does implement Storer.
 // If this is not the case, regenerate this file with moq.
-var _ Storer = &IStoreMock{}
+var _ Storer = &StorerMock{}
 
-// IStoreMock is a mock implementation of IStore.
+// StorerMock is a mock implementation of Storer.
 //
-//	func TestSomethingThatUsesIStore(t *testing.T) {
+//	func TestSomethingThatUsesStorer(t *testing.T) {
 //
-//		// make and configure a mocked IStore
-//		mockedIStore := &IStoreMock{
-//			createAuthorizationFunc: func(sessionKey *Authorization) error {
+//		// make and configure a mocked Storer
+//		mockedStorer := &StorerMock{
+//			createAuthorizationFunc: func(authorization *Authorization) error {
 //				panic("mock out the createAuthorization method")
 //			},
-//			createRequestFunc: func(authorizationRequest *AuthorizationRequest) error {
+//			createRequestFunc: func(request *Request) error {
 //				panic("mock out the createRequest method")
 //			},
 //			findAuthorizationFunc: func(s string) (*Authorization, error) {
 //				panic("mock out the findAuthorization method")
 //			},
-//			findRequestFunc: func(s string) (*AuthorizationRequest, error) {
+//			findRequestFunc: func(s string) (*Request, error) {
 //				panic("mock out the findRequest method")
 //			},
 //		}
 //
-//		// use mockedIStore in code that requires IStore
+//		// use mockedStorer in code that requires Storer
 //		// and then make assertions.
 //
 //	}
-type IStoreMock struct {
+type StorerMock struct {
 	// createAuthorizationFunc mocks the createAuthorization method.
-	createAuthorizationFunc func(sessionKey *Authorization) error
+	createAuthorizationFunc func(authorization *Authorization) error
 
 	// createRequestFunc mocks the createRequest method.
-	createRequestFunc func(authorizationRequest *Request) error
+	createRequestFunc func(request *Request) error
 
 	// findAuthorizationFunc mocks the findAuthorization method.
 	findAuthorizationFunc func(s string) (*Authorization, error)
@@ -52,13 +52,13 @@ type IStoreMock struct {
 	calls struct {
 		// createAuthorization holds details about calls to the createAuthorization method.
 		createAuthorization []struct {
-			// SessionKey is the sessionKey argument value.
-			SessionKey *Authorization
+			// Authorization is the authorization argument value.
+			Authorization *Authorization
 		}
 		// createRequest holds details about calls to the createRequest method.
 		createRequest []struct {
-			// AuthorizationRequest is the authorizationRequest argument value.
-			AuthorizationRequest *Request
+			// Request is the request argument value.
+			Request *Request
 		}
 		// findAuthorization holds details about calls to the findAuthorization method.
 		findAuthorization []struct {
@@ -78,30 +78,30 @@ type IStoreMock struct {
 }
 
 // createAuthorization calls createAuthorizationFunc.
-func (mock *IStoreMock) createAuthorization(sessionKey *Authorization) error {
+func (mock *StorerMock) createAuthorization(authorization *Authorization) error {
 	if mock.createAuthorizationFunc == nil {
-		panic("IStoreMock.createAuthorizationFunc: method is nil but IStore.createAuthorization was just called")
+		panic("StorerMock.createAuthorizationFunc: method is nil but Storer.createAuthorization was just called")
 	}
 	callInfo := struct {
-		SessionKey *Authorization
+		Authorization *Authorization
 	}{
-		SessionKey: sessionKey,
+		Authorization: authorization,
 	}
 	mock.lockcreateAuthorization.Lock()
 	mock.calls.createAuthorization = append(mock.calls.createAuthorization, callInfo)
 	mock.lockcreateAuthorization.Unlock()
-	return mock.createAuthorizationFunc(sessionKey)
+	return mock.createAuthorizationFunc(authorization)
 }
 
 // createAuthorizationCalls gets all the calls that were made to createAuthorization.
 // Check the length with:
 //
-//	len(mockedIStore.createAuthorizationCalls())
-func (mock *IStoreMock) createAuthorizationCalls() []struct {
-	SessionKey *Authorization
+//	len(mockedStorer.createAuthorizationCalls())
+func (mock *StorerMock) createAuthorizationCalls() []struct {
+	Authorization *Authorization
 } {
 	var calls []struct {
-		SessionKey *Authorization
+		Authorization *Authorization
 	}
 	mock.lockcreateAuthorization.RLock()
 	calls = mock.calls.createAuthorization
@@ -110,30 +110,30 @@ func (mock *IStoreMock) createAuthorizationCalls() []struct {
 }
 
 // createRequest calls createRequestFunc.
-func (mock *IStoreMock) createRequest(authorizationRequest *Request) error {
+func (mock *StorerMock) createRequest(request *Request) error {
 	if mock.createRequestFunc == nil {
-		panic("IStoreMock.createRequestFunc: method is nil but IStore.createRequest was just called")
+		panic("StorerMock.createRequestFunc: method is nil but Storer.createRequest was just called")
 	}
 	callInfo := struct {
-		AuthorizationRequest *Request
+		Request *Request
 	}{
-		AuthorizationRequest: authorizationRequest,
+		Request: request,
 	}
 	mock.lockcreateRequest.Lock()
 	mock.calls.createRequest = append(mock.calls.createRequest, callInfo)
 	mock.lockcreateRequest.Unlock()
-	return mock.createRequestFunc(authorizationRequest)
+	return mock.createRequestFunc(request)
 }
 
 // createRequestCalls gets all the calls that were made to createRequest.
 // Check the length with:
 //
-//	len(mockedIStore.createRequestCalls())
-func (mock *IStoreMock) createRequestCalls() []struct {
-	AuthorizationRequest *Request
+//	len(mockedStorer.createRequestCalls())
+func (mock *StorerMock) createRequestCalls() []struct {
+	Request *Request
 } {
 	var calls []struct {
-		AuthorizationRequest *Request
+		Request *Request
 	}
 	mock.lockcreateRequest.RLock()
 	calls = mock.calls.createRequest
@@ -142,9 +142,9 @@ func (mock *IStoreMock) createRequestCalls() []struct {
 }
 
 // findAuthorization calls findAuthorizationFunc.
-func (mock *IStoreMock) findAuthorization(s string) (*Authorization, error) {
+func (mock *StorerMock) findAuthorization(s string) (*Authorization, error) {
 	if mock.findAuthorizationFunc == nil {
-		panic("IStoreMock.findAuthorizationFunc: method is nil but IStore.findAuthorization was just called")
+		panic("StorerMock.findAuthorizationFunc: method is nil but Storer.findAuthorization was just called")
 	}
 	callInfo := struct {
 		S string
@@ -160,8 +160,8 @@ func (mock *IStoreMock) findAuthorization(s string) (*Authorization, error) {
 // findAuthorizationCalls gets all the calls that were made to findAuthorization.
 // Check the length with:
 //
-//	len(mockedIStore.findAuthorizationCalls())
-func (mock *IStoreMock) findAuthorizationCalls() []struct {
+//	len(mockedStorer.findAuthorizationCalls())
+func (mock *StorerMock) findAuthorizationCalls() []struct {
 	S string
 } {
 	var calls []struct {
@@ -174,9 +174,9 @@ func (mock *IStoreMock) findAuthorizationCalls() []struct {
 }
 
 // findRequest calls findRequestFunc.
-func (mock *IStoreMock) findRequest(s string) (*Request, error) {
+func (mock *StorerMock) findRequest(s string) (*Request, error) {
 	if mock.findRequestFunc == nil {
-		panic("IStoreMock.findRequestFunc: method is nil but IStore.findRequest was just called")
+		panic("StorerMock.findRequestFunc: method is nil but Storer.findRequest was just called")
 	}
 	callInfo := struct {
 		S string
@@ -192,8 +192,8 @@ func (mock *IStoreMock) findRequest(s string) (*Request, error) {
 // findRequestCalls gets all the calls that were made to findRequest.
 // Check the length with:
 //
-//	len(mockedIStore.findRequestCalls())
-func (mock *IStoreMock) findRequestCalls() []struct {
+//	len(mockedStorer.findRequestCalls())
+func (mock *StorerMock) findRequestCalls() []struct {
 	S string
 } {
 	var calls []struct {
