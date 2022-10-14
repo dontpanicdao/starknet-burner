@@ -31,6 +31,9 @@ type Key = map[string]types.AttributeValue
 var (
 	// ensure `dynStore` implements `IStore` interface
 	_ Storer = &dynStore{}
+
+	authorizationDuration = time.Second * 300
+	requestDuration       = time.Second * 120
 )
 
 func NewStore(ctx context.Context) (*dynStore, error) {
@@ -45,8 +48,19 @@ func NewStore(ctx context.Context) (*dynStore, error) {
 	}, nil
 }
 
+func (s *dynStore) createAuthorization(ctx context.Context, auth *Authorization) error {
+	auth.TTL = time.Now().Add(authorizationDuration).Unix()
+	item, err := attributevalue.MarshalMap(auth)
+	if err != nil {
+		return err
+	}
+	input := &dynamodb.PutItemInput{TableName: s.sessionTable, Item: item}
+	_, err = s.client.PutItem(ctx, input)
+	return err
+}
+
 func (s *dynStore) createRequest(ctx context.Context, req *Request) error {
-	req.TTL = time.Now().Add(time.Second * 120).Unix()
+	req.TTL = time.Now().Add(requestDuration).Unix()
 	nBig, _ := rand.Int(rand.Reader, big.NewInt(899999))
 	req.ID = nBig.Add(nBig, big.NewInt(100000)).Text(10)
 	item, err := attributevalue.MarshalMap(req)
@@ -58,28 +72,10 @@ func (s *dynStore) createRequest(ctx context.Context, req *Request) error {
 	return err
 }
 
-func (s *dynStore) findRequest(ctx context.Context, id string) (*Request, error) {
-	input := &dynamodb.GetItemInput{
-		TableName: s.requestTable,
-		Key:       Key{"requestID": &types.AttributeValueMemberS{Value: id}},
-	}
-	output, err := s.client.GetItem(ctx, input)
-	if err != nil {
-		return nil, err
-	}
-	if output.Item == nil {
-		return nil, nil
-	}
-	var req Request
-	err = attributevalue.UnmarshalMap(output.Item, &req)
-	return &req, err
-}
-
 func (s *dynStore) findAuthorization(ctx context.Context, pk string) (*Authorization, error) {
-	pk = strings.ToLower(pk)
 	input := &dynamodb.GetItemInput{
 		TableName: s.sessionTable,
-		Key:       Key{"sessionPublicKey": &types.AttributeValueMemberS{Value: pk}},
+		Key:       Key{"sessionPublicKey": &types.AttributeValueMemberS{Value: strings.ToLower(pk)}},
 	}
 	output, err := s.client.GetItem(ctx, input)
 	if err != nil {
@@ -98,13 +94,19 @@ func (s *dynStore) findAuthorization(ctx context.Context, pk string) (*Authoriza
 	return &auth, nil
 }
 
-func (s *dynStore) createAuthorization(ctx context.Context, auth *Authorization) error {
-	auth.TTL = time.Now().Add(time.Second * 300).Unix()
-	item, err := attributevalue.MarshalMap(auth)
-	if err != nil {
-		return err
+func (s *dynStore) findRequest(ctx context.Context, id string) (*Request, error) {
+	input := &dynamodb.GetItemInput{
+		TableName: s.requestTable,
+		Key:       Key{"requestID": &types.AttributeValueMemberS{Value: id}},
 	}
-	input := &dynamodb.PutItemInput{TableName: s.sessionTable, Item: item}
-	_, err = s.client.PutItem(ctx, input)
-	return err
+	output, err := s.client.GetItem(ctx, input)
+	if err != nil {
+		return nil, err
+	}
+	if output.Item == nil {
+		return nil, nil
+	}
+	var req Request
+	err = attributevalue.UnmarshalMap(output.Item, &req)
+	return &req, err
 }
