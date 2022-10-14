@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-
-	"github.com/aws/aws-lambda-go/lambda"
 )
 
 var (
@@ -15,5 +13,5 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	lambda.Start(app.Proxy())
+	app.Start()
 }

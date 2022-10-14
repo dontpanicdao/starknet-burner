@@ -6,6 +6,7 @@ import (
 	"os"
 	"regexp"
 
+	"github.com/aws/aws-lambda-go/lambda"
 	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
 	"github.com/gin-gonic/gin"
 )
@@ -113,6 +114,4 @@ func routes(r gin.IRouter, store Storer) {
 	})
 }
 
-func (app *App) Proxy() *ginadapter.GinLambdaV2 {
-	return ginadapter.NewV2(app.Router)
-}
+func (app *App) Start() { lambda.Start(ginadapter.NewV2(app.Router)) }
