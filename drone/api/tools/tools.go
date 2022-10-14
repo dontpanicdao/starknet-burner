@@ -6,4 +6,4 @@ import (
 	_ "github.com/matryer/moq"
 )
 
-//go:generate go build -v github.com/matryer/moq
+//go:generate go install -v github.com/matryer/moq
