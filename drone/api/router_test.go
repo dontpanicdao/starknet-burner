@@ -1,6 +1,6 @@
 package main
 
-//go:generate bin/moq -out router_mock_test.go . Storer
+//go:generate moq -out router_mock_test.go . Storer
 
 import (
 	"errors"
