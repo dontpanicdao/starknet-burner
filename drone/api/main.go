@@ -1,9 +1,17 @@
 package main
 
 import (
-	"github.com/aws/aws-lambda-go/lambda"
+	"context"
+)
+
+var (
+	version = "dev"
 )
 
 func main() {
-	lambda.Start(handleRequest)
+	app, err := NewApp(context.Background())
+	if err != nil {
+		panic(err)
+	}
+	app.Start()
 }

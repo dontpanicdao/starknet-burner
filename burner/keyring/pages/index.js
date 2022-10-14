@@ -1,16 +1,7 @@
 import styles from "styles/Home.module.css";
 import { useEffect, useState } from "react";
-import {
-  useStateContext,
-  UNINITIALIZED,
-  INITIALIZED,
-  CONNECTED,
-} from "lib/ui/context";
-import {
-  getLocalStorage,
-  saveLocalStorage,
-  removeLocalStorage,
-} from "lib/storage";
+import { useStateContext, UNINITIALIZED, INITIALIZED, CONNECTED } from "lib/ui/context";
+import { getLocalStorage, saveLocalStorage, removeLocalStorage } from "lib/storage";
 import { generateKey } from "lib/sessionkey";
 import Loader from "components/Loader";
 import { eventHandler, injectSets } from "lib/index";
@@ -24,8 +15,7 @@ import CloseButton from "components/CloseButton";
 import { getKeyPair, getStarkKey } from "starknet4/utils/ellipticCurve";
 
 export default function Home() {
-  const { state, setState, key, setKey, modalProperties, setModalProperties } =
-    useStateContext();
+  const { state, setState, key, setKey, modalProperties, setModalProperties } = useStateContext();
   const [sessionToken, setSessionToken] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [displayed, setDisplayed] = useState(false);
@@ -43,7 +33,7 @@ export default function Home() {
   const getDroneData = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`https://drone.carnage.sh/${key}`);
+      const res = await fetch(`https://drone.carnage.sh/authorizations/${key}`);
       if (res.status !== 200) {
         return setLoading(false);
       }
