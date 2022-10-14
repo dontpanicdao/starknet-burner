@@ -70,9 +70,9 @@ func (s *dynStore) findRequest(id string) (*Request, error) {
 	if output.Item == nil {
 		return nil, nil
 	}
-	item := Request{}
-	err = attributevalue.UnmarshalMap(output.Item, &item)
-	return &item, err
+	var req Request
+	err = attributevalue.UnmarshalMap(output.Item, &req)
+	return &req, err
 }
 
 func (s *dynStore) findAuthorization(pk string) (*Authorization, error) {
