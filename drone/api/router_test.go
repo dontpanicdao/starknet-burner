@@ -11,6 +11,8 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/nsf/jsondiff"
 )
 
 func TestRouter(t *testing.T) {
@@ -174,7 +176,8 @@ func TestRouter(t *testing.T) {
 		if w.Code != test.resCode {
 			t.Fatalf("expected response code %d, but got %d", test.resCode, w.Code)
 		}
-		if w.Body.String() != test.resBody {
+		diff, _ := jsondiff.Compare(w.Body.Bytes(), []byte(test.resBody), &jsondiff.Options{})
+		if diff != jsondiff.FullMatch {
 			t.Fatalf("expected response body %q, but got %q", test.resBody, w.Body.String())
 		}
 	}
