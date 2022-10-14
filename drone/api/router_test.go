@@ -3,6 +3,7 @@ package main
 //go:generate moq -out router_mock_test.go . Storer
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -49,7 +50,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusCreated,
 		resBody: `{"requestID":"baz","dappTokenID":"bar","key":"foo"}`,
 		store: &StorerMock{
-			createRequestFunc: func(r *Request) error {
+			createRequestFunc: func(_ context.Context, r *Request) error {
 				r.ID = "baz"
 				return nil
 			},
@@ -67,7 +68,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusInternalServerError,
 		resBody: `{"message":"foo"}`,
 		store: &StorerMock{
-			findRequestFunc: func(pin string) (*Request, error) { return nil, errors.New("foo") },
+			findRequestFunc: func(_ context.Context, _ string) (*Request, error) { return nil, errors.New("foo") },
 		},
 	}, {
 		desc:    "getting a request: not found",
@@ -76,7 +77,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusNotFound,
 		resBody: `{"message":"not found"}`,
 		store: &StorerMock{
-			findRequestFunc: func(pin string) (*Request, error) { return nil, nil },
+			findRequestFunc: func(_ context.Context, _ string) (*Request, error) { return nil, nil },
 		},
 	}, {
 		desc:    "getting a request: store all is good",
@@ -85,7 +86,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusOK,
 		resBody: `{"requestID":"123456","dappTokenID":"baz","key":"bar"}`,
 		store: &StorerMock{
-			findRequestFunc: func(pin string) (*Request, error) {
+			findRequestFunc: func(_ context.Context, _ string) (*Request, error) {
 				return &Request{
 					ID:               "123456",
 					SessionPublicKey: "bar",
@@ -100,7 +101,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusInternalServerError,
 		resBody: `{"message":"foo"}`,
 		store: &StorerMock{
-			findAuthorizationFunc: func(pk string) (*Authorization, error) { return nil, errors.New("foo") },
+			findAuthorizationFunc: func(_ context.Context, _ string) (*Authorization, error) { return nil, errors.New("foo") },
 		},
 	}, {
 		desc:    "getting signed authorization: not found",
@@ -109,7 +110,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusNotFound,
 		resBody: `{"message":"not found"}`,
 		store: &StorerMock{
-			findAuthorizationFunc: func(pk string) (*Authorization, error) { return nil, nil },
+			findAuthorizationFunc: func(_ context.Context, _ string) (*Authorization, error) { return nil, nil },
 		},
 	}, {
 		desc:    "getting signed authorization: all is good",
@@ -118,7 +119,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusOK,
 		resBody: `{"account":"baz","expires":0,"root":"bar","policies":[],"key":"foo","signature":["qux"]}`,
 		store: &StorerMock{
-			findAuthorizationFunc: func(pk string) (*Authorization, error) {
+			findAuthorizationFunc: func(_ context.Context, _ string) (*Authorization, error) {
 				return &Authorization{
 					SessionPublicKey: "foo",
 					Policies:         []Policy{},
@@ -142,7 +143,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusInternalServerError,
 		resBody: `{"message":"foo"}`,
 		store: &StorerMock{
-			createAuthorizationFunc: func(s *Authorization) error { return errors.New("foo") },
+			createAuthorizationFunc: func(_ context.Context, _ *Authorization) error { return errors.New("foo") },
 		},
 	}, {
 		desc:    "create signed authorization: all is good",
@@ -152,7 +153,7 @@ func TestRouter(t *testing.T) {
 		resCode: http.StatusCreated,
 		resBody: `{"account":"","expires":0,"root":"foo","policies":null,"key":"0xdeadbeef","signature":null}`,
 		store: &StorerMock{
-			createAuthorizationFunc: func(s *Authorization) error {
+			createAuthorizationFunc: func(_ context.Context, s *Authorization) error {
 				s.MerkleRoot = "foo"
 				return nil
 			},

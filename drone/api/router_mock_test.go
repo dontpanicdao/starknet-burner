@@ -4,6 +4,7 @@
 package main
 
 import (
+	"context"
 	"sync"
 )
 
@@ -17,16 +18,16 @@ var _ Storer = &StorerMock{}
 //
 //		// make and configure a mocked Storer
 //		mockedStorer := &StorerMock{
-//			createAuthorizationFunc: func(authorization *Authorization) error {
+//			createAuthorizationFunc: func(contextMoqParam context.Context, authorization *Authorization) error {
 //				panic("mock out the createAuthorization method")
 //			},
-//			createRequestFunc: func(request *Request) error {
+//			createRequestFunc: func(contextMoqParam context.Context, request *Request) error {
 //				panic("mock out the createRequest method")
 //			},
-//			findAuthorizationFunc: func(s string) (*Authorization, error) {
+//			findAuthorizationFunc: func(contextMoqParam context.Context, s string) (*Authorization, error) {
 //				panic("mock out the findAuthorization method")
 //			},
-//			findRequestFunc: func(s string) (*Request, error) {
+//			findRequestFunc: func(contextMoqParam context.Context, s string) (*Request, error) {
 //				panic("mock out the findRequest method")
 //			},
 //		}
@@ -37,36 +38,44 @@ var _ Storer = &StorerMock{}
 //	}
 type StorerMock struct {
 	// createAuthorizationFunc mocks the createAuthorization method.
-	createAuthorizationFunc func(authorization *Authorization) error
+	createAuthorizationFunc func(contextMoqParam context.Context, authorization *Authorization) error
 
 	// createRequestFunc mocks the createRequest method.
-	createRequestFunc func(request *Request) error
+	createRequestFunc func(contextMoqParam context.Context, request *Request) error
 
 	// findAuthorizationFunc mocks the findAuthorization method.
-	findAuthorizationFunc func(s string) (*Authorization, error)
+	findAuthorizationFunc func(contextMoqParam context.Context, s string) (*Authorization, error)
 
 	// findRequestFunc mocks the findRequest method.
-	findRequestFunc func(s string) (*Request, error)
+	findRequestFunc func(contextMoqParam context.Context, s string) (*Request, error)
 
 	// calls tracks calls to the methods.
 	calls struct {
 		// createAuthorization holds details about calls to the createAuthorization method.
 		createAuthorization []struct {
+			// ContextMoqParam is the contextMoqParam argument value.
+			ContextMoqParam context.Context
 			// Authorization is the authorization argument value.
 			Authorization *Authorization
 		}
 		// createRequest holds details about calls to the createRequest method.
 		createRequest []struct {
+			// ContextMoqParam is the contextMoqParam argument value.
+			ContextMoqParam context.Context
 			// Request is the request argument value.
 			Request *Request
 		}
 		// findAuthorization holds details about calls to the findAuthorization method.
 		findAuthorization []struct {
+			// ContextMoqParam is the contextMoqParam argument value.
+			ContextMoqParam context.Context
 			// S is the s argument value.
 			S string
 		}
 		// findRequest holds details about calls to the findRequest method.
 		findRequest []struct {
+			// ContextMoqParam is the contextMoqParam argument value.
+			ContextMoqParam context.Context
 			// S is the s argument value.
 			S string
 		}
@@ -78,19 +87,21 @@ type StorerMock struct {
 }
 
 // createAuthorization calls createAuthorizationFunc.
-func (mock *StorerMock) createAuthorization(authorization *Authorization) error {
+func (mock *StorerMock) createAuthorization(contextMoqParam context.Context, authorization *Authorization) error {
 	if mock.createAuthorizationFunc == nil {
 		panic("StorerMock.createAuthorizationFunc: method is nil but Storer.createAuthorization was just called")
 	}
 	callInfo := struct {
-		Authorization *Authorization
+		ContextMoqParam context.Context
+		Authorization   *Authorization
 	}{
-		Authorization: authorization,
+		ContextMoqParam: contextMoqParam,
+		Authorization:   authorization,
 	}
 	mock.lockcreateAuthorization.Lock()
 	mock.calls.createAuthorization = append(mock.calls.createAuthorization, callInfo)
 	mock.lockcreateAuthorization.Unlock()
-	return mock.createAuthorizationFunc(authorization)
+	return mock.createAuthorizationFunc(contextMoqParam, authorization)
 }
 
 // createAuthorizationCalls gets all the calls that were made to createAuthorization.
@@ -98,10 +109,12 @@ func (mock *StorerMock) createAuthorization(authorization *Authorization) error 
 //
 //	len(mockedStorer.createAuthorizationCalls())
 func (mock *StorerMock) createAuthorizationCalls() []struct {
-	Authorization *Authorization
+	ContextMoqParam context.Context
+	Authorization   *Authorization
 } {
 	var calls []struct {
-		Authorization *Authorization
+		ContextMoqParam context.Context
+		Authorization   *Authorization
 	}
 	mock.lockcreateAuthorization.RLock()
 	calls = mock.calls.createAuthorization
@@ -110,19 +123,21 @@ func (mock *StorerMock) createAuthorizationCalls() []struct {
 }
 
 // createRequest calls createRequestFunc.
-func (mock *StorerMock) createRequest(request *Request) error {
+func (mock *StorerMock) createRequest(contextMoqParam context.Context, request *Request) error {
 	if mock.createRequestFunc == nil {
 		panic("StorerMock.createRequestFunc: method is nil but Storer.createRequest was just called")
 	}
 	callInfo := struct {
-		Request *Request
+		ContextMoqParam context.Context
+		Request         *Request
 	}{
-		Request: request,
+		ContextMoqParam: contextMoqParam,
+		Request:         request,
 	}
 	mock.lockcreateRequest.Lock()
 	mock.calls.createRequest = append(mock.calls.createRequest, callInfo)
 	mock.lockcreateRequest.Unlock()
-	return mock.createRequestFunc(request)
+	return mock.createRequestFunc(contextMoqParam, request)
 }
 
 // createRequestCalls gets all the calls that were made to createRequest.
@@ -130,10 +145,12 @@ func (mock *StorerMock) createRequest(request *Request) error {
 //
 //	len(mockedStorer.createRequestCalls())
 func (mock *StorerMock) createRequestCalls() []struct {
-	Request *Request
+	ContextMoqParam context.Context
+	Request         *Request
 } {
 	var calls []struct {
-		Request *Request
+		ContextMoqParam context.Context
+		Request         *Request
 	}
 	mock.lockcreateRequest.RLock()
 	calls = mock.calls.createRequest
@@ -142,19 +159,21 @@ func (mock *StorerMock) createRequestCalls() []struct {
 }
 
 // findAuthorization calls findAuthorizationFunc.
-func (mock *StorerMock) findAuthorization(s string) (*Authorization, error) {
+func (mock *StorerMock) findAuthorization(contextMoqParam context.Context, s string) (*Authorization, error) {
 	if mock.findAuthorizationFunc == nil {
 		panic("StorerMock.findAuthorizationFunc: method is nil but Storer.findAuthorization was just called")
 	}
 	callInfo := struct {
-		S string
+		ContextMoqParam context.Context
+		S               string
 	}{
-		S: s,
+		ContextMoqParam: contextMoqParam,
+		S:               s,
 	}
 	mock.lockfindAuthorization.Lock()
 	mock.calls.findAuthorization = append(mock.calls.findAuthorization, callInfo)
 	mock.lockfindAuthorization.Unlock()
-	return mock.findAuthorizationFunc(s)
+	return mock.findAuthorizationFunc(contextMoqParam, s)
 }
 
 // findAuthorizationCalls gets all the calls that were made to findAuthorization.
@@ -162,10 +181,12 @@ func (mock *StorerMock) findAuthorization(s string) (*Authorization, error) {
 //
 //	len(mockedStorer.findAuthorizationCalls())
 func (mock *StorerMock) findAuthorizationCalls() []struct {
-	S string
+	ContextMoqParam context.Context
+	S               string
 } {
 	var calls []struct {
-		S string
+		ContextMoqParam context.Context
+		S               string
 	}
 	mock.lockfindAuthorization.RLock()
 	calls = mock.calls.findAuthorization
@@ -174,19 +195,21 @@ func (mock *StorerMock) findAuthorizationCalls() []struct {
 }
 
 // findRequest calls findRequestFunc.
-func (mock *StorerMock) findRequest(s string) (*Request, error) {
+func (mock *StorerMock) findRequest(contextMoqParam context.Context, s string) (*Request, error) {
 	if mock.findRequestFunc == nil {
 		panic("StorerMock.findRequestFunc: method is nil but Storer.findRequest was just called")
 	}
 	callInfo := struct {
-		S string
+		ContextMoqParam context.Context
+		S               string
 	}{
-		S: s,
+		ContextMoqParam: contextMoqParam,
+		S:               s,
 	}
 	mock.lockfindRequest.Lock()
 	mock.calls.findRequest = append(mock.calls.findRequest, callInfo)
 	mock.lockfindRequest.Unlock()
-	return mock.findRequestFunc(s)
+	return mock.findRequestFunc(contextMoqParam, s)
 }
 
 // findRequestCalls gets all the calls that were made to findRequest.
@@ -194,10 +217,12 @@ func (mock *StorerMock) findRequest(s string) (*Request, error) {
 //
 //	len(mockedStorer.findRequestCalls())
 func (mock *StorerMock) findRequestCalls() []struct {
-	S string
+	ContextMoqParam context.Context
+	S               string
 } {
 	var calls []struct {
-		S string
+		ContextMoqParam context.Context
+		S               string
 	}
 	mock.lockfindRequest.RLock()
 	calls = mock.calls.findRequest

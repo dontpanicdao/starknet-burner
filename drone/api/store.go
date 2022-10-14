@@ -1,5 +1,7 @@
 package main
 
+import "context"
+
 type Request struct {
 	ID               string `dynamodbav:"requestID" json:"requestID" form:"requestID"`
 	DappTokenID      string `dynamodbav:"dappTokenID" json:"dappTokenID" form:"dappTokenID" binding:"required"`
@@ -23,8 +25,8 @@ type Authorization struct {
 }
 
 type Storer interface {
-	createAuthorization(*Authorization) error
-	createRequest(*Request) error
-	findAuthorization(string) (*Authorization, error)
-	findRequest(string) (*Request, error)
+	createAuthorization(context.Context, *Authorization) error
+	createRequest(context.Context, *Request) error
+	findAuthorization(context.Context, string) (*Authorization, error)
+	findRequest(context.Context, string) (*Request, error)
 }

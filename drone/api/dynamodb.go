@@ -45,7 +45,7 @@ func NewStore(ctx context.Context) (*dynStore, error) {
 	}, nil
 }
 
-func (s *dynStore) createRequest(req *Request) error {
+func (s *dynStore) createRequest(ctx context.Context, req *Request) error {
 	req.TTL = time.Now().Add(time.Second * 120).Unix()
 	nBig, _ := rand.Int(rand.Reader, big.NewInt(899999))
 	req.ID = nBig.Add(nBig, big.NewInt(100000)).Text(10)
@@ -54,16 +54,16 @@ func (s *dynStore) createRequest(req *Request) error {
 		return err
 	}
 	input := &dynamodb.PutItemInput{TableName: s.requestTable, Item: item}
-	_, err = s.client.PutItem(context.TODO(), input)
+	_, err = s.client.PutItem(ctx, input)
 	return err
 }
 
-func (s *dynStore) findRequest(id string) (*Request, error) {
+func (s *dynStore) findRequest(ctx context.Context, id string) (*Request, error) {
 	input := &dynamodb.GetItemInput{
 		TableName: s.requestTable,
 		Key:       Key{"requestID": &types.AttributeValueMemberS{Value: id}},
 	}
-	output, err := s.client.GetItem(context.TODO(), input)
+	output, err := s.client.GetItem(ctx, input)
 	if err != nil {
 		return nil, err
 	}
@@ -75,13 +75,13 @@ func (s *dynStore) findRequest(id string) (*Request, error) {
 	return &req, err
 }
 
-func (s *dynStore) findAuthorization(pk string) (*Authorization, error) {
+func (s *dynStore) findAuthorization(ctx context.Context, pk string) (*Authorization, error) {
 	pk = strings.ToLower(pk)
 	input := &dynamodb.GetItemInput{
 		TableName: s.sessionTable,
 		Key:       Key{"sessionPublicKey": &types.AttributeValueMemberS{Value: pk}},
 	}
-	output, err := s.client.GetItem(context.TODO(), input)
+	output, err := s.client.GetItem(ctx, input)
 	if err != nil {
 		return nil, err
 	}
@@ -98,13 +98,13 @@ func (s *dynStore) findAuthorization(pk string) (*Authorization, error) {
 	return &auth, nil
 }
 
-func (s *dynStore) createAuthorization(auth *Authorization) error {
+func (s *dynStore) createAuthorization(ctx context.Context, auth *Authorization) error {
 	auth.TTL = time.Now().Add(time.Second * 300).Unix()
 	item, err := attributevalue.MarshalMap(auth)
 	if err != nil {
 		return err
 	}
 	input := &dynamodb.PutItemInput{TableName: s.sessionTable, Item: item}
-	_, err = s.client.PutItem(context.TODO(), input)
+	_, err = s.client.PutItem(ctx, input)
 	return err
 }

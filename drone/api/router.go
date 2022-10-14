@@ -52,7 +52,7 @@ func routes(r gin.IRouter, store Storer) {
 			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 			return
 		}
-		err := store.createRequest(&req)
+		err := store.createRequest(c.Request.Context(), &req)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
@@ -68,7 +68,7 @@ func routes(r gin.IRouter, store Storer) {
 			return
 		}
 
-		req, err := store.findRequest(id)
+		req, err := store.findRequest(c.Request.Context(), id)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
@@ -84,7 +84,7 @@ func routes(r gin.IRouter, store Storer) {
 
 	r.GET("/authorizations/0x:pk", func(c *gin.Context) {
 		pk := "0x" + c.Params.ByName("pk")
-		auth, err := store.findAuthorization(pk)
+		auth, err := store.findAuthorization(c.Request.Context(), pk)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
@@ -104,7 +104,7 @@ func routes(r gin.IRouter, store Storer) {
 			return
 		}
 
-		if err := store.createAuthorization(&auth); err != nil {
+		if err := store.createAuthorization(c.Request.Context(), &auth); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
 		}
