@@ -75,7 +75,7 @@ curl https://drone.carnage.sh/requests/960958
 
 ```shell
 export BASEURL=https://...
-curl -XPUT ${BASEURL}/0xdeadbeef \
+curl -XPOST ${BASEURL}/authorizations \
   -d'{
 	"key": "0xdeadbeef",
   "policies": [{"contractAddress": "0xdeadbeef", "selector": "transfert"}],

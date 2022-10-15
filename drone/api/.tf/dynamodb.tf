@@ -1,5 +1,5 @@
-resource "aws_dynamodb_table" "sessionkey" {
-  name         = "${terraform.workspace}BurnerSession"
+resource "aws_dynamodb_table" "authorization" {
+  name         = "${terraform.workspace}QasarAuthorization"
   hash_key     = "sessionPublicKey"
   billing_mode = "PAY_PER_REQUEST"
 
@@ -15,7 +15,7 @@ resource "aws_dynamodb_table" "sessionkey" {
 }
 
 resource "aws_dynamodb_table" "request" {
-  name         = "${terraform.workspace}BurnerRequest"
+  name         = "${terraform.workspace}QasarRequest"
   hash_key     = "requestID"
   billing_mode = "PAY_PER_REQUEST"
 
@@ -31,10 +31,10 @@ resource "aws_dynamodb_table" "request" {
 
 }
 
-data "aws_iam_policy_document" "sessionkey" {
-  policy_id = "${terraform.workspace}BurnerSessionPolicy"
+data "aws_iam_policy_document" "authorization" {
+  policy_id = "${terraform.workspace}QasarAuthorizationPolicy"
   statement {
-    sid    = "BurnerSessionTable"
+    sid    = "QasarAuthorizationTable"
     effect = "Allow"
     actions = [
       "dynamodb:PutItem",
@@ -42,16 +42,16 @@ data "aws_iam_policy_document" "sessionkey" {
       "dynamodb:GetItem",
     ]
     resources = [
-      aws_dynamodb_table.sessionkey.arn,
+      aws_dynamodb_table.authorization.arn,
       aws_dynamodb_table.request.arn,
     ]
   }
 }
 
 resource "aws_iam_policy" "dynamodb_policy" {
-  name        = "${terraform.workspace}BurnerSessionPolicy"
-  description = "The policy to access the starknet burner Session Token"
-  policy      = data.aws_iam_policy_document.sessionkey.json
+  name        = "${terraform.workspace}QasarSessionPolicy"
+  description = "The policy to access the starknet Qasar Session Token"
+  policy      = data.aws_iam_policy_document.authorization.json
 }
 
 resource "aws_iam_role_policy_attachment" "dynamodb_for_lambda" {

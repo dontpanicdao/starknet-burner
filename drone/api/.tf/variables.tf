@@ -2,21 +2,8 @@ variable "bucket" {
   type = string
 }
 
-variable "dns" {
-  type = string
-}
-
 variable "certificate" {
   type = string
-}
-
-variable "drone" {
-  type = string
-}
-
-variable "drone_test" {
-  type    = string
-  default = "http://localhost:5174"
 }
 
 variable "keyring" {
@@ -24,12 +11,17 @@ variable "keyring" {
   default = "https://starknet-burner.vercel.app"
 }
 
-variable "test" {
+variable "keyring_test" {
   type    = string
   default = "http://localhost:3000"
 }
 
-variable "dawallet" {
-  type    = string
-  default = "https://da-wallet.blaqkube.io"
+variable "qasar" {
+  type = string
 }
+
+variable "qasar_test" {
+  type    = string
+  default = "http://localhost:3001"
+}
+
