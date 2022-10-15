@@ -2,10 +2,13 @@ package main
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 	"regexp"
 
+	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
 	"github.com/gin-gonic/gin"
@@ -114,8 +117,27 @@ func routes(r gin.IRouter, store Storer) {
 	})
 }
 
+type LambdaHandler struct {
+	Adapter *ginadapter.GinLambdaV2
+}
+
+func (lh *LambdaHandler) lambdaHandler(ctx context.Context, req events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
+	output, err := json.Marshal(req)
+	if err != nil {
+		return events.APIGatewayV2HTTPResponse{
+			StatusCode: http.StatusBadRequest,
+			Body:       fmt.Sprintf(`{"message": "%v"}`, err),
+		}, nil
+	}
+	fmt.Printf("%s\n", string(output))
+	return lh.Adapter.ProxyWithContext(ctx, req)
+}
+
 func (app *App) Start() {
+	lh := LambdaHandler{
+		Adapter: ginadapter.NewV2(app.Router),
+	}
 	lambda.Start(
-		ginadapter.NewV2(app.Router).ProxyWithContext,
+		lh.lambdaHandler,
 	)
 }
