@@ -21,9 +21,9 @@ type dynamoClient interface {
 }
 
 type dynStore struct {
-	client       dynamoClient
-	requestTable *string
-	sessionTable *string
+	client             dynamoClient
+	requestTable       *string
+	authorizationTable *string
 }
 
 type Key = map[string]types.AttributeValue
@@ -42,9 +42,9 @@ func NewStore(ctx context.Context) (*dynStore, error) {
 		return nil, err
 	}
 	return &dynStore{
-		client:       dynamodb.NewFromConfig(cfg),
-		requestTable: aws.String(os.Getenv("table_request")),
-		sessionTable: aws.String(os.Getenv("table_session")),
+		client:             dynamodb.NewFromConfig(cfg),
+		requestTable:       aws.String(os.Getenv("table_request")),
+		authorizationTable: aws.String(os.Getenv("table_authorization")),
 	}, nil
 }
 
@@ -54,7 +54,7 @@ func (s *dynStore) createAuthorization(ctx context.Context, auth *Authorization)
 	if err != nil {
 		return err
 	}
-	input := &dynamodb.PutItemInput{TableName: s.sessionTable, Item: item}
+	input := &dynamodb.PutItemInput{TableName: s.authorizationTable, Item: item}
 	_, err = s.client.PutItem(ctx, input)
 	return err
 }
@@ -74,7 +74,7 @@ func (s *dynStore) createRequest(ctx context.Context, req *Request) error {
 
 func (s *dynStore) findAuthorization(ctx context.Context, pk string) (*Authorization, error) {
 	input := &dynamodb.GetItemInput{
-		TableName: s.sessionTable,
+		TableName: s.authorizationTable,
 		Key:       Key{"sessionPublicKey": &types.AttributeValueMemberS{Value: strings.ToLower(pk)}},
 	}
 	output, err := s.client.GetItem(ctx, input)

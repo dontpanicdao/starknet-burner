@@ -1,11 +1,11 @@
 resource "aws_apigatewayv2_api" "api" {
-  name          = "drone${terraform.workspace}api"
+  name          = "qasar${terraform.workspace}api"
   protocol_type = "HTTP"
   target        = aws_lambda_function.lambda.arn
 
   cors_configuration {
     allow_credentials = true
-    allow_origins     = [var.drone, var.keyring, var.test, var.drone_test, var.dawallet]
+    allow_origins     = [var.keyring, var.keyring_test, var.qasar, var.qasar_test]
     allow_methods     = ["GET", "PUT", "POST", "DELETE"]
     allow_headers     = ["Authorization", "Content-Type", "X-Amz-Date", "X-Amz-Security-Token", "Accept", "Referer", "User-Agent", "sec-ch-ua", "sec-ch-ua-mobile", "sec-ch-ua-platform"]
   }
@@ -18,12 +18,12 @@ resource "aws_lambda_permission" "apigw" {
   source_arn    = "${aws_apigatewayv2_api.api.execution_arn}/*/*"
 }
 
-data "aws_route53_zone" "domain" {
-  name = "${var.dns}."
-}
+# resource "aws_route53_zone" "domain" {
+#   name = "${var.dns}."
+# }
 
 resource "aws_apigatewayv2_domain_name" "api" {
-  domain_name = "drone.${var.dns}"
+  domain_name = "api.qasar.xyz"
 
   domain_name_configuration {
     certificate_arn = var.certificate
@@ -32,16 +32,24 @@ resource "aws_apigatewayv2_domain_name" "api" {
   }
 }
 
-resource "aws_route53_record" "api" {
-  name    = aws_apigatewayv2_domain_name.api.domain_name
-  type    = "A"
-  zone_id = data.aws_route53_zone.domain.zone_id
+# resource "aws_route53_record" "api" {
+#   name    = aws_apigatewayv2_domain_name.api.domain_name
+#   type    = "A"
+#   zone_id = data.aws_route53_zone.domain.zone_id
 
-  alias {
-    name                   = aws_apigatewayv2_domain_name.api.domain_name_configuration[0].target_domain_name
-    zone_id                = aws_apigatewayv2_domain_name.api.domain_name_configuration[0].hosted_zone_id
-    evaluate_target_health = false
-  }
+#   alias {
+#     name                   = aws_apigatewayv2_domain_name.api.domain_name_configuration[0].target_domain_name
+#     zone_id                = aws_apigatewayv2_domain_name.api.domain_name_configuration[0].hosted_zone_id
+#     evaluate_target_health = false
+#   }
+# }
+
+output "target_name" {
+  value = aws_apigatewayv2_domain_name.api.domain_name_configuration[0].target_domain_name
+}
+
+output "target_zone" {
+  value = aws_apigatewayv2_domain_name.api.domain_name_configuration[0].hosted_zone_id
 }
 
 resource "aws_apigatewayv2_api_mapping" "mapping" {

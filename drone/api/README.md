@@ -50,6 +50,7 @@ The service provides 2 ways of exchanging data:
 ```shell
 export BASEURL=https://...
 export REQUESTID=$(curl -XPOST ${BASEURL}/requests \
+  -H 'Content-Type: application/json' \
   -d'{"key": "0xdeadbeef", "dappTokenID": "0xdeadbeef"}' | \
    jq -r '.requestID')
 curl ${BASEURL}/requests/${REQUESTID}
@@ -59,13 +60,14 @@ curl ${BASEURL}/requests/${REQUESTID}
 > dappTokenID.
 
 ```shell
-curl https://drone.carnage.sh/requests \
+curl https://api.qasar.xyz/requests \
+  -H 'Content-Type: application/json' \
   -d'{"key": "0x2", "dappTokenID": "0x3"}'
 
 # returns the output below
 # {"requestID":"960958","key":"0x2","dappTokenID":"0x3"}
 
-curl https://drone.carnage.sh/requests/960958
+curl https://api.qasar.xyz/requests/960958
 
 # returns the output below
 # {"key": "0x2", "dappTokenID": "0x3"}
@@ -75,7 +77,8 @@ curl https://drone.carnage.sh/requests/960958
 
 ```shell
 export BASEURL=https://...
-curl -XPUT ${BASEURL}/0xdeadbeef \
+curl -XPOST ${BASEURL}/authorizations \
+  -H 'Content-Type: application/json' \
   -d'{
 	"key": "0xdeadbeef",
   "policies": [{"contractAddress": "0xdeadbeef", "selector": "transfert"}],
@@ -84,5 +87,5 @@ curl -XPUT ${BASEURL}/0xdeadbeef \
 	"signature": ["0x1", "0x2"],
 	"expires": 1659210039
   }'
-curl ${BASEURL}/0xdeadbeef
+curl ${BASEURL}/authorizations/0xdeadbeef
 ```
