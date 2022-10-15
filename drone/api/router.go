@@ -114,4 +114,8 @@ func routes(r gin.IRouter, store Storer) {
 	})
 }
 
-func (app *App) Start() { lambda.Start(ginadapter.NewV2(app.Router)) }
+func (app *App) Start() {
+	lambda.Start(
+		ginadapter.NewV2(app.Router).ProxyWithContext,
+	)
+}
