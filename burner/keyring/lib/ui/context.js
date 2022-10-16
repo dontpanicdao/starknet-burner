@@ -7,8 +7,8 @@ export const CONNECTED = "CONNECTED";
 const Context = createContext();
 
 export const StateProvider = ({ children }) => {
-  const [key, setKey] = useState(null);
-  const [modalProperties, setModalProperties] = useState({});
+  const [key, setKey] = useState("");
+  const [modalProperties, setModalProperties] = useState({ usePin: true, tokenId: "0xdeadbeef" }); // TODO remove default values
   const [state, setState] = useState(UNINITIALIZED);
   return (
     <Context.Provider
