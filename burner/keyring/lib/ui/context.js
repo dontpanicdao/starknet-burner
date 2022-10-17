@@ -8,7 +8,7 @@ const Context = createContext();
 
 export const StateProvider = ({ children }) => {
   const [key, setKey] = useState("");
-  const [modalProperties, setModalProperties] = useState({ usePin: true, tokenId: "0xdeadbeef" }); // TODO remove default values
+  const [modalProperties, setModalProperties] = useState({});
   const [state, setState] = useState(UNINITIALIZED);
   return (
     <Context.Provider

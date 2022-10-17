@@ -7,10 +7,6 @@ const CloseButton = () => {
   };
 
   return (
-    // <div className={styles.round_container} onClick={close}>
-    //   <div className={styles.round_content}>X</div>
-    // </div>
-
     <svg
       width="42"
       height="42"
