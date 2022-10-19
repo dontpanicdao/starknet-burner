@@ -8,11 +8,10 @@ const Form = styled.div`
 `;
 
 export const IncrementCounter = ({ account, contractAddress }) => {
-  const [status, transactionHash, execute] = useExecute(
-    account,
-    contractAddress,
-    "increment"
-  );
+  const [status, transactionHash, execute] = useExecute(account, [
+    { contractAddress: contractAddress, entrypoint: "increment" },
+    { contractAddress: contractAddress, entrypoint: "increment" },
+  ]);
 
   return (
     <main>

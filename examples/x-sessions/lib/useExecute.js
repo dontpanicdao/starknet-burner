@@ -1,26 +1,10 @@
 import { useEffect, useState } from "react";
-import { toBN } from "starknet/utils/number";
 
 const timer = 5000;
 
-export const useExecute = (
-  account,
-  contractAddress,
-  entrypoint,
-  calldata = []
-) => {
+export const useExecute = (account, calls) => {
   const startExecute = async () => {
-    const params = calldata.map((param) => {
-      if (param.slice(0, 2) === "0x") {
-        return toBN(param.slice(2), hex).toString(10);
-      }
-      return param;
-    });
-    return await account.execute({
-      contractAddress,
-      entrypoint,
-      calldata: params,
-    });
+    return await account.execute(calls);
   };
 
   const [waitCounter, setWaitCounter] = useState(0);
