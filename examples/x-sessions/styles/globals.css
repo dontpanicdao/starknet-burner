@@ -1,0 +1,26 @@
+@font-face {
+  font-family: "SpaceGrotesk";
+  src: url("../public/fonts/SpaceGrotesk-VariableFont_wght.ttf");
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../public/fonts/Poppins-Bold.ttf");
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: "SpaceGrotesk";
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button {
+  all: unset;
+  cursor: pointer;
+}
+* {
+  box-sizing: border-box;
+}
