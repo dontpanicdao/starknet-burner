@@ -4,11 +4,7 @@ import { registerWindow } from "./lib/window";
 export let UsePin;
 export let TokenId;
 
-export const register = ({
-  tokenId = "0x0",
-  usePin = false,
-  version = "3.x",
-}) => {
+export const register = ({ tokenId = "0x0", usePin = false, version = "3.x" }) => {
   UsePin = usePin;
   TokenId = tokenId;
   registerWindow(version);
@@ -20,11 +16,7 @@ export const register = ({
   element.innerHTML = `
     <div id="modal-wrapper"></div>
     <iframe id="iframe" 
-	src="${
-    import.meta.env.DEV
-      ? "http://localhost:3000"
-      : "https://starknet-burner.vercel.app/"
-  }"
+	src="${import.meta.env.DEV ? "http://localhost:3000" : "https://starknet-burner.vercel.app/"}"
        allow="clipboard-write"/>
 `;
   hideIFrame();

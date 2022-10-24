@@ -1,11 +1,13 @@
 import styles from "styles/Pin.module.css";
 import { useEffect, useState } from "react";
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://drone.carnage.sh";
+
 export default ({ accessKey, modalProperties }) => {
   const [requestId, setRequestId] = useState(0);
   useEffect(() => {
     (async () => {
-      const res = await fetch("https://drone.carnage.sh/requests", {
+      const res = await fetch(`${apiUrl}/requests`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -22,16 +24,16 @@ export default ({ accessKey, modalProperties }) => {
   }, []);
 
   return (
-    <div className={styles.choicesContainer}>
-      <div className={styles.choice}>
+    <div className={styles.containers}>
+      <div className={styles.numbers}>
         {requestId
           ? requestId
               .toString()
               .split("")
               .map((num, i) => (
-                <span className={styles.number} key={i}>
+                <div className={styles.number} key={i}>
                   {num}
-                </span>
+                </div>
               ))
           : "loading..."}
       </div>

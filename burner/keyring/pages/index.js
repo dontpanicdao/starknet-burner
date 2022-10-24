@@ -14,6 +14,8 @@ import Connected from "components/Connected";
 import CloseButton from "components/CloseButton";
 import { getKeyPair, getStarkKey } from "starknet4/utils/ellipticCurve";
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://drone.carnage.sh";
+
 export default function Home() {
   const { state, setState, key, setKey, modalProperties, setModalProperties } = useStateContext();
   const [sessionToken, setSessionToken] = useState(null);
@@ -33,7 +35,7 @@ export default function Home() {
   const getDroneData = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`https://drone.carnage.sh/authorizations/${key}`);
+      const res = await fetch(`${apiUrl}/authorizations/${key}`);
       if (res.status !== 200) {
         return setLoading(false);
       }
@@ -91,7 +93,6 @@ export default function Home() {
 
   return (
     <Layout>
-      <CloseButton />
       <main className={styles.main}>
         {state === UNINITIALIZED && <Loader />}
         {state === INITIALIZED && (
@@ -103,6 +104,7 @@ export default function Home() {
           />
         )}
         {state === CONNECTED && <Connected sessionToken={sessionToken} />}
+        <CloseButton />
       </main>
     </Layout>
   );

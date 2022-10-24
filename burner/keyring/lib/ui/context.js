@@ -7,7 +7,7 @@ export const CONNECTED = "CONNECTED";
 const Context = createContext();
 
 export const StateProvider = ({ children }) => {
-  const [key, setKey] = useState(null);
+  const [key, setKey] = useState("");
   const [modalProperties, setModalProperties] = useState({});
   const [state, setState] = useState(UNINITIALIZED);
   return (

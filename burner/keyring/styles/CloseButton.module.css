@@ -1,47 +1,10 @@
 .closeButton {
   position: absolute;
-  top: 0;
-  left: 0;
-  padding: 0.5rem;
-  background-color: Transparent;
-  background-repeat: no-repeat;
-  border: none;
-  cursor: pointer;
-  overflow: hidden;
-}
-.round_container {
-  margin: 1em 0.5em;
-  justify-content: center;
+  right: 1em;
+  top: 1em;
   transition: transform 300ms ease-in;
-  align-items: center;
-  display: flex;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 3rem;
-  background: #d9ddde;
 }
 
-.round_content {
-  display: flex;
+.closeButton:hover {
   cursor: pointer;
-  justify-content: center;
-  align-items: center;
-  font-size: 1rem;
-  transition: transform 300ms ease-in;
-  background: #f2f4f4;
-  background-color: #fff;
-  text-align: center;
-  color: #231f20;
-  width: 1.9rem;
-  height: 1.9rem;
-  border-radius: 3rem;
-  font-weight: 600;
-}
-.round_content:hover {
-  transform: scale(0.9);
-  width: 1.8rem;
-  height: 1.8rem;
 }

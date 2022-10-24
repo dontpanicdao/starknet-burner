@@ -1,17 +1,16 @@
-.choicesContainer {
-  display: flex;
-  flex-direction: column;
+.container {
   justify-content: space-around;
   align-items: center;
   width: 100%;
-  height: 50%;
 }
 
-.choice {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+.numbers {
+  display: grid;
+  gap: 0.5em;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  margin-bottom: 2em;
+  text-align: center;
 }
 
 .alert {
@@ -19,8 +18,9 @@
 }
 
 .number {
-  background-color: #ccc;
-  display: inline;
-  padding: 2em;
-  margin-left: 1em;
+  border-radius: 0.33em;
+  border: 0.1rem solid #fff;
+  font-family: Poppins;
+  font-size: 2.5rem;
+  padding: 0.5em 0.25em;
 }

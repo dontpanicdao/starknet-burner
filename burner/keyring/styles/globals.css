@@ -1,16 +1,28 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+@font-face {
+  font-family: "SpaceGrotesk";
+  src: url("../public/fonts/SpaceGrotesk-VariableFont_wght.ttf");
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../public/fonts/Poppins-Bold.ttf");
 }
 
+html,
+body {
+  background: #141415;
+  color: #fff;
+  font-family: "SpaceGrotesk";
+  margin: 0;
+  padding: 0;
+}
 a {
   color: inherit;
   text-decoration: none;
 }
-
+button {
+  all: unset;
+  cursor: pointer;
+}
 * {
   box-sizing: border-box;
 }
