@@ -1,53 +1,58 @@
 <script lang="ts">
   import { browser } from "$app/environment";
   import { register } from "@starknet/burner";
+  import { onMount } from "svelte";
 
-  const wallet = browser && window?.["starknet-burner"];
-  let isConnected: boolean = wallet?.isConnected;
+  const contractAddress = "0x51e94d515df16ecae5be4a377666121494eb54193d854fcf5baba2b0da679c6";
+  let isConnected: boolean = wallet()?.isConnected;
 
-  setInterval(() => {
-    isConnected = wallet?.isConnected;
-    console.log(isConnected);
-    console.log(wallet?.isConnected);
-  }, 1000);
+  onMount(() => {
+    if (!browser) {
+      return;
+    }
+
+    const clear = setInterval(() => {
+      isConnected = connectedWallet();
+    }, 2000);
+
+    return () => clearInterval(clear);
+  });
 
   if (browser) {
     register({ tokenId: "0x234", usePin: true });
   }
 
+  function wallet() {
+    return browser && (window as any)?.["starknet-burner"];
+  }
+
+  function connectedWallet(): boolean {
+    return wallet()?.isConnected;
+  }
+
   async function connect() {
-    await wallet.enable({ showModal: true });
+    await wallet().enable({ showModal: true });
   }
 
   async function disconnect() {
-    if (wallet && wallet.isConnected) {
-      await wallet.request({ type: "keyring_Disconnect" });
+    if (connectedWallet()) {
+      await wallet().request({ type: "keyring_Disconnect" });
     }
   }
 
   async function increment() {
-    if (wallet && wallet.isConnected) {
-      wallet.account.execute({
-        contractAddress: "0x51e94d515df16ecae5be4a377666121494eb54193d854fcf5baba2b0da679c6",
-        entrypoint: "increment",
-      });
+    if (connectedWallet()) {
+      wallet().account.execute({ contractAddress, entrypoint: "increment" });
     }
   }
 
   async function forbidden() {
-    if (wallet && wallet.isConnected) {
-      wallet.account.execute({
-        contractAddress: "0x51e94d515df16ecae5be4a377666121494eb54193d854fcf5baba2b0da679c6",
-        entrypoint: "increment",
-      });
+    if (connectedWallet()) {
+      wallet().account.execute({ contractAddress, entrypoint: "increment" });
     }
   }
 
-  $: {
-    setInterval(() => {
-      isConnected = wallet?.isConnected;
-    }, 2000);
-  }
+  $: isConnected;
 </script>
 
 <div class="gameover">GAME OVER</div>
@@ -56,9 +61,9 @@
   <button on:click={connect} class:hide={isConnected}>Connect to my wallet</button>
   <button on:click={disconnect} class="warn" class:hide={!isConnected}>Disconnect</button>
   <button on:click={increment} class:hide={!isConnected}>Increment my account</button>
-  <button on:click={forbidden} class="error" class:hide={!isConnected}
-    >Give me infinite lives</button
-  >
+  <button on:click={forbidden} class="error" class:hide={!isConnected}>
+    Give me infinite lives!!!
+  </button>
 </div>
 
 <style>
