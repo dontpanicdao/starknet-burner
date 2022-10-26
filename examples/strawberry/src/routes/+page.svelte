@@ -76,6 +76,7 @@
   .container {
     margin: 0 auto;
     max-width: 400px;
+    padding: 0.5rem;
   }
   .credits {
     font-family: "VT323";
