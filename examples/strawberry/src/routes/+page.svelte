@@ -13,7 +13,7 @@
 
     const clear = setInterval(() => {
       isConnected = connectedWallet();
-    }, 2000);
+    }, 1000);
 
     return () => clearInterval(clear);
   });
@@ -60,9 +60,9 @@
   <div class="credits">buy more credits?</div>
   <div class="buttons">
     <button on:click={connect} class:hide={isConnected}>🍓 Connect to my wallet</button>
-    <button on:click={increment} class:hide={!isConnected}>🍄 Add lives</button>
+    <button on:click={increment} class:hide={!isConnected}>🍄 1 UP</button>
     <button on:click={forbidden} class="error" class:hide={!isConnected}>
-      ☠️ Give me infinite lives!!!
+      ☠️ Gimme immortal potion!
     </button>
     <button on:click={disconnect} class="warn" class:hide={!isConnected}>🚪 Disconnect</button>
   </div>
