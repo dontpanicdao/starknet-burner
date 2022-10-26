@@ -57,14 +57,20 @@
 
 <div class="container">
   <div class="gameover">GAME OVER</div>
-  <div class="credits">buy more credits?</div>
+  <div class="title">
+    {#if isConnected}
+      MAKE A WISE CHOICE
+    {:else}
+      WANT MORE CREDITS?
+    {/if}
+  </div>
   <div class="buttons">
-    <button on:click={connect} class:hide={isConnected}>🍓 Connect to my wallet</button>
+    <button on:click={connect} class:hide={isConnected}>🍓 connect to my wallet</button>
     <button on:click={increment} class:hide={!isConnected}>🍄 1 UP</button>
     <button on:click={forbidden} class="error" class:hide={!isConnected}>
-      ☠️ Gimme immortal potion!
+      ☠️ gimme "immortal" potion!
     </button>
-    <button on:click={disconnect} class="warn" class:hide={!isConnected}>🚪 Disconnect</button>
+    <button on:click={disconnect} class="warn" class:hide={!isConnected}>🚪 disconnect</button>
   </div>
 </div>
 
@@ -78,7 +84,7 @@
     max-width: 400px;
     padding: 0.5rem;
   }
-  .credits {
+  .title {
     font-family: "VT323";
     margin-bottom: 2rem;
     text-align: center;
