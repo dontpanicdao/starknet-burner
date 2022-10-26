@@ -55,21 +55,27 @@
   $: isConnected;
 </script>
 
-<div class="gameover">GAME OVER</div>
-<div class="credits">buy more credits?</div>
-<div class="buttons">
-  <button on:click={connect} class:hide={isConnected}>Connect to my wallet</button>
-  <button on:click={disconnect} class="warn" class:hide={!isConnected}>Disconnect</button>
-  <button on:click={increment} class:hide={!isConnected}>Increment my account</button>
-  <button on:click={forbidden} class="error" class:hide={!isConnected}>
-    Give me infinite lives!!!
-  </button>
+<div class="container">
+  <div class="gameover">GAME OVER</div>
+  <div class="credits">buy more credits?</div>
+  <div class="buttons">
+    <button on:click={connect} class:hide={isConnected}>Connect to my wallet</button>
+    <button on:click={increment} class:hide={!isConnected}>Add lives</button>
+    <button on:click={forbidden} class="error" class:hide={!isConnected}>
+      Give me infinite lives!!!
+    </button>
+    <button on:click={disconnect} class="warn" class:hide={!isConnected}>Disconnect</button>
+  </div>
 </div>
 
 <style>
   .buttons {
     display: grid;
     gap: 0.5em;
+  }
+  .container {
+    margin: 0 auto;
+    max-width: 400px;
   }
   .credits {
     font-family: "VT323";
