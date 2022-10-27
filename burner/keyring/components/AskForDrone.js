@@ -15,7 +15,12 @@ function Validator({ accessKey, modalProperties }) {
   );
 }
 
-export default ({ accessKey, isLoading, sessionToken, modalProperties }) => {
+export const AskForDrone = ({
+  accessKey,
+  isLoading,
+  sessionToken,
+  modalProperties,
+}) => {
   return (
     <div className={styles.choicesContainer}>
       <div className={styles.choice}>
@@ -23,7 +28,8 @@ export default ({ accessKey, isLoading, sessionToken, modalProperties }) => {
           target="_blank"
           rel="noreferrer"
           href={`${
-            process.env.NEXT_PUBLIC_DRONE_BASE_URL || "https://drone.blaqkube.io"
+            process.env.NEXT_PUBLIC_DRONE_BASE_URL ||
+            "https://drone.blaqkube.io"
           }?s=${accessKey}`}
         >
           <Validator accessKey={accessKey} modalProperties={modalProperties} />
@@ -37,3 +43,5 @@ export default ({ accessKey, isLoading, sessionToken, modalProperties }) => {
     </div>
   );
 };
+
+export default AskForDrone;
