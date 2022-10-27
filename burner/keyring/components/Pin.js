@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://drone.carnage.sh";
 
-export default ({ accessKey, modalProperties }) => {
+export const Pin = ({ accessKey, modalProperties }) => {
   const [requestId, setRequestId] = useState(0);
   useEffect(() => {
     (async () => {
@@ -40,3 +40,5 @@ export default ({ accessKey, modalProperties }) => {
     </div>
   );
 };
+
+export default Pin;
