@@ -11,6 +11,11 @@ variable "keyring" {
   default = "https://starknet-burner.vercel.app"
 }
 
+variable "keyringv2" {
+  type    = string
+  default = "https://keyring.qasar.xyz"
+}
+
 variable "keyring_test" {
   type    = string
   default = "http://localhost:3000"

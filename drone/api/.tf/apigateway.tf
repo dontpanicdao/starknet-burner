@@ -5,7 +5,7 @@ resource "aws_apigatewayv2_api" "api" {
 
   cors_configuration {
     allow_credentials = true
-    allow_origins     = [var.keyring, var.keyring_test, var.qasar, var.qasar_test]
+    allow_origins     = [var.keyring, var.keyringv2, var.keyring_test, var.qasar, var.qasar_test]
     allow_methods     = ["GET", "PUT", "POST", "DELETE"]
     allow_headers     = ["Authorization", "Content-Type", "X-Amz-Date", "X-Amz-Security-Token", "Accept", "Referer", "User-Agent", "sec-ch-ua", "sec-ch-ua-mobile", "sec-ch-ua-platform"]
   }

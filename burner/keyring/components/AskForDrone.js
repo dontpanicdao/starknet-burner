@@ -9,7 +9,7 @@ function Validator({ accessKey, modalProperties }) {
   return (
     <QRCode
       value={`${
-        process.env.NEXT_PUBLIC_DRONE_BASE_URL || "https://drone.blaqkube.io"
+        process.env.NEXT_PUBLIC_DRONE_BASE_URL || "https://app.qasar.xyz"
       }/?s=${accessKey}`}
     />
   );
