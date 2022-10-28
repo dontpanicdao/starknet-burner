@@ -1,7 +1,7 @@
 import styles from "styles/Pin.module.css";
 import { useEffect, useState } from "react";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://drone.carnage.sh";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.qasar.xyz";
 
 export const Pin = ({ accessKey, modalProperties }) => {
   const [requestId, setRequestId] = useState(0);
