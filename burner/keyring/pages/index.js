@@ -1,7 +1,16 @@
 import styles from "styles/Home.module.css";
 import { useEffect, useState } from "react";
-import { useStateContext, UNINITIALIZED, INITIALIZED, CONNECTED } from "lib/ui/context";
-import { getLocalStorage, saveLocalStorage, removeLocalStorage } from "lib/storage";
+import {
+  useStateContext,
+  UNINITIALIZED,
+  INITIALIZED,
+  CONNECTED,
+} from "lib/ui/context";
+import {
+  getLocalStorage,
+  saveLocalStorage,
+  removeLocalStorage,
+} from "lib/storage";
 import { generateKey } from "lib/sessionkey";
 import Loader from "components/Loader";
 import { eventHandler, injectSets } from "lib/index";
@@ -14,10 +23,11 @@ import Connected from "components/Connected";
 import CloseButton from "components/CloseButton";
 import { getKeyPair, getStarkKey } from "starknet4/utils/ellipticCurve";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://drone.carnage.sh";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.qasar.xyz";
 
 export default function Home() {
-  const { state, setState, key, setKey, modalProperties, setModalProperties } = useStateContext();
+  const { state, setState, key, setKey, modalProperties, setModalProperties } =
+    useStateContext();
   const [sessionToken, setSessionToken] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [displayed, setDisplayed] = useState(false);

@@ -28,8 +28,7 @@ export const AskForDrone = ({
           target="_blank"
           rel="noreferrer"
           href={`${
-            process.env.NEXT_PUBLIC_DRONE_BASE_URL ||
-            "https://drone.blaqkube.io"
+            process.env.NEXT_PUBLIC_DRONE_BASE_URL || "https://app.qasar.xyz"
           }?s=${accessKey}`}
         >
           <Validator accessKey={accessKey} modalProperties={modalProperties} />
